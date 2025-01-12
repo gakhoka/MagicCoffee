@@ -11,9 +11,7 @@ import SwiftUI
 class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
-    
-    private let leftBarButton = UIButton()
-    
+   
     private lazy var newMemberLabel: UILabel = {
         let label = UILabel()
         label.create(text: "New member?", textColor: .systemGray2, font: 14)
@@ -84,14 +82,9 @@ class LoginPageViewController: UIViewController {
     }
     
     private func leftBarButtonConfig() {
-        view.addSubview(leftBarButton)
-        leftBarButton.translatesAutoresizingMaskIntoConstraints = false
-        leftBarButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
-        leftBarButton.tintColor = .black
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
-        leftBarButton.addAction(UIAction(handler: { [weak self] action in
+        configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.backButtonTapped()
-        }), for: .touchUpInside)
+        })
     }
     
     private func backButtonTapped() {
