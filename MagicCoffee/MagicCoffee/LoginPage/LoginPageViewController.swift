@@ -12,6 +12,8 @@ class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
     
+    private let leftBarButton = UIButton()
+    
     private lazy var textFieldsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -43,12 +45,28 @@ class LoginPageViewController: UIViewController {
         placeViews()
         setupConstraints()
         stackViewSetup()
+        leftBarButtonConfig()
     }
     
     private func placeViews() {
         view.addSubview(signInLabel)
         view.addSubview(subtitleLabel)
         view.addSubview(textFieldsStackView)
+    }
+    
+    private func leftBarButtonConfig() {
+        view.addSubview(leftBarButton)
+        leftBarButton.translatesAutoresizingMaskIntoConstraints = false
+        leftBarButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        leftBarButton.tintColor = .black
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
+        leftBarButton.addAction(UIAction(handler: { [weak self] action in
+            self?.backButtonTapped()
+        }), for: .touchUpInside)
+    }
+    
+    private func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
     }
     
     private func stackViewSetup() {
