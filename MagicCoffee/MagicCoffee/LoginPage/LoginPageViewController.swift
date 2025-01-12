@@ -45,10 +45,7 @@ class LoginPageViewController: UIViewController {
     
     private lazy var textFieldsStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 30
+        stackView.configure()
         return stackView
     }()
     
