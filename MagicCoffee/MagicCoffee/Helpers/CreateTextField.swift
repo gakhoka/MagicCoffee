@@ -46,7 +46,7 @@ class CustomTextField {
         if showPasswordIcon {
             eyeButton = UIButton(type: .system)
             eyeButton?.setImage(UIImage(named: "Eye"), for: .normal)
-            eyeButton?.tintColor = .gray
+            eyeButton?.tintColor = .black
             eyeButton?.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(eyeButton!)
             
