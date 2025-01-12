@@ -11,9 +11,7 @@ import SwiftUI
 class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
-    
-    private let leftBarButton = UIButton()
-    
+   
     private lazy var newMemberLabel: UILabel = {
         let label = UILabel()
         label.create(text: "New member?", textColor: .systemGray2, font: 14)
@@ -23,6 +21,9 @@ class LoginPageViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.create(title: "Sign Up")
+        button.addAction(UIAction { [weak self] action in
+            self?.signUpButtonTapped()
+        }, for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         return button
     }()
@@ -84,14 +85,13 @@ class LoginPageViewController: UIViewController {
     }
     
     private func leftBarButtonConfig() {
-        view.addSubview(leftBarButton)
-        leftBarButton.translatesAutoresizingMaskIntoConstraints = false
-        leftBarButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
-        leftBarButton.tintColor = .black
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButton)
-        leftBarButton.addAction(UIAction(handler: { [weak self] action in
+        configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.backButtonTapped()
-        }), for: .touchUpInside)
+        })
+    }
+    
+    private func signUpButtonTapped() {
+        navigationController?.pushViewController(SignupViewController(), animated: true)
     }
     
     private func backButtonTapped() {
