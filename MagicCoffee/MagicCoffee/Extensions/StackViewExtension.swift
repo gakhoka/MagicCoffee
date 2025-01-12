@@ -14,4 +14,12 @@ extension UIStackView {
             self.addArrangedSubview(view)
         }
     }
+    
+    func configure() {
+        self.axis = .vertical
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.distribution = .equalSpacing
+        self.spacing = 30
+    }
 }
+

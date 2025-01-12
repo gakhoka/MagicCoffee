@@ -37,15 +37,15 @@ class LoginPageViewController: UIViewController {
     private lazy var forgotPasswordButton: UIButton = {
         let button = UIButton()
         button.create(title: "Forgot Password ?")
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.navigateToForgotPassPage()
+        }), for: .touchUpInside)
         return button
     }()
     
     private lazy var textFieldsStackView: UIStackView = {
         let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.distribution = .equalSpacing
-        stackView.spacing = 30
+        stackView.configure()
         return stackView
     }()
     
@@ -88,6 +88,10 @@ class LoginPageViewController: UIViewController {
         configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.backButtonTapped()
         })
+    }
+    
+    private func navigateToForgotPassPage() {
+        navigationController?.pushViewController(ForgotPasswordViewController(), animated: true)
     }
     
     private func signUpButtonTapped() {
