@@ -33,13 +33,13 @@ class WelcomePageViewController: UIViewController {
     
     private lazy var headerLabel: UILabel = {
         let label = UILabel()
-        label.createLabel(text: "Feel yourself like a barista !", font: 40)
+        label.create(text: "Feel yourself like a barista !", font: 40)
         return label
     }()
     
     private lazy var appName: UILabel = {
         let label = UILabel()
-        label.createLabel(text: "Magic Coffee", textColor: .white)
+        label.create(text: "Magic Coffee", textColor: .white)
         label.font = UIFont(name: "ReenieBeanie", size: 50)
         return label
     }()
@@ -65,7 +65,7 @@ class WelcomePageViewController: UIViewController {
     }
     
     private func navigateToLogInPage() {
-        navigationController?.pushViewController(LoginViewController(), animated: true)
+        navigationController?.pushViewController(LoginPageViewController(), animated: true)
     }
     
     private func setupUI() {
@@ -112,27 +112,5 @@ class WelcomePageViewController: UIViewController {
         ])
     }
    
-}
-
-
-
-struct viewControllerRepresentable: UIViewControllerRepresentable {
-    
-    typealias UIViewControllerType = WelcomePageViewController
-    
-    
-    func makeUIViewController(context: Context) -> WelcomePageViewController {
-        WelcomePageViewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: WelcomePageViewController, context: Context) {
-        
-    }
-}
-
-struct viewController_Previews: PreviewProvider {
-    static var previews: some View {
-        viewControllerRepresentable()
-    }
 }
 
