@@ -21,6 +21,9 @@ class LoginPageViewController: UIViewController {
     private lazy var signUpButton: UIButton = {
         let button = UIButton()
         button.create(title: "Sign Up")
+        button.addAction(UIAction { [weak self] action in
+            self?.signUpButtonTapped()
+        }, for: .touchUpInside)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 14)
         return button
     }()
@@ -85,6 +88,10 @@ class LoginPageViewController: UIViewController {
         configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.backButtonTapped()
         })
+    }
+    
+    private func signUpButtonTapped() {
+        navigationController?.pushViewController(SignupViewController(), animated: true)
     }
     
     private func backButtonTapped() {
