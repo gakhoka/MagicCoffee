@@ -77,19 +77,12 @@ struct OrderDetailsView: View {
                 Button("One") {
                     
                 }
-                .frame(minWidth: 50, maxHeight: 10)
-                .padding()
-                .background(Capsule().stroke(Color.gray.opacity(0.5), lineWidth: 1))
-                .foregroundStyle(.black)
+                .capsuleButton()
                 
                 Button("Two") {
                     
                 }
-                .frame(minWidth: 50, maxHeight: 10)
-               
-                .padding()
-                .background(Capsule().stroke(Color.gray.opacity(0.5), lineWidth: 1))
-                .foregroundStyle(.black)
+                .capsuleButton()
                 
             }
         }
@@ -127,9 +120,7 @@ struct OrderDetailsView: View {
 
                 }
             }
-            .frame(minWidth: 50, maxHeight: 10)
-            .padding()
-            .background(Capsule().stroke(Color.gray.opacity(0.5), lineWidth: 1))
+            .capsuleButton()
             
         }
         .padding(.horizontal)
