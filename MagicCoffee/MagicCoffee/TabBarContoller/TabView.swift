@@ -13,7 +13,7 @@ struct TabBarView: View {
     
     var body: some View {
         TabView(selection: $selection) {
-            Text("1")
+            HomePageView()
                 .tag(1)
         }
         .overlay(alignment: .bottom) {
