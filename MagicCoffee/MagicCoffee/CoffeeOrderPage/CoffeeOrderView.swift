@@ -44,11 +44,7 @@ struct CoffeeOrderView: View {
             }) {
                 Text("Next")
             }
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity, minHeight: 50)
-            .background(Color.navyGreen)
-            .cornerRadius(20)
-            .padding()
+            .nextButtonAppearance()
         }
     }
     
