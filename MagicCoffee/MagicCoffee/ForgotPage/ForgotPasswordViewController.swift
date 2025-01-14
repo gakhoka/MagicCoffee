@@ -32,6 +32,9 @@ class ForgotPasswordViewController: UIViewController {
     private lazy var sendButton: UIButton = {
         let button = UIButton()
         button.create(image: "arrow.right", backgroundColor: .navyGreen)
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.navigateToVerificationPage()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -55,6 +58,11 @@ class ForgotPasswordViewController: UIViewController {
         view.addSubview(textFieldsStackView)
         view.addSubview(sendButton)
     }
+    
+    private func navigateToVerificationPage() {
+        navigationController?.pushViewController(VerificationViewController(), animated: true)
+    }
+    
     private func leftBarButtonConfig() {
         configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.navigateTologinPage()
