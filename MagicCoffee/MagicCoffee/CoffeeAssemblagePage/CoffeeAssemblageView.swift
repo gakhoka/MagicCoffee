@@ -14,6 +14,12 @@ struct CoffeeAssemblageView: View {
     @State private var selectedIceAmount = 1
     @State private var isGrindingSelected = false
     @State private var value = 0.5
+    @State private var selectedMilk = ""
+    @State private var selectedSyrup = ""
+    @State private var isMilkSelectionTapped = false
+    @State private var isSyrupSelectionTapped = false
+    @State private var milkTypes = ["None", "Cow's", "Lactose-free", "Skimmed", "Vegetable"]
+    @State private var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
     
    
     var body: some View {
@@ -43,7 +49,21 @@ struct CoffeeAssemblageView: View {
             }
             .poppinsFont(size: 16)
             .foregroundStyle(.black)
+            .sheet(isPresented: $isMilkSelectionTapped) {
+                milkSheet
+            }
+            .sheet(isPresented: $isSyrupSelectionTapped) {
+                syrupSheet
+            }
         }
+    }
+    
+    private var milkSheet: some View {
+        OptionSelectionView(selectedOption: $selectedMilk, title: "What type of milk do you prefer?", options: milkTypes)
+    }
+    
+    private var syrupSheet: some View {
+        OptionSelectionView(selectedOption: $selectedSyrup, title: "What flavor of syrup do you prefer?", options: syrupTypes)
     }
     
     private var totalAmountNextButton: some View {
@@ -115,7 +135,10 @@ struct CoffeeAssemblageView: View {
         HStack {
             Text("Syrup")
             Spacer()
-            Button("Select") {
+            Button(action: {
+                isSyrupSelectionTapped = true
+            }) {
+                Text(selectedSyrup.isEmpty ? "Select" : selectedSyrup)
             }
             .foregroundStyle(.black)
         }
@@ -126,7 +149,10 @@ struct CoffeeAssemblageView: View {
         HStack {
             Text("Milk")
             Spacer()
-            Button("Select") {
+            Button(action: {
+                isMilkSelectionTapped = true
+            }) {
+                Text(selectedMilk.isEmpty ? "Select" : selectedMilk)
             }
             .foregroundStyle(.black)
         }
