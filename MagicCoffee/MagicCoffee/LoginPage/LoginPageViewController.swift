@@ -91,7 +91,7 @@ class LoginPageViewController: UIViewController {
     }
     
     private func navigateToForgotPassPage() {
-        navigationController?.pushViewController(ForgotPasswordViewController(), animated: true)
+        navigationController?.pushViewController(VerificationViewController(), animated: true)
     }
     
     private func signUpButtonTapped() {
