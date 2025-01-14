@@ -15,6 +15,8 @@ struct TabBarView: View {
         TabView(selection: $selection) {
             HomePageView()
                 .tag(1)
+            RewardsView()
+                .tag(2)
         }
         .overlay(alignment: .bottom) {
             CustomTabBar(selection: $selection)
