@@ -48,6 +48,15 @@ class HistoryViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OrderCell")
+        return tableView
+    }()
         
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +69,18 @@ class HistoryViewController: UIViewController {
     
     private func setupUI() {
         setupButtons()
+        setupTableView()
+    }
+    
+    private func setupTableView() {
+        view.addSubview(tableView)
+        
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: ongoingButton.bottomAnchor, constant: 30),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
+        ])
     }
     
     private func setupButtons() {
@@ -94,9 +115,8 @@ class HistoryViewController: UIViewController {
     }
    
     
-     private func didTapOngoing() {
+    private func didTapOngoing() {
         updateTabSelection(selectedButton: ongoingButton, unselectedButton: historyButton)
-        
     }
     
      private func didTapHistory() {
@@ -113,6 +133,28 @@ class HistoryViewController: UIViewController {
         }
     }
 }
+
+
+extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath)
+        cell.textLabel?.text = "Order \(indexPath.row + 1)"
+        return cell
+    }
+}
+
+
+
+
+
+
+
+
 
 
 struct HistoryviewControllerRepresentable: UIViewControllerRepresentable {
