@@ -14,7 +14,6 @@ struct Coffee: Identifiable {
     let ristreto: Int
     let size: CoffeeSize
     let image: String
-    let type: CoffeeType
     let sort: [Country]
     let grinding: GrindingLevel
     let milk: [String]?
@@ -24,6 +23,7 @@ struct Coffee: Identifiable {
     let additives: [String]?
     let score: Int
     let redeemPointsAmount: Int
+    let validityDate: String
     
     
     enum CoffeeSize: String {
