@@ -16,6 +16,7 @@ class MyOrderViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(MyOrderTableViewCell.self, forCellReuseIdentifier: "CurrentOrder")
+        tableView.separatorStyle = .none
         return tableView
     }()
     
@@ -27,6 +28,7 @@ class MyOrderViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         setupUI()
     }
     
