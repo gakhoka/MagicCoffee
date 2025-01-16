@@ -77,7 +77,28 @@ extension MyOrderViewController: UITableViewDelegate, UITableViewDataSource {
         }
         return UITableViewCell()
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        var actions = [UIContextualAction]()
+
+        let delete = UIContextualAction(style: .normal, title: nil) { [weak self] (contextualAction, view, completion) in
+            guard self == self else { return }
+
+            completion(true)
+        }
+
+        delete.image = UIImage(named: "TrashCan")?.addBackgroundCircle(.lightRed)
+        delete.backgroundColor = .systemBackground
+        actions.append(delete)
+
+        let config = UISwipeActionsConfiguration(actions: actions)
+        config.performsFirstActionWithFullSwipe = false
+
+        return config
+    }
 }
+
 
 struct MyOrderviewControllerRepresentable: UIViewControllerRepresentable {
     
