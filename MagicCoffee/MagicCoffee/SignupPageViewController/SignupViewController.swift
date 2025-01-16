@@ -7,16 +7,28 @@
 
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 class SignupViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
     private let viewModel = SignupViewModel()
-
+    
     private var usernameField: UITextField?
     private var confirmPasswordField: UITextField?
     private var emailField: UITextField?
     private var passwordField: UITextField?
+    
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .red
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
+        label.isHidden = true
+        label.numberOfLines = 0
+        return label
+    }()
     
     private lazy var memberLabel: UILabel = {
         let label = UILabel()
@@ -112,65 +124,94 @@ class SignupViewController: UIViewController {
         view.addSubview(textFieldsStackView)
         view.addSubview(memberLabel)
         view.addSubview(signinButton)
+        view.addSubview(errorLabel)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-        signupLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-        signupLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
-        
-        subtitleLabel.topAnchor.constraint(equalTo: signupLabel.bottomAnchor, constant: 20),
-        subtitleLabel.leftAnchor.constraint(equalTo: signupLabel.leftAnchor),
-        
-        textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 50),
-        textFieldsStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
-        textFieldsStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
-        
-        termsLabel.topAnchor.constraint(equalTo: textFieldsStackView.bottomAnchor, constant: 20),
-        termsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-        
-        loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
-        loginButton.bottomAnchor.constraint(equalTo: memberLabel.topAnchor, constant: -50),
-        loginButton.heightAnchor.constraint(equalToConstant: 50),
-        loginButton.widthAnchor.constraint(equalToConstant: 50),
-        
-        memberLabel.leftAnchor.constraint(equalTo: signupLabel.leftAnchor),
-        memberLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-        
-        signinButton.leftAnchor.constraint(equalTo: memberLabel.rightAnchor, constant: 5),
-        signinButton.centerYAnchor.constraint(equalTo: memberLabel.centerYAnchor)
+            signupLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            signupLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            
+            subtitleLabel.topAnchor.constraint(equalTo: signupLabel.bottomAnchor, constant: 20),
+            subtitleLabel.leftAnchor.constraint(equalTo: signupLabel.leftAnchor),
+            
+            errorLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20),
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 60),
+            textFieldsStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            textFieldsStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
+            
+            termsLabel.topAnchor.constraint(equalTo: textFieldsStackView.bottomAnchor, constant: 20),
+            termsLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
+            loginButton.bottomAnchor.constraint(equalTo: memberLabel.topAnchor, constant: -50),
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
+            loginButton.widthAnchor.constraint(equalToConstant: 50),
+            
+            memberLabel.leftAnchor.constraint(equalTo: signupLabel.leftAnchor),
+            memberLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            
+            signinButton.leftAnchor.constraint(equalTo: memberLabel.rightAnchor, constant: 5),
+            signinButton.centerYAnchor.constraint(equalTo: memberLabel.centerYAnchor)
         ])
     }
     
+    private func showError(_ message: String) {
+        errorLabel.text = message
+        errorLabel.isHidden = false
+    }
+    
+    private func showSuccess(_ message: String) {
+        errorLabel.text = message
+        errorLabel.textColor = .forestGreen
+        errorLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        errorLabel.isHidden = false
+        errorLabel.textAlignment = .center
+        clearTextFields()
+    }
+    
+    private func clearTextFields() {
+        emailField?.text = ""
+        usernameField?.text = ""
+        confirmPasswordField?.text = ""
+        passwordField?.text = ""
+    }
+    
+    private func hideError() {
+        errorLabel.isHidden = true
+    }
+    
     private func signupButtonTapped() {
+        hideError()
         guard let username = usernameField?.text,
               let email = emailField?.text,
               let password = passwordField?.text,
               let confirmPassword = confirmPasswordField?.text else {
+            showError("Please fill all fields")
             return
         }
         
         viewModel.signUp(email: email, password: password, username: username, confirmPassword: confirmPassword) { [weak self] result in
-            guard self == self else { return }
             DispatchQueue.main.async {
-
                 switch result {
-                case .success(_):
-                    print("do something")
-                    
+                case .success:
+                    self?.hideError()
+                    self?.showSuccess("""
+                Successfull sign up
+                    Go back to log in 
+                """)
                 case .failure(let error):
-                    print("errror case")
+                    if let authError = error as? AuthError {
+                        self?.showError(authError.message)
+                    } else {
+                        let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
+                        self?.showError(errorMessage)
+                    }
                 }
             }
         }
-    }
-
-    private func showAlert(message: String, completion: (() -> Void)? = nil) {
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            completion?()
-        })
-        present(alert, animated: true)
     }
 }
 
