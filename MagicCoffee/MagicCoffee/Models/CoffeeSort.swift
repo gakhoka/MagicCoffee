@@ -12,12 +12,14 @@ struct Country: Identifiable {
     let id = UUID()
     let name: String
     let coffeeTypes: [CoffeeType]
+    
+    struct CoffeeType: Identifiable {
+        let id = UUID()
+        let name: String
+    }
 }
 
-struct CoffeeType: Identifiable {
-    let id = UUID()
-    let name: String
-}
+
 
 
 
