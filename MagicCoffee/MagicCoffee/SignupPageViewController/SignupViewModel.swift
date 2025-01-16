@@ -62,6 +62,7 @@ enum AuthError: Error {
     case emptyFields
     case passwordsDontMatch
     case userNotCreated
+    case loginError
     
     var message: String {
         switch self {
@@ -71,6 +72,8 @@ enum AuthError: Error {
             return "Passwords don't match"
         case .userNotCreated:
             return "Error during sign up"
+        case .loginError:
+            return "Error during log in"
         }
     }
 }

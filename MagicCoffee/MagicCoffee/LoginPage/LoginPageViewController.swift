@@ -11,6 +11,7 @@ import SwiftUI
 class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
+    private let viewModel = LoginViewModel()
     
     private var emailField: UITextField?
     private var passwordField: UITextField?
@@ -34,6 +35,9 @@ class LoginPageViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.create(image: "arrow.right", backgroundColor: .navyGreen)
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.loginButtonTapped()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -142,6 +146,35 @@ class LoginPageViewController: UIViewController {
             signUpButton.leftAnchor.constraint(equalTo: newMemberLabel.rightAnchor, constant: 5),
             signUpButton.centerYAnchor.constraint(equalTo: newMemberLabel.centerYAnchor)
         ])
+    }
+
+    private func navigateToHomePage() {
+        
+    }
+    
+    
+    private func showLoginError(_ message: String) {
+        
+    }
+
+    
+    private func loginButtonTapped() {
+        guard let email = emailField?.text,
+              let password = passwordField?.text else {
+            showLoginError("")
+            return
+        }
+        
+        viewModel.signin(email: email, password: password) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.navigateToHomePage()
+                case .failure(let error):
+                    let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
+                }
+            }
+        }
     }
 }
 
