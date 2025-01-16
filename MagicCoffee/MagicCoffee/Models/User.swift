@@ -8,12 +8,10 @@
 import Foundation
 
 
-struct User {
-    let firstName: String
-    let lastName: String
+struct User: Identifiable {
+    let id = UUID()
     let username: String
     let email: String
-    let mobileNumber: String
-    let orders: [Order]
-    let points: Int
+    let orders: [Order] = []
+    let points: Int? = 0
 }

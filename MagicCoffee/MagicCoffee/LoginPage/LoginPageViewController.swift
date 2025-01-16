@@ -11,6 +11,10 @@ import SwiftUI
 class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
+    private let viewModel = LoginViewModel()
+    
+    private var emailField: UITextField?
+    private var passwordField: UITextField?
    
     private lazy var newMemberLabel: UILabel = {
         let label = UILabel()
@@ -31,6 +35,9 @@ class LoginPageViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.create(image: "arrow.right", backgroundColor: .navyGreen)
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.loginButtonTapped()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -61,6 +68,17 @@ class LoginPageViewController: UIViewController {
         return label
     }()
     
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .red
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
+        label.isHidden = true
+        label.numberOfLines = 0
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -82,6 +100,7 @@ class LoginPageViewController: UIViewController {
         view.addSubview(loginButton)
         view.addSubview(newMemberLabel)
         view.addSubview(signUpButton)
+        view.addSubview(errorLabel)
     }
     
     private func leftBarButtonConfig() {
@@ -103,10 +122,13 @@ class LoginPageViewController: UIViewController {
     }
     
     private func stackViewSetup() {
-        let emailTextField = textFieldCenter.createTextField(placeholder: "Enter email", imageName: "Message")
-        let passwordTextField = textFieldCenter.createTextField(placeholder: "Enter password", imageName: "Lock", showPasswordIcon: true)
-        textFieldsStackView.addArrangedSubview(emailTextField)
-        textFieldsStackView.addArrangedSubview(passwordTextField)
+        let (emailContainer, emailTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
+        let (passwordContainer, passwordTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Lock", showPasswordIcon: true)
+        
+        self.emailField = emailTextField
+        self.passwordField = passwordTextField
+        
+        textFieldsStackView.addMultipleViews(emailContainer, passwordContainer )
     }
     
     private func setupConstraints() {
@@ -117,7 +139,10 @@ class LoginPageViewController: UIViewController {
             subtitleLabel.topAnchor.constraint(equalTo: signInLabel.bottomAnchor, constant: 20),
             subtitleLabel.leftAnchor.constraint(equalTo: signInLabel.leftAnchor),
             
-            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 50),
+            errorLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20),
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 60),
             textFieldsStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
             textFieldsStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             
@@ -136,6 +161,44 @@ class LoginPageViewController: UIViewController {
             signUpButton.leftAnchor.constraint(equalTo: newMemberLabel.rightAnchor, constant: 5),
             signUpButton.centerYAnchor.constraint(equalTo: newMemberLabel.centerYAnchor)
         ])
+    }
+
+    private func navigateToHomePage() {
+        let host = UIHostingController(rootView: TabBarView())
+    
+        navigationController?.setNavigationBarHidden(true, animated: true)
+        
+        navigationController?.pushViewController(host, animated: true)
+    }
+    
+    
+    private func showLoginError(_ message: String) {
+        errorLabel.isHidden = false
+        errorLabel.text = message
+    }
+
+    
+    private func loginButtonTapped() {
+        guard let email = emailField?.text,
+              let password = passwordField?.text else {
+            return
+        }
+        
+        viewModel.signin(email: email, password: password) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.navigateToHomePage()
+                case .failure(let error):
+                    if let authError = error as? AuthError {
+                        self?.showLoginError(authError.message)
+                    } else {
+                        let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
+                        self?.showLoginError(errorMessage)
+                    }
+                }
+            }
+        }
     }
 }
 

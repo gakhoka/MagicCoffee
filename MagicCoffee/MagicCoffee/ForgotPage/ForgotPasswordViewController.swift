@@ -9,7 +9,7 @@ import UIKit
 
 class ForgotPasswordViewController: UIViewController {
     
-    private let textFieldCenter = CustomTextField()
+  //  private let textFieldCenter = CustomTextField()
     
     private lazy var forgotPasswordLabel: UILabel = {
         let label = UILabel()
@@ -74,9 +74,9 @@ class ForgotPasswordViewController: UIViewController {
     }
     
     private func configureStackView() {
-        let emailTextField = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
+//        let emailTextField = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
         
-        textFieldsStackView.addMultipleViews(emailTextField)
+     //   textFieldsStackView.addMultipleViews(emailTextField)
     }
     
     private func setupConstraints() {
