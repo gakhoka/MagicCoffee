@@ -164,7 +164,11 @@ class LoginPageViewController: UIViewController {
     }
 
     private func navigateToHomePage() {
+        let host = UIHostingController(rootView: TabBarView())
+    
+        navigationController?.setNavigationBarHidden(true, animated: true)
         
+        navigationController?.pushViewController(host, animated: true)
     }
     
     
