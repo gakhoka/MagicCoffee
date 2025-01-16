@@ -17,7 +17,7 @@ class LoginViewModel {
         }
         
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] result, error in
-            guard let self = self else { return }
+            guard self != nil else { return }
             if let error = error {
                 completion(.failure(error))
                 return

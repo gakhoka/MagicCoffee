@@ -68,6 +68,17 @@ class LoginPageViewController: UIViewController {
         return label
     }()
     
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = .red
+        label.font = UIFont.systemFont(ofSize: 12, weight: .medium)
+        label.textAlignment = .center
+        label.isHidden = true
+        label.numberOfLines = 0
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -89,6 +100,7 @@ class LoginPageViewController: UIViewController {
         view.addSubview(loginButton)
         view.addSubview(newMemberLabel)
         view.addSubview(signUpButton)
+        view.addSubview(errorLabel)
     }
     
     private func leftBarButtonConfig() {
@@ -127,7 +139,10 @@ class LoginPageViewController: UIViewController {
             subtitleLabel.topAnchor.constraint(equalTo: signInLabel.bottomAnchor, constant: 20),
             subtitleLabel.leftAnchor.constraint(equalTo: signInLabel.leftAnchor),
             
-            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 50),
+            errorLabel.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 20),
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 60),
             textFieldsStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
             textFieldsStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             
@@ -154,14 +169,14 @@ class LoginPageViewController: UIViewController {
     
     
     private func showLoginError(_ message: String) {
-        
+        errorLabel.isHidden = false
+        errorLabel.text = message
     }
 
     
     private func loginButtonTapped() {
         guard let email = emailField?.text,
               let password = passwordField?.text else {
-            showLoginError("")
             return
         }
         
@@ -171,7 +186,12 @@ class LoginPageViewController: UIViewController {
                 case .success(_):
                     self?.navigateToHomePage()
                 case .failure(let error):
-                    let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
+                    if let authError = error as? AuthError {
+                        self?.showLoginError(authError.message)
+                    } else {
+                        let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
+                        self?.showLoginError(errorMessage)
+                    }
                 }
             }
         }
