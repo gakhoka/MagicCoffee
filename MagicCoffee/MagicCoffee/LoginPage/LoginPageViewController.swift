@@ -11,6 +11,9 @@ import SwiftUI
 class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
+    
+    private var emailField: UITextField?
+    private var passwordField: UITextField?
    
     private lazy var newMemberLabel: UILabel = {
         let label = UILabel()
@@ -103,10 +106,13 @@ class LoginPageViewController: UIViewController {
     }
     
     private func stackViewSetup() {
-        let emailTextField = textFieldCenter.createTextField(placeholder: "Enter email", imageName: "Message")
-        let passwordTextField = textFieldCenter.createTextField(placeholder: "Enter password", imageName: "Lock", showPasswordIcon: true)
-        textFieldsStackView.addArrangedSubview(emailTextField)
-        textFieldsStackView.addArrangedSubview(passwordTextField)
+        let (emailContainer, emailTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
+        let (passwordContainer, passwordTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Lock", showPasswordIcon: true)
+        
+        self.emailField = emailTextField
+        self.passwordField = passwordTextField
+        
+        textFieldsStackView.addMultipleViews(emailContainer, passwordContainer )
     }
     
     private func setupConstraints() {

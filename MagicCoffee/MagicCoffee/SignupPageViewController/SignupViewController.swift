@@ -11,7 +11,12 @@ import SwiftUI
 class SignupViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
+    private let viewModel = SignupViewModel()
 
+    private var usernameField: UITextField?
+    private var confirmPasswordField: UITextField?
+    private var emailField: UITextField?
+    private var passwordField: UITextField?
     
     private lazy var memberLabel: UILabel = {
         let label = UILabel()
@@ -32,6 +37,9 @@ class SignupViewController: UIViewController {
     private lazy var loginButton: UIButton = {
         let button = UIButton()
         button.create(image: "arrow.right", backgroundColor: .navyGreen)
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.signupButtonTapped()
+        }), for: .touchUpInside)
         return button
     }()
     
@@ -83,12 +91,17 @@ class SignupViewController: UIViewController {
     }
     
     private func configureStackView() {
-        let usernameTextField = textFieldCenter.createTextField(placeholder: "Username", imageName: "Profile")
-        let mobileNumberTextField = textFieldCenter.createTextField(placeholder: "Mobile Number", imageName: "smartphone")
-        let emailTextField = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
-        let passwordTextField = textFieldCenter.createTextField(placeholder: " Password", imageName: "Lock", showPasswordIcon: true)
+        let (usernameContainer, usernameTextField) = textFieldCenter.createTextField(placeholder: "Username", imageName: "Profile")
+        let (emailContainer, emailTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
+        let (passwordContainer, passwordTextField) = textFieldCenter.createTextField(placeholder: "Password", imageName: "Lock", showPasswordIcon: true)
+        let (confirmContainer, confirmPasswordTextField) = textFieldCenter.createTextField(placeholder: "Confirm Password", imageName: "Lock", showPasswordIcon: true)
         
-        textFieldsStackView.addMultipleViews(usernameTextField, mobileNumberTextField, emailTextField, passwordTextField)
+        self.usernameField = usernameTextField
+        self.emailField = emailTextField
+        self.passwordField = passwordTextField
+        self.confirmPasswordField = confirmPasswordTextField
+        
+        textFieldsStackView.addMultipleViews(usernameContainer, emailContainer, passwordContainer, confirmContainer)
     }
     
     private func placeViews() {
@@ -127,6 +140,37 @@ class SignupViewController: UIViewController {
         signinButton.leftAnchor.constraint(equalTo: memberLabel.rightAnchor, constant: 5),
         signinButton.centerYAnchor.constraint(equalTo: memberLabel.centerYAnchor)
         ])
+    }
+    
+    private func signupButtonTapped() {
+        guard let username = usernameField?.text,
+              let email = emailField?.text,
+              let password = passwordField?.text,
+              let confirmPassword = confirmPasswordField?.text else {
+            return
+        }
+        
+        viewModel.signUp(email: email, password: password, username: username, confirmPassword: confirmPassword) { [weak self] result in
+            guard self == self else { return }
+            DispatchQueue.main.async {
+
+                switch result {
+                case .success(_):
+                    print("do something")
+                    
+                case .failure(let error):
+                    print("errror case")
+                }
+            }
+        }
+    }
+
+    private func showAlert(message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default) { _ in
+            completion?()
+        })
+        present(alert, animated: true)
     }
 }
 

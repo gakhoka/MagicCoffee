@@ -9,7 +9,7 @@ import UIKit
 
 class CustomTextField {
     
-    func createTextField(placeholder: String, imageName: String, showPasswordIcon: Bool = false) -> UIView {
+    func createTextField(placeholder: String, imageName: String, showPasswordIcon: Bool = false) -> (container: UIView, textField: UITextField) {
         
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
@@ -80,7 +80,7 @@ class CustomTextField {
                 eyeButton.heightAnchor.constraint(equalToConstant: 26)
             ])
         }
-        return container
+        return (container, textField)
     }
     
     @objc func togglePasswordVisibility(_ sender: UIButton) {
