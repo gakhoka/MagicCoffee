@@ -54,7 +54,7 @@ class HistoryViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OrderCell")
+        tableView.register(OrdersTableViewCell.self, forCellReuseIdentifier: "OrderCell")
         return tableView
     }()
         
@@ -142,9 +142,10 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath)
-        cell.textLabel?.text = "Order \(indexPath.row + 1)"
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell {
+            return cell
+        }
+        return UITableViewCell()
     }
 }
 
