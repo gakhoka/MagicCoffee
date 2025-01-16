@@ -13,6 +13,7 @@ import SwiftUI
 extension UIColor {
     static let navyGreen = UIColor(red: 50/255, green: 74/255, blue: 90/255, alpha: 1)
     static let tabItemColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
+    static let lightRed = UIColor(red: 255/255, green: 229/255, blue: 229/255, alpha: 1)
 }
 
 extension Color {
