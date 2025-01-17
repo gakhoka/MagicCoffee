@@ -29,7 +29,8 @@ struct RedeemView: View {
                         Button("\(coffee.redeemPointsAmount)") {
                           //TODO: action
                         }
-                        .roundedRectangleStyle(width: 75, height: 40, cornerRadius: 50)
+                        .roundedRectangleStyle(cornerRadius: 50)
+                        .frame(width: 75, height: 40)
                         .foregroundStyle(.white)
                     }
                     .padding([.top, .bottom])
