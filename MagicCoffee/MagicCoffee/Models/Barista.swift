@@ -8,10 +8,10 @@
 import Foundation
 
 
-struct Barista: Identifiable {
-    let id = UUID()
+struct Barista: Identifiable, Codable {
+    var id = UUID()
     let name: String
-    let isActive: Bool = false
-    let isTopBarista: Bool = false
+    var isActive: Bool = false
+    var isTopBarista: Bool = false
     let image: String
 }

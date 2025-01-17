@@ -26,12 +26,11 @@ struct HomePageView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.coffees, id: \.id) { coffee in
-                                NavigationLink(destination: CoffeeOrderView()) {
+                                NavigationLink(destination: CoffeeOrderView(coffee: coffee)) {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 25)
                                             .fill(.white)
                                             .frame(width: 175)
-                                        
                                         VStack {
                                             if let imageUrl = URL(string: coffee.image) {
                                                 AsyncImage(url: imageUrl) { image in

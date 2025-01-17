@@ -9,14 +9,14 @@ import SwiftUI
 
 struct OrderDetailsView: View {
     
-    
+    var coffee: Coffee
     let cupData: [String: Int] = [
            "smallCup": 250,
            "mediumCup": 350,
            "largeCup": 450
        ]
 
-    @State private var count = 3
+    @State private var count = 1
     
     var body: some View {
         VStack {
@@ -93,7 +93,7 @@ struct OrderDetailsView: View {
     
     private var coffeeAmount: some View {
         HStack {
-            Text("Capuccino")
+            Text(coffee.name)
                 .padding()
             Spacer()
             HStack {
@@ -128,5 +128,5 @@ struct OrderDetailsView: View {
 }
 
 #Preview {
-    OrderDetailsView()
+    OrderDetailsView(coffee: .example)
 }

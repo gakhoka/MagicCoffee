@@ -8,8 +8,8 @@
 import Foundation
 
 
-struct Order: Identifiable {
-    let id = UUID()
+struct Order: Identifiable, Codable {
+    var id = UUID()
     let coffeeAmount: Int
     let isTakeAway: Bool
     let price: Int
