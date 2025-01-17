@@ -26,6 +26,20 @@ struct CoffeeOrderView: View {
             
         }
         .navigationTitle("Order")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: btnBack)
+    }
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    var btnBack : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })  {
+            Image(systemName: "arrow.left")
+                .foregroundStyle(.black)
+        }
     }
     
     private var nextButton: some View {

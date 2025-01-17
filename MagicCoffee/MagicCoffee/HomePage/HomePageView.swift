@@ -10,8 +10,7 @@ import SwiftUI
 struct HomePageView: View {
     
     let columns = Array(repeating: GridItem(.flexible()), count: 2)
-    let coffeeImages = ["coffee1","coffee2","coffee3","coffee5", "latte2", "coffee4"]
-    
+
     @StateObject var viewModel = HomePageViewModel()
     
     var body: some View {
