@@ -59,6 +59,7 @@ class SignupViewModel {
         
         database.collection("users").document(user.id).setData(userData) { error in
             if let error = error {
+                print(error.localizedDescription)
                 completion(false)
             } else {
                 completion(true)

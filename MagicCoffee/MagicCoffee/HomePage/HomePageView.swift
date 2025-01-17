@@ -64,10 +64,10 @@ struct HomePageView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Welcome !")
                     .foregroundStyle(.gray)
-                Text("Alex")
-                    .font(.system(size: 24))
+                    .poppinsFont(size: 12)
+                Text(viewModel.username)
+                    .poppinsFont(size: 16)
             }
-            .poppinsFont(size: 16)
             
             Spacer()
             
