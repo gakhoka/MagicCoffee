@@ -17,6 +17,7 @@ struct CustomTabBar: View {
             Capsule()
                 .frame(height: 80)
                 .foregroundStyle(.white)
+                .shadow(radius: 5)
             
             HStack(spacing: 40) {
                 ForEach(0..<3) { index in
