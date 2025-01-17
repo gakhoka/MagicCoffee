@@ -8,10 +8,10 @@
 import Foundation
 
 
-struct User: Identifiable {
-    let id = UUID()
+struct User: Identifiable, Codable {
+    var id: String
     let username: String
     let email: String
-    let orders: [Order] = []
-    let points: Int? = 0
+    var orders: [Order] = []
+    var points: Int? = 0
 }

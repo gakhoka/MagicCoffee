@@ -10,42 +10,52 @@ import SwiftUI
 struct HomePageView: View {
     
     let columns = Array(repeating: GridItem(.flexible()), count: 2)
-    let coffeeImages = ["coffee1","coffee2","coffee3","coffee5", "latte2", "coffee4"]
+
+    @StateObject var viewModel = HomePageViewModel()
     
     var body: some View {
-        VStack {
-            topView
-                .padding()
-            
-            VStack(alignment: .leading) {
+        NavigationView {
+            VStack {
+                topView
+                    .padding()
                 
-                selectYourCoffee
-                
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 20) {
-                        ForEach(coffeeImages, id: \.self) { image in
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 25)
-                                    .fill(.white)
-                                    .frame(width: 175)
-                                
-                                VStack {
-                                    Image(image)
-                                    Text(image)
+                VStack(alignment: .leading) {
+                    
+                    selectYourCoffee
+                    
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 20) {
+                            ForEach(viewModel.coffees, id: \.id) { coffee in
+                                NavigationLink(destination: CoffeeOrderView(coffee: coffee)) {
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 25)
+                                            .fill(.white)
+                                            .frame(width: 175)
+                                        VStack {
+                                            if let imageUrl = URL(string: coffee.image) {
+                                                AsyncImage(url: imageUrl) { image in
+                                                    image.image?.resizable()
+                                                        .scaledToFit()
+                                                }
+                                            }
+                                            Text(coffee.name)
+                                                .foregroundStyle(.black)
+                                        }
+                                        .frame(height: 150)
+                                        .padding()
+                                    }
+                                    .padding(.horizontal)
                                 }
-                                .frame(height: 150)
-                                .padding()
                             }
-                            .padding(.horizontal)
                         }
                     }
+                    .padding(.horizontal)
+                    
                 }
-                .padding(.horizontal)
+                .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
+                .edgesIgnoringSafeArea(.bottom)
                 
             }
-            .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
-            .edgesIgnoringSafeArea(.bottom)
-            
         }
     }
     
@@ -54,10 +64,10 @@ struct HomePageView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Welcome !")
                     .foregroundStyle(.gray)
-                Text("Alex")
-                    .font(.system(size: 24))
+                    .poppinsFont(size: 12)
+                Text(viewModel.username)
+                    .poppinsFont(size: 16)
             }
-            .poppinsFont(size: 16)
             
             Spacer()
             

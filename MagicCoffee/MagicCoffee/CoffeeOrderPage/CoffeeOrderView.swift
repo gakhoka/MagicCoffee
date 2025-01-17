@@ -9,14 +9,16 @@ import SwiftUI
 
 struct CoffeeOrderView: View {
  
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State var isOn = false
+    var coffee: Coffee
     
     var body: some View {
         NavigationView {
             VStack {
                 coffeeImage
                 ScrollView {
-                    OrderDetailsView()
+                    OrderDetailsView(coffee: coffee)
                     timePicker
                     coffeeLoverAssemblage
                     nextButton
@@ -26,6 +28,18 @@ struct CoffeeOrderView: View {
             
         }
         .navigationTitle("Order")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: btnBack)
+    }
+
+    var btnBack : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })  {
+            Image(systemName: "arrow.left")
+                .foregroundStyle(.black)
+        }
     }
     
     private var nextButton: some View {
@@ -85,19 +99,22 @@ struct CoffeeOrderView: View {
     }
     
     private var coffeeImage: some View {
-        Image("coffee3")
-            .resizable()
-            .scaledToFit()
-            .frame(width: 200, height: 200)
-            .roundedRectangleStyle(color: Color.navyGreen)
-            .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width)
-            .frame(minHeight: 0, maxHeight:UIScreen.main.bounds.height)
-            .padding()
-        
+        VStack {
+            if let imageUrl = URL(string: coffee.image) {
+                AsyncImage(url: imageUrl) { image in
+                    image.image?.resizable()
+                        .scaledToFit()
+                }
+            
+                .frame(width: 200, height: 200)
+                .roundedRectangleStyle(color: Color.navyGreen)
+                .padding()
+                .frame(width: UIScreen.main.bounds.width, height: 200)         
+            }
+        }
     }
- 
 }
 
 #Preview {
-    CoffeeOrderView()
+    CoffeeOrderView(coffee: .example)
 }

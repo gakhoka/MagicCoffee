@@ -8,11 +8,12 @@
 import FirebaseAuth
 import UIKit
 import Foundation
+import FirebaseFirestore
 
 class SignupViewModel {
- 
-    func signUp(email: String,password: String,username: String,confirmPassword: String,
-                completion: @escaping (Result<User, Error>) -> Void) {
+    
+    func signUp(email: String, password: String, username: String, confirmPassword: String,
+                completion: @escaping (Result<Void, Error>) -> Void) {
         
         guard !email.isEmpty, !password.isEmpty, !username.isEmpty, !confirmPassword.isEmpty else {
             completion(.failure(AuthError.emptyFields))
@@ -24,26 +25,49 @@ class SignupViewModel {
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { result, error in
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
                 completion(.failure(error))
                 return
             }
             
-            
-            guard let user = result?.user else {
-                completion(.failure(AuthError.userNotCreated))
+            guard let userId = authResult?.user.uid else {
                 return
             }
             
-            let coffeeUser = User(username: username, email: user.email ?? "")
-  
-            completion(.success(coffeeUser))
-   
+            let newUser = User(id: userId, username: username, email: email)
+            
+            self.saveUser(user: newUser) { success in
+                if success {
+                    completion(.success(()))
+                } else {
+                    completion(.failure(AuthError.userNotCreated))
+                }
+            }
         }
     }
     
-     func getFirebaseErrorMessage(_ error: Error) -> String {
+    private func saveUser(user: User, completion: @escaping (Bool) -> Void) {
+        let database = Firestore.firestore()
+        let userData: [String: Any] = [
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "points": user.points ?? 0,
+            "orders": []
+        ]
+        
+        database.collection("users").document(user.id).setData(userData) { error in
+            if let error = error {
+                print(error.localizedDescription)
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
+    
+    func getFirebaseErrorMessage(_ error: Error) -> String {
         let nsError = error as NSError
         switch nsError.code {
         case AuthErrorCode.emailAlreadyInUse.rawValue:

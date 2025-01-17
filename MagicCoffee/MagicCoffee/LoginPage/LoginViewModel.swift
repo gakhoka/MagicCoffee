@@ -28,8 +28,10 @@ class LoginViewModel {
                 return
             }
             
+            guard let userId = result?.user.uid else { return }
+            
             let loggedInUser = User(
-                username: firebaseUser.displayName ?? "Unknown",
+                id: userId, username: firebaseUser.displayName ?? "Unknown",
                 email: firebaseUser.email ?? ""
             )
             

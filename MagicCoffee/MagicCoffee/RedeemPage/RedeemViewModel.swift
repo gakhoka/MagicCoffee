@@ -30,7 +30,7 @@ class RedeemViewModel: ObservableObject {
                 additives: nil,
                 score: 0,
                 redeemPointsAmount: 1340,
-                validityDate: "04.07.21"
+                validityDate: "04.07.21", price: 2
             ),
             Coffee(
                 name: "Cappuccino",
@@ -46,7 +46,8 @@ class RedeemViewModel: ObservableObject {
                 additives: nil,
                 score: 0,
                 redeemPointsAmount: 1340,
-                validityDate: "04.07.21"
+                validityDate: "04.07.21",
+                price: 1
             )
         ]
         coffees.append(contentsOf: coffeeItems)
