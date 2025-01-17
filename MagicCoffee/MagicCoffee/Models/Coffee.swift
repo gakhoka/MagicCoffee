@@ -14,7 +14,7 @@ struct Coffee: Identifiable {
     let ristreto: Int
     let size: CoffeeSize
     let image: String
-    let sort: [Country]
+    let sort: [String]
     let grinding: GrindingLevel
     let milk: [String]?
     let syrup: [String]?

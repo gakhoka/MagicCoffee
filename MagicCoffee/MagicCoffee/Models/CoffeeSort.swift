@@ -11,9 +11,9 @@ import Foundation
 struct Country: Identifiable {
     let id = UUID()
     let name: String
-    let coffeeTypes: [CoffeeType]
+    let coffeeTypes: [City]
     
-    struct CoffeeType: Identifiable {
+    struct City: Identifiable {
         let id = UUID()
         let name: String
     }
