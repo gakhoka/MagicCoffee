@@ -9,7 +9,10 @@ import UIKit
 
 class ForgotPasswordViewController: UIViewController {
     
-  //  private let textFieldCenter = CustomTextField()
+    private let viewModel = ForgotPasswordViewModel()
+    private let textFieldCenter = CustomTextField()
+    
+    private var emailField: UITextField?
     
     private lazy var forgotPasswordLabel: UILabel = {
         let label = UILabel()
@@ -33,7 +36,7 @@ class ForgotPasswordViewController: UIViewController {
         let button = UIButton()
         button.create(image: "arrow.right", backgroundColor: .navyGreen)
         button.addAction(UIAction(handler: { [weak self] action in
-            self?.navigateToVerificationPage()
+            self?.forgotPasswordButtonTapped()
         }), for: .touchUpInside)
         return button
     }()
@@ -69,14 +72,29 @@ class ForgotPasswordViewController: UIViewController {
         })
     }
     
+    private func forgotPasswordButtonTapped() {
+        guard let email = emailField?.text else { return }
+        
+        viewModel.sendPasswordReset(email: email) { [weak self] result in
+            switch result {
+            case .success(let success):
+                self?.navigateToVerificationPage()
+            case .failure(let failure):
+                print("error")
+            }
+        }
+    }
+    
     private func navigateTologinPage() {
         navigationController?.popViewController(animated: true)
     }
     
     private func configureStackView() {
-//        let emailTextField = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
+        let (emailContainer, emailTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
         
-     //   textFieldsStackView.addMultipleViews(emailTextField)
+        self.emailField = emailTextField
+
+        textFieldsStackView.addMultipleViews(emailContainer)
     }
     
     private func setupConstraints() {
@@ -87,7 +105,7 @@ class ForgotPasswordViewController: UIViewController {
             subtitleLabel.topAnchor.constraint(equalTo: forgotPasswordLabel.bottomAnchor, constant: 20),
             subtitleLabel.leftAnchor.constraint(equalTo: forgotPasswordLabel.leftAnchor),
             
-            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 50),
+            textFieldsStackView.topAnchor.constraint(equalTo: subtitleLabel.bottomAnchor, constant: 150),
             textFieldsStackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
             textFieldsStackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             
