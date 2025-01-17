@@ -43,8 +43,7 @@ struct HomePageView: View {
                 .padding(.horizontal)
                 
             }
-        
-            .roundedRectangleStyle(width: .infinity, height: .infinity, cornerRadius: 20, color: .navyGreen)
+            .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
             .edgesIgnoringSafeArea(.bottom)
             
         }

@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 extension View {
-    func roundedRectangleStyle(width: CGFloat = 500, height: CGFloat = 500, cornerRadius: CGFloat = 20, color: Color = .navyGreen) -> some View {
-        modifier(RoundedRectangleStyle(width: width, height: height, cornerRadius: cornerRadius, color: color))
+    func roundedRectangleStyle(cornerRadius: CGFloat = 20, color: Color = .navyGreen) -> some View {
+        modifier(RoundedRectangleStyle(cornerRadius: cornerRadius, color: color))
     }
     
     func poppinsFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
@@ -19,8 +19,6 @@ extension View {
 }
 
 struct RoundedRectangleStyle: ViewModifier {
-    let width: CGFloat
-    let height: CGFloat
     let cornerRadius: CGFloat
     let color: Color
     
@@ -28,7 +26,8 @@ struct RoundedRectangleStyle: ViewModifier {
         ZStack {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
-                .frame(width: width, height: height)
+                .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width)
+                .frame(minHeight: 0, maxHeight: UIScreen.main.bounds.height)
             content
         }
     }

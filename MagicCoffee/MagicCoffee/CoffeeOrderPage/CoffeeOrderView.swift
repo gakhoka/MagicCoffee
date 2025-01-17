@@ -89,7 +89,9 @@ struct CoffeeOrderView: View {
             .resizable()
             .scaledToFit()
             .frame(width: 200, height: 200)
-            .roundedRectangleStyle(width: .infinity, height: 200, color: Color.navyGreen)
+            .roundedRectangleStyle(color: Color.navyGreen)
+            .frame(minWidth: 0, maxWidth: UIScreen.main.bounds.width)
+            .frame(minHeight: 0, maxHeight:UIScreen.main.bounds.height)
             .padding()
         
     }
