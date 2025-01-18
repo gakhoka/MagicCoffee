@@ -91,7 +91,7 @@ class ForgotPasswordViewController: UIViewController {
                                     title: "Password Reset Email Sent",
                                     message: "We have sent a password reset email to \(email)")
                                 self?.clearTextField()
-                            case .failure(let error):
+                            case .failure(_):
                                 self?.showErrorAlert(
                                     message: "Failed to send the password reset email. Please try again later")
                             }

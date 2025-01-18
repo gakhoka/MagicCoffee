@@ -31,7 +31,7 @@ class CustomTextField {
         
         let iconImageView = UIImageView()
         iconImageView.image = UIImage(named: imageName)
-        iconImageView.tintColor = .gray
+        iconImageView.tintColor = .black
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(iconImageView)
         
@@ -39,14 +39,16 @@ class CustomTextField {
         textField.placeholder = placeholder
         textField.font = UIFont.systemFont(ofSize: 16)
         textField.borderStyle = .none
+        textField.autocapitalizationType = .none
+        textField.isSecureTextEntry = showPasswordIcon
         textField.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(textField)
         
         var eyeButton: UIButton?
         if showPasswordIcon {
             eyeButton = UIButton(type: .system)
-            eyeButton?.setImage(UIImage(named: "Eye"), for: .normal)
-            eyeButton?.tintColor = .black
+            eyeButton?.setImage(UIImage(named: "Eyeoff"), for: .normal)
+            eyeButton?.tintColor = .gray
             eyeButton?.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(eyeButton!)
             
