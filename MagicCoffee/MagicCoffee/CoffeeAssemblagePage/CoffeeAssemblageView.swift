@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CoffeeAssemblageView: View {
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @State private var selectedGrindSize =  0
     @State private var selectedRoastAmount = 1
     @State private var selectedIceAmount = 1
@@ -56,8 +57,20 @@ struct CoffeeAssemblageView: View {
                 syrupSheet
             }
         }
+        .navigationTitle("Coffee Lover Assemblage")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: btnBack)
     }
-    
+
+    var btnBack : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })  {
+            Image(systemName: "arrow.left")
+                .foregroundStyle(.black)
+        }
+    }
     private var milkSheet: some View {
         OptionSelectionView(selectedOption: $selectedMilk, title: "What type of milk do you prefer?", options: milkTypes)
     }

@@ -35,7 +35,7 @@ struct Coffee: Identifiable, Codable {
         case fine = 0, medium
     }
     
-    static let example = Coffee(name: "", ristreto: 1, size: CoffeeSize.large, image: "", sort: ["sd"], grinding: GrindingLevel.fine, milk: [""], syrup: [""], iceAmount: 1, roastingLevel: 1, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6)
+    static let example = Coffee(name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sort: ["sd"], grinding: GrindingLevel.fine, milk: [""], syrup: [""], iceAmount: 1, roastingLevel: 1, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6)
 }
 
 

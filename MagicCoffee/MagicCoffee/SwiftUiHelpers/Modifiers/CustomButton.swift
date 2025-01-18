@@ -21,7 +21,5 @@ struct CustomButton: ViewModifier {
             .frame(minWidth: 50, maxHeight: 10)
             .padding()
             .background(Capsule().stroke(Color.gray.opacity(0.5), lineWidth: 1))
-            .foregroundStyle(.black)
-            
     }
 }
