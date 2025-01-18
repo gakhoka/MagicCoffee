@@ -9,7 +9,7 @@
 import UIKit
 
 class FourDigitEntryView: UIView, UITextFieldDelegate {
-    private let digitLabels = [UILabel(), UILabel(), UILabel(), UILabel()]
+    private let digitLabels = [UILabel(), UILabel(), UILabel(), UILabel(), UILabel()]
     private let hiddenTextField = UITextField()
     
     var onCodeComplete: ((String) -> Void)? 
