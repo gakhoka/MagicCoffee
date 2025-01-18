@@ -19,4 +19,24 @@ class ForgotPasswordViewModel {
             }
         }
     }
+    
+    
+    func checkIfEmailExists(_ email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        
+        Auth.auth().createUser(withEmail: email, password: UUID().uuidString) { result, error in
+            if let error = error as NSError? {
+                let authError = AuthErrorCode(_bridgedNSError: error)
+                
+                if authError?.code == .emailAlreadyInUse {
+                    completion(.success(true))
+                } else {
+                    completion(.failure(error))
+                }
+            } else if result != nil {
+                result?.user.delete { _ in
+                    completion(.success(false))
+                }
+            }
+        }
+    }
 }

@@ -75,14 +75,48 @@ class ForgotPasswordViewController: UIViewController {
     private func forgotPasswordButtonTapped() {
         guard let email = emailField?.text else { return }
         
-        viewModel.sendPasswordReset(email: email) { [weak self] result in
-            switch result {
-            case .success(let success):
-                self?.navigateToVerificationPage()
-            case .failure(let failure):
-                print("error")
+        viewModel.checkIfEmailExists(email) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(_):
+                    self?.showAlert(
+                        title: "Account Not Found",
+                        message: "We could not find an account associated with the email address \(email)")
+                case .failure(_):
+                    self?.viewModel.sendPasswordReset(email: email) { [weak self] result in
+                        DispatchQueue.main.async {
+                            switch result {
+                            case .success:
+                                self?.showAlert(
+                                    title: "Password Reset Email Sent",
+                                    message: "We have sent a password reset email to \(email)")
+                                self?.clearTextField()
+                            case .failure(let error):
+                                self?.showErrorAlert(
+                                    message: "Failed to send the password reset email. Please try again later")
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+    
+    private func clearTextField() {
+        emailField?.text = ""
+    }
+    
+    private func showErrorAlert(message: String) {
+        let ac = UIAlertController(title: "Incorrect email", message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .default))
+        present(ac, animated: true)
+    }
+    
+    
+    private func showAlert(title: String, message: String) {
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .default))
+        present(ac, animated: true)
     }
     
     private func navigateTologinPage() {
