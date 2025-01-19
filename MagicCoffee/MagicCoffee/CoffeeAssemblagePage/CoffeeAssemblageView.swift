@@ -9,19 +9,10 @@ import SwiftUI
 
 struct CoffeeAssemblageView: View {
     
-    @State private var selectedGrindSize =  0
-    @State private var selectedRoastAmount = 1
-    @State private var selectedIceAmount = 1
-    @State private var isGrindingSelected = false
-    @State private var value = 0.5
-    @State private var selectedMilk = ""
-    @State private var selectedSyrup = ""
-    @State private var isMilkSelectionTapped = false
-    @State private var isSyrupSelectionTapped = false
-    @State private var milkTypes = ["None", "Cow's", "Lactose-free", "Skimmed", "Vegetable"]
-    @State private var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @ObservedObject private var viewModel = OrderViewModel()
+    @State private var sliderValue = 0.0
     
-   
     var body: some View {
         NavigationView {
             VStack {
@@ -49,21 +40,33 @@ struct CoffeeAssemblageView: View {
             }
             .poppinsFont(size: 16)
             .foregroundStyle(.black)
-            .sheet(isPresented: $isMilkSelectionTapped) {
+            .sheet(isPresented: $viewModel.isMilkSelectionTapped) {
                 milkSheet
             }
-            .sheet(isPresented: $isSyrupSelectionTapped) {
+            .sheet(isPresented: $viewModel.isSyrupSelectionTapped) {
                 syrupSheet
             }
         }
+        .navigationTitle("Coffee Lover Assemblage")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: btnBack)
     }
-    
+
+    var btnBack : some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        })  {
+            Image(systemName: "arrow.left")
+                .foregroundStyle(.black)
+        }
+    }
     private var milkSheet: some View {
-        OptionSelectionView(selectedOption: $selectedMilk, title: "What type of milk do you prefer?", options: milkTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes)
     }
     
     private var syrupSheet: some View {
-        OptionSelectionView(selectedOption: $selectedSyrup, title: "What flavor of syrup do you prefer?", options: syrupTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes)
     }
     
     private var totalAmountNextButton: some View {
@@ -115,16 +118,16 @@ struct CoffeeAssemblageView: View {
             HStack(spacing: 20) {
                 Image("smallBean")
                     .renderingMode(.template)
-                    .foregroundColor(selectedGrindSize == 0 ? .black : .gray)
+                    .foregroundColor(viewModel.selectedGrindSize == 0 ? .coffeeBeanColor : .gray)
                     .onTapGesture {
-                        selectedGrindSize = 0
+                        viewModel.selectedGrindSize = 0
                     }
                 
                 Image("bigBean")
                     .renderingMode(.template)
-                    .foregroundColor(selectedGrindSize == 1 ? .black : .gray)
+                    .foregroundColor(viewModel.selectedGrindSize == 1 ? .coffeeBeanColor : .gray)
                     .onTapGesture {
-                        selectedGrindSize = 1
+                        viewModel.selectedGrindSize = 1
                 }
             }
         }
@@ -136,9 +139,9 @@ struct CoffeeAssemblageView: View {
             Text("Syrup")
             Spacer()
             Button(action: {
-                isSyrupSelectionTapped = true
+                viewModel.isSyrupSelectionTapped = true
             }) {
-                Text(selectedSyrup.isEmpty ? "Select" : selectedSyrup)
+                Text(viewModel.selectedSyrup.isEmpty ? "Select" : viewModel.selectedSyrup)
             }
             .foregroundStyle(.black)
         }
@@ -150,9 +153,9 @@ struct CoffeeAssemblageView: View {
             Text("Milk")
             Spacer()
             Button(action: {
-                isMilkSelectionTapped = true
+                viewModel.isMilkSelectionTapped = true
             }) {
-                Text(selectedMilk.isEmpty ? "Select" : selectedMilk)
+                Text(viewModel.selectedMilk.isEmpty ? "Select" : viewModel.selectedMilk)
             }
             .foregroundStyle(.black)
         }
@@ -200,12 +203,18 @@ struct CoffeeAssemblageView: View {
             Text("Coffee type")
             Spacer()
             VStack {
-                Slider(value: $value, in: 0...1)
+                Slider(value: $viewModel.value, in: 0...1)
                     .frame(width: 225)
+                    .accentColor(.fireColor)
                 HStack {
                     Text("Arabica")
+                        .foregroundColor(.black.opacity(max(0.3,1 - viewModel.value)))
+                        .animation(.easeIn, value: viewModel.value)
                     Spacer()
                     Text("Robusta")
+                        .foregroundColor(.black.opacity(max(0.3, viewModel.value)))
+                        .animation(.easeIn, value: viewModel.value)
+
                 }
                 .foregroundStyle(.gray)
                 .padding(.horizontal, 20)
@@ -215,24 +224,24 @@ struct CoffeeAssemblageView: View {
     }
     
     func iceAmountView(amount: Int) -> some View {
-        Button(action: { selectedIceAmount = amount }) {
+        Button(action: { viewModel.selectedIceAmount = amount }) {
             HStack(spacing: 2) {
                 ForEach(0..<amount + 1, id: \.self) { _ in
                     Image("Ice")
                 }
             }
-            .foregroundColor(selectedIceAmount == amount ? .black : .gray)
+            .foregroundColor(viewModel.selectedIceAmount == amount ? .black : .gray)
         }
     }
     
     func roastingAmountView(amount: Int) -> some View {
-        Button(action: { selectedRoastAmount = amount }) {
+        Button(action: { viewModel.selectedRoastAmount = amount }) {
             HStack(spacing: 2) {
                 ForEach(0..<amount + 1, id: \.self) { _ in
                     Image("fire")
                 }
             }
-            .foregroundColor(selectedRoastAmount == amount ? .black : .gray)
+            .foregroundColor(viewModel.selectedRoastAmount == amount ? .fireColor : .gray)
         }
     }
 }
