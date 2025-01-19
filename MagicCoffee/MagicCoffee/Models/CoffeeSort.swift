@@ -7,19 +7,33 @@
 
 import Foundation
 
-
-struct Country: Identifiable {
-    let id = UUID()
+struct Country: Identifiable, Codable {
+    var id = UUID()
     let name: String
-    let coffeeTypes: [City]
+    let cities: [City]
     
-    struct City: Identifiable {
-        let id = UUID()
+    struct City: Identifiable, Codable {
+        var id = UUID()
         let name: String
     }
 }
 
-
-
+struct QuizQuestion: Identifiable, Codable {
+    var id = UUID()
+    
+    let question: String
+    let difficulty: String
+    let category: String
+    let correctAnswer: String
+    let incorrectAnswers: [String]
+    
+    enum CodingKeys: String, CodingKey {
+        case question
+        case difficulty
+        case category
+        case correctAnswer = "correct_answer"
+        case incorrectAnswers = "incorrect_answers"
+    }
+}
 
 
