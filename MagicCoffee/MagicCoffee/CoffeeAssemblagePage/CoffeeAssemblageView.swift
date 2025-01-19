@@ -9,12 +9,11 @@ import SwiftUI
 
 struct CoffeeAssemblageView: View {
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.dismiss) var dismiss: DismissAction
     @ObservedObject private var viewModel = OrderViewModel()
     @State private var sliderValue = 0.0
     
     var body: some View {
-        NavigationView {
             VStack {
                 ScrollView {
                     selectBarista
@@ -46,21 +45,21 @@ struct CoffeeAssemblageView: View {
             .sheet(isPresented: $viewModel.isSyrupSelectionTapped) {
                 syrupSheet
             }
-        }
-        .navigationTitle("Coffee Lover Assemblage")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: btnBack)
+            .navigationTitle("Coffee Lover Assemblage")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: btnBack)
     }
 
     var btnBack : some View {
         Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
+            dismiss()
         })  {
             Image(systemName: "arrow.left")
                 .foregroundStyle(.black)
         }
     }
+    
     private var milkSheet: some View {
         OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes)
     }
@@ -176,7 +175,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var coffeeSort: some View {
-        NavigationLink(destination: Text("Coffee sorting")) {
+        NavigationLink(destination: CoffeeCountryView()) {
             HStack {
                 Text("Coffee sort")
                 Spacer()

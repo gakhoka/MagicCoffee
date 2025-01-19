@@ -10,11 +10,11 @@ import SwiftUI
 struct CoffeeOrderView: View {
     
     @StateObject var viewModel = OrderViewModel()
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.dismiss) var dismiss: DismissAction
+
     var coffee: Coffee
     
     var body: some View {
-        NavigationView {
             VStack {
                 coffeeImage
                 ScrollView {
@@ -30,14 +30,13 @@ struct CoffeeOrderView: View {
                 }
             }
             .poppinsFont(size: 16)
-        }
-        .onAppear {
-            viewModel.coffeeName = coffee.name
-        }
-        .navigationTitle("Order")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: btnBack)
+            .onAppear {
+                viewModel.coffeeName = coffee.name
+            }
+            .navigationTitle("Order")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .navigationBarItems(leading: btnBack)
     }
     
     private var volume: some View {
@@ -153,7 +152,7 @@ struct CoffeeOrderView: View {
     
     private var btnBack : some View {
         Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
+            dismiss()
         })  {
             Image(systemName: "arrow.left")
                 .foregroundStyle(.black)
