@@ -16,8 +16,6 @@ struct CoffeeAssemblageView: View {
     var body: some View {
             VStack {
                 ScrollView {
-                    selectBarista
-                    Divider()
                     coffeeType
                     Divider()
                     coffeeSort
@@ -186,16 +184,6 @@ struct CoffeeAssemblageView: View {
         }
     }
     
-    private var selectBarista: some View {
-        NavigationLink(destination: Text("Barista Selection")) {
-            HStack {
-                Text("Select a barista")
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-        }
-        .padding()
-    }
     
     private var coffeeType: some View {
         HStack(spacing: 15) {
