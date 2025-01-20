@@ -11,7 +11,7 @@ struct CitiesView: View {
     let cities: [Country.City]
 
     @ObservedObject private var viewModel = OrderViewModel()
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
 
     
     var body: some View {
@@ -30,18 +30,7 @@ struct CitiesView: View {
         }
         .scrollContentBackground(.hidden)
         .navigationTitle("Select City")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarItems(leading: btnBack)
-    }
-
-    var btnBack : some View {
-        Button(action: {
-            dismiss()
-        })  {
-            Image(systemName: "arrow.left")
-                .foregroundStyle(.black)
-        }
+        .customBackButton { dismiss() }
     }
 }
 

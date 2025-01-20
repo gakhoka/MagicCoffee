@@ -10,9 +10,8 @@ import SwiftUI
 struct CoffeeCountryView: View {
     
     @ObservedObject private var viewModel = OrderViewModel()
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @Environment(\.dismiss) var dismiss
 
-    
     var body: some View {
             VStack(alignment: .leading) {
                 Spacer()
@@ -31,19 +30,9 @@ struct CoffeeCountryView: View {
             }
             .navigationTitle("Select Country")
             .scrollContentBackground(.hidden)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: btnBack)
+            .customBackButton { dismiss() }
     }
 
-    var btnBack : some View {
-        Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
-        })  {
-            Image(systemName: "arrow.left")
-                .foregroundStyle(.black)
-        }
-    }
 }
 
 #Preview {

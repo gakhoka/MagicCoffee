@@ -51,19 +51,8 @@ struct AdditivesView: View {
             .scrollContentBackground(.hidden)
         }
         .poppinsFont(size: 16)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(leading: backButton)
-    }
-    
-    private var backButton: some View {
-        Button {
-            dismiss()
-        } label: {
-            Image(systemName: "arrow.left")
-                .foregroundStyle(.black)
-        }
-
+        .navigationTitle("Select Additives")
+        .customBackButton { dismiss() }
     }
 
     private func toggleSelection(of additive: String) {
