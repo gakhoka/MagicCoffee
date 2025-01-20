@@ -9,6 +9,7 @@
 import SwiftUI
 
 class OrderViewModel: ObservableObject {
+    var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
     @Published var coffeeCount = 1
     @Published var isOn = false
     @Published var isTakeAway = true

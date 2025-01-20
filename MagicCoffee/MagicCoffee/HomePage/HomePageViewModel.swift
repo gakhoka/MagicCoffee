@@ -103,6 +103,6 @@ class HomePageViewModel: ObservableObject {
         if let displayName = user?.username {
             return displayName
         }
-        return "No username"
+        return ""
     }
 }
