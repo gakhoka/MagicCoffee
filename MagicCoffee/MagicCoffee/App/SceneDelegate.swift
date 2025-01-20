@@ -19,8 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             window = UIWindow(windowScene: windowScene)
             
-            let host = UIHostingController(rootView: CoffeeAssemblageView())
-            let rootViewController = host
+          //  let host = UIHostingController(rootView: TabBarView())
+            let rootViewController = WelcomePageViewController()
             let navigationController = UINavigationController(rootViewController: rootViewController)
             
             window?.rootViewController = navigationController
