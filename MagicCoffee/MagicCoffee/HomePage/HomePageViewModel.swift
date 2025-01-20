@@ -36,13 +36,14 @@ class HomePageViewModel: ObservableObject {
                     let sizeRaw = data["size"] as? String ?? "small"
                     let size = Coffee.CoffeeSize(rawValue: sizeRaw) ?? .small
                     let image = data["image"] as? String ?? ""
-                    let sortRaw = data["sort"] as? [String] ?? []
-                    let grindingRaw = data["grinding"] as? Int ?? 0
+                    let sortRaw = data["sort"] as? String ?? ""
+                    let grindingRaw = data["grinding"] as? String ?? ""
                     let grinding = Coffee.GrindingLevel(rawValue: grindingRaw) ?? .fine
-                    let milk = data["milk"] as? [String]
-                    let syrup = data["syrup"] as? [String]
+                    let milk = data["milk"] as? String
+                    let syrup = data["syrup"] as? String
                     let iceAmount = data["iceAmount"] as? Int ?? 0
                     let roastingLevel = data["roastingLevel"] as? Int ?? 0
+                    let roast = Coffee.RoastingLevel(roastingLevel) ?? .high
                     let additives = data["additives"] as? [String]
                     let score = data["score"] as? Int ?? 0
                     let redeemPointsAmount = data["redeemPointsAmount"] as? Int ?? 0
@@ -54,12 +55,12 @@ class HomePageViewModel: ObservableObject {
                         ristreto: ristreto,
                         size: size,
                         image: image,
-                        sort: sortRaw,
+                        sortByOrigin: sortRaw,
                         grinding: grinding,
                         milk: milk,
                         syrup: syrup,
                         iceAmount: iceAmount,
-                        roastingLevel: roastingLevel,
+                        roastingLevel: roast,
                         additives: additives,
                         score: score,
                         redeemPointsAmount: redeemPointsAmount,

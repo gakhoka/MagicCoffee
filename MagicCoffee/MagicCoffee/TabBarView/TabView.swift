@@ -10,7 +10,7 @@ import SwiftUI
 struct TabBarView: View {
     
     init() {
-        UITabBar.appearance().backgroundColor = .white
+        UITabBar.appearance().backgroundColor = .lightGrayBackground
     }
     
     @State private var selection = 1

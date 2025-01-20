@@ -23,7 +23,7 @@ struct CoffeeOrderView: View {
                     volume
                     ristretto
                     timePicker
-                    NavigationLink(destination: CoffeeAssemblageView()) {
+                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel)) {
                         coffeeLoverAssemblage
                     }
                     nextButton

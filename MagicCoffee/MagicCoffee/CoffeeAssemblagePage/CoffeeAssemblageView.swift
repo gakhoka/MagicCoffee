@@ -10,7 +10,7 @@ import SwiftUI
 struct CoffeeAssemblageView: View {
     
     @Environment(\.dismiss) var dismiss: DismissAction
-    @ObservedObject private var viewModel = OrderViewModel()
+    @ObservedObject var viewModel: OrderViewModel
     @State private var sliderValue = 0.0
     
     var body: some View {
@@ -75,10 +75,20 @@ struct CoffeeAssemblageView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
-            NavigationLink(destination: MyOrderView().navigationBarBackButtonHidden(true)) {
-                Text("Next")
+           
+                Button("Next") {
+                    let order = viewModel.createOrder()
+                    viewModel.uploadOrderToFirebase(order: order) { result in
+                        switch result {
+                        case .success(_):
+                            print("sent")
+                        case .failure(_):
+                            fatalError()
+                        }
+                    }
+                }
                 .nextButtonAppearance()
-            }
+            
         }
     }
     
@@ -95,7 +105,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var additives: some View {
-        NavigationLink(destination: AdditivesView()) {
+        NavigationLink(destination: AdditivesView(viewModel: viewModel)) {
             HStack {
                 Text("Additives")
                 Spacer()
@@ -246,5 +256,5 @@ struct CoffeeAssemblageView: View {
 }
 
 #Preview {
-    CoffeeAssemblageView()
+    CoffeeAssemblageView(viewModel: OrderViewModel())
 }

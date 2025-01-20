@@ -15,3 +15,14 @@ struct Order: Identifiable, Codable {
     let price: Int
     let coffee: [Coffee]
 }
+
+extension Order {
+    func asDictionary() -> [String: Any] {
+        return [
+            "coffeeAmount": coffeeAmount,
+            "isTakeAway": isTakeAway,
+            "price": price,
+            "coffee": coffee.map { $0.asDictionary() }
+        ]
+    }
+}

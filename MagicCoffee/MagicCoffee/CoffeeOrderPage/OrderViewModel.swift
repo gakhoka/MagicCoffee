@@ -5,8 +5,9 @@
 //  Created by Giorgi Gakhokidze on 18.01.25.
 //
 
-
+import FirebaseFirestore
 import SwiftUI
+import FirebaseAuth
 
 class OrderViewModel: ObservableObject {
     var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
@@ -34,6 +35,34 @@ class OrderViewModel: ObservableObject {
     @Published var selectedCity = ""
     
     
+    func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
+        guard  let currentUser = Auth.auth().currentUser else { return }
+        
+        let userId = currentUser.uid
+        let db = Firestore.firestore()
+        let userOrdersRef = db.collection("users").document(userId).collection("orders")
+        
+        let orderData = order.asDictionary()
+        
+        userOrdersRef.addDocument(data: orderData) { error in
+            if let error = error {
+                completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+    }
+    
+    func createOrder() -> Order {
+        var coffees: [Coffee] = []
+        
+        let coffee = Coffee(name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .small, image: "", sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: 5)
+        
+        coffees.append(coffee)
+        
+        let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: 19, coffee: coffees)
+        return order
+    }
     
      func toggleCitySelection(_ city: String) {
         if selectedCity == city {

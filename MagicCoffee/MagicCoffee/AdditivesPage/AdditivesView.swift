@@ -10,7 +10,7 @@ import SwiftUI
 
 struct AdditivesView: View {
     
-    @ObservedObject private var viewModel = OrderViewModel()
+    @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -57,5 +57,5 @@ struct AdditivesView: View {
 }
 
 #Preview {
-    AdditivesView()
+    AdditivesView(viewModel: OrderViewModel())
 }
