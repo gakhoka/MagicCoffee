@@ -14,5 +14,4 @@ struct Order: Identifiable, Codable {
     let isTakeAway: Bool
     let price: Int
     let coffee: [Coffee]
-    let barista: [Barista]
 }

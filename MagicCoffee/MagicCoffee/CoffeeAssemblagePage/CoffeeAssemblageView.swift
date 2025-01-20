@@ -14,43 +14,41 @@ struct CoffeeAssemblageView: View {
     @State private var sliderValue = 0.0
     
     var body: some View {
-            VStack {
-                ScrollView {
-                    selectBarista
-                    Divider()
-                    coffeeType
-                    Divider()
-                    coffeeSort
-                    Divider()
-                    roasting
-                    Divider()
-                    grinding
-                    Divider()
-                    milkType
-                    Divider()
-                    syrup
-                    Divider()
-                    additives
-                    Divider()
-                    ice
-                }
-                .scrollIndicators(.hidden)
-                totalAmountNextButton
+        VStack {
+            ScrollView {
+                coffeeType
+                Divider()
+                coffeeSort
+                Divider()
+                roasting
+                Divider()
+                grinding
+                Divider()
+                milkType
+                Divider()
+                syrup
+                Divider()
+                additives
+                Divider()
+                ice
             }
-            .poppinsFont(size: 16)
-            .foregroundStyle(.black)
-            .sheet(isPresented: $viewModel.isMilkSelectionTapped) {
-                milkSheet
-            }
-            .sheet(isPresented: $viewModel.isSyrupSelectionTapped) {
-                syrupSheet
-            }
-            .navigationTitle("Coffee Lover Assemblage")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: btnBack)
+            .scrollIndicators(.hidden)
+            totalAmountNextButton
+        }
+        .poppinsFont(size: 16)
+        .foregroundStyle(.black)
+        .sheet(isPresented: $viewModel.isMilkSelectionTapped) {
+            milkSheet
+        }
+        .sheet(isPresented: $viewModel.isSyrupSelectionTapped) {
+            syrupSheet
+        }
+        .navigationTitle("Coffee Lover Assemblage")
+        .customBackButton {
+            dismiss()
+        }
     }
-
+    
     var btnBack : some View {
         Button(action: {
             dismiss()
@@ -78,7 +76,7 @@ struct CoffeeAssemblageView: View {
             .font(.system(size: 20))
             .padding(.horizontal, 30)
             Button(action: {
-               //todo
+                //todo
             }) {
                 Text("Next")
             }
@@ -99,7 +97,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var additives: some View {
-        NavigationLink(destination: Text("Additives")) {
+        NavigationLink(destination: AdditivesView()) {
             HStack {
                 Text("Additives")
                 Spacer()
@@ -127,7 +125,7 @@ struct CoffeeAssemblageView: View {
                     .foregroundColor(viewModel.selectedGrindSize == 1 ? .coffeeBeanColor : .gray)
                     .onTapGesture {
                         viewModel.selectedGrindSize = 1
-                }
+                    }
             }
         }
         .padding()
@@ -186,16 +184,6 @@ struct CoffeeAssemblageView: View {
         }
     }
     
-    private var selectBarista: some View {
-        NavigationLink(destination: Text("Barista Selection")) {
-            HStack {
-                Text("Select a barista")
-                Spacer()
-                Image(systemName: "chevron.right")
-            }
-        }
-        .padding()
-    }
     
     private var coffeeType: some View {
         HStack(spacing: 15) {
@@ -213,7 +201,7 @@ struct CoffeeAssemblageView: View {
                     Text("Robusta")
                         .foregroundColor(.black.opacity(max(0.3, viewModel.value)))
                         .animation(.easeIn, value: viewModel.value)
-
+                    
                 }
                 .foregroundStyle(.gray)
                 .padding(.horizontal, 20)

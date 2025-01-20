@@ -34,9 +34,7 @@ struct CoffeeOrderView: View {
                 viewModel.coffeeName = coffee.name
             }
             .navigationTitle("Order")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: btnBack)
+            .customBackButton { dismiss() }
     }
     
     private var volume: some View {
@@ -148,15 +146,6 @@ struct CoffeeOrderView: View {
             
         }
         .padding(.horizontal)
-    }
-    
-    private var btnBack : some View {
-        Button(action: {
-            dismiss()
-        })  {
-            Image(systemName: "arrow.left")
-                .foregroundStyle(.black)
-        }
     }
     
     private var nextButton: some View {
