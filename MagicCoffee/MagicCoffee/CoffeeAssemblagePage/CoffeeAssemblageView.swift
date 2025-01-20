@@ -97,7 +97,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var additives: some View {
-        NavigationLink(destination: Text("Additives")) {
+        NavigationLink(destination: AdditivesView()) {
             HStack {
                 Text("Additives")
                 Spacer()

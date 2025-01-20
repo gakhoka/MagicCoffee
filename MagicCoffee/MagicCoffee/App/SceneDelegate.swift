@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -18,7 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             
             window = UIWindow(windowScene: windowScene)
             
-            let rootViewController = WelcomePageViewController()
+            let host = UIHostingController(rootView: CoffeeAssemblageView())
+            let rootViewController = host
             let navigationController = UINavigationController(rootViewController: rootViewController)
             
             window?.rootViewController = navigationController

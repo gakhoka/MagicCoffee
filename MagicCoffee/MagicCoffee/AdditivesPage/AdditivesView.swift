@@ -10,9 +10,8 @@ import SwiftUI
 
 struct AdditivesView: View {
     
-    let additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
-    
-    @State private var selectedAdditives: [String] = []
+    @ObservedObject private var viewModel = OrderViewModel()
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
@@ -24,14 +23,14 @@ struct AdditivesView: View {
             .padding(.horizontal, 50)
             
             List {
-                ForEach(additives, id: \.self) { additive in
+                ForEach(viewModel.additives, id: \.self) { additive in
                     HStack {
                         Text(additive)
-                            .foregroundColor(selectedAdditives.contains(additive) ? .brown : .black)
-                            .scaleEffect(selectedAdditives.contains(additive) ? 1.1 : 1)
-                            .animation(.easeInOut(duration: 0.4), value: selectedAdditives.contains(additive))
+                            .foregroundColor(viewModel.selectedAdditives.contains(additive) ? .brown : .black)
+                            .scaleEffect(viewModel.selectedAdditives.contains(additive) ? 1.1 : 1)
+                            .animation(.easeInOut(duration: 0.4), value: viewModel.selectedAdditives.contains(additive))
                         Spacer()
-                        if selectedAdditives.contains(additive) {
+                        if viewModel.selectedAdditives.contains(additive) {
                             Image(systemName: "checkmark.circle")
                                 .foregroundColor(.brownColor)
                                 .imageScale(.large)
@@ -52,13 +51,26 @@ struct AdditivesView: View {
             .scrollContentBackground(.hidden)
         }
         .poppinsFont(size: 16)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(leading: backButton)
+    }
+    
+    private var backButton: some View {
+        Button {
+            dismiss()
+        } label: {
+            Image(systemName: "arrow.left")
+                .foregroundStyle(.black)
+        }
+
     }
 
     private func toggleSelection(of additive: String) {
-        if selectedAdditives.contains(additive) {
-            selectedAdditives.removeAll { $0 == additive }
+        if viewModel.selectedAdditives.contains(additive) {
+            viewModel.selectedAdditives.removeAll { $0 == additive }
         } else {
-            selectedAdditives.append(additive)
+            viewModel.selectedAdditives.append(additive)
         }
     }
 }
