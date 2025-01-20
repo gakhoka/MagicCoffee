@@ -44,7 +44,7 @@ struct AdditivesView: View {
                     .contentShape(Rectangle())
                     .padding(6)
                     .onTapGesture {
-                        toggleSelection(of: additive)
+                        viewModel.toggleAdditiveSelection(additive)
                     }
                 }
             }
@@ -53,14 +53,6 @@ struct AdditivesView: View {
         .poppinsFont(size: 16)
         .navigationTitle("Select Additives")
         .customBackButton { dismiss() }
-    }
-
-    private func toggleSelection(of additive: String) {
-        if viewModel.selectedAdditives.contains(additive) {
-            viewModel.selectedAdditives.removeAll { $0 == additive }
-        } else {
-            viewModel.selectedAdditives.append(additive)
-        }
     }
 }
 

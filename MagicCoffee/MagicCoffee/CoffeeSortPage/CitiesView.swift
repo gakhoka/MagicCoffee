@@ -13,7 +13,6 @@ struct CitiesView: View {
     @ObservedObject private var viewModel = OrderViewModel()
     @Environment(\.dismiss) var dismiss
 
-    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading) {
@@ -22,7 +21,32 @@ struct CitiesView: View {
                     .padding()
                 List {
                     ForEach(cities) { city in
-                        Text(city.name)
+                        HStack {
+                            Text(city.name)
+                                .foregroundColor(viewModel.selectedCity == city.name ? .brown : .black)
+                                .scaleEffect(viewModel.selectedCity == city.name ? 1.1 : 1)
+                                .animation(.easeInOut(duration: 0.4), value: viewModel.selectedCity == city.name)
+                                .onTapGesture {
+                                    viewModel.selectedCity = city.name
+                            }
+                            
+                            Spacer()
+                            if viewModel.selectedCity == city.name {
+                                Image(systemName: "checkmark.circle")
+                                    .foregroundColor(.brownColor)
+                                    .imageScale(.large)
+                            } else {
+                                Image(systemName: "circle")
+                                    .foregroundColor(.nardoGray)
+                                    .imageScale(.large)
+                                
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .padding(6)
+                        .onTapGesture {
+                            viewModel.toggleCitySelection(city.name)
+                        }
                     }
                 }
             }

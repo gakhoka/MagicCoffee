@@ -31,6 +31,24 @@ class OrderViewModel: ObservableObject {
     @Published var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
     @Published var additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
     @Published var selectedAdditives = [String]()
+    @Published var selectedCity = ""
     
+    
+    
+     func toggleCitySelection(_ city: String) {
+        if selectedCity == city {
+           selectedCity = ""
+        } else {
+            selectedCity = city
+        }
+    }
+    
+     func toggleAdditiveSelection(_ additive: String) {
+        if selectedAdditives.contains(additive) {
+            selectedAdditives.removeAll { $0 == additive }
+        } else {
+            selectedAdditives.append(additive)
+        }
+    }
 }
 
