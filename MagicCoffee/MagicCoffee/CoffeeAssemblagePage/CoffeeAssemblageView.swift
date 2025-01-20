@@ -75,12 +75,10 @@ struct CoffeeAssemblageView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
-            Button(action: {
-                //todo
-            }) {
+            NavigationLink(destination: MyOrderView().navigationBarBackButtonHidden(true)) {
                 Text("Next")
+                .nextButtonAppearance()
             }
-            .nextButtonAppearance()
         }
     }
     
@@ -231,6 +229,20 @@ struct CoffeeAssemblageView: View {
             .foregroundColor(viewModel.selectedRoastAmount == amount ? .fireColor : .gray)
         }
     }
+    
+    struct MyOrderView: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> MyOrderViewController {
+            let vc = MyOrderViewController()
+            return vc
+        }
+        
+        func updateUIViewController(_ uiViewController: MyOrderViewController, context: Context) {
+            
+        }
+        
+        typealias UIViewControllerType = MyOrderViewController
+    }
+
 }
 
 #Preview {

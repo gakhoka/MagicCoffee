@@ -159,12 +159,10 @@ struct CoffeeOrderView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal)
-            Button(action: {
-                
-            }) {
+            NavigationLink(destination: MyOrderView()                    .navigationBarBackButtonHidden(true)) {
                 Text("Next")
+                    .nextButtonAppearance()
             }
-            .nextButtonAppearance()
         }
     }
     
@@ -213,6 +211,20 @@ struct CoffeeOrderView: View {
             }
         }
     }
+    
+    struct MyOrderView: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> MyOrderViewController {
+            let vc = MyOrderViewController()
+            return vc
+        }
+        
+        func updateUIViewController(_ uiViewController: MyOrderViewController, context: Context) {
+            
+        }
+        
+        typealias UIViewControllerType = MyOrderViewController
+    }
+        
 }
 
 #Preview {

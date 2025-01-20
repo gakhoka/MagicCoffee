@@ -12,6 +12,7 @@ extension View {
     func customBackButton(dismissAction: @escaping () -> Void) -> some View{
         self
             .navigationBarBackButtonHidden(true)
+            .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button(action: {
                 dismissAction()
             }) {

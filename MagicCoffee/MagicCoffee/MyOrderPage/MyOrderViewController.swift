@@ -10,6 +10,8 @@ import SwiftUI
 
 class MyOrderViewController: UIViewController {
     
+    private let leftBarButton = UIButton()
+    
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -39,22 +41,35 @@ class MyOrderViewController: UIViewController {
     }
     
     private func leftBarButtonConfig() {
-        configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
+        
+        var config = UIButton.Configuration.plain()
+        config.image = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(scale: .large))
+        config.imagePadding = 2
+        leftBarButton.configuration = config
+        leftBarButton.translatesAutoresizingMaskIntoConstraints = false
+        leftBarButton.scalesLargeContentImage = true
+        leftBarButton.tintColor = .black
+        leftBarButton.addAction(UIAction(handler: { [weak self] action in
             self?.navigateBack()
-        })
+        }), for: .touchUpInside)
     }
     
     private func navigateBack() {
-       //todo
+        navigationController?.popViewController(animated: true)
     }
     
     private func placeViews() {
         view.addSubview(myOrderLabel)
         view.addSubview(tableView)
+        view.addSubview(leftBarButton)
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            
+            leftBarButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            leftBarButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 5),
+            
             myOrderLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             myOrderLabel.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
             
