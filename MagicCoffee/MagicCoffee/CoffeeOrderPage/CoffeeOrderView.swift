@@ -119,8 +119,10 @@ struct CoffeeOrderView: View {
             Spacer()
             HStack {
                 Button(action: {
-                    if viewModel.coffeeCount > 0 {
+                    if viewModel.coffeeCount > 1 {
                         viewModel.coffeeCount -= 1
+                        viewModel.coffeePrice = viewModel.coffeePrice - coffee.price
+
                     }
                 }) {
                     Image(systemName: "minus")
@@ -134,8 +136,7 @@ struct CoffeeOrderView: View {
                 
                 Button(action: {
                     viewModel.coffeeCount += 1
-                    viewModel.coffeePrice *= Double(viewModel.coffeeCount)
-                    print(viewModel.coffeePrice)
+                    viewModel.coffeePrice = viewModel.coffeePrice + coffee.price
                 }) {
                     Image(systemName: "plus")
                         .foregroundColor(.black)
