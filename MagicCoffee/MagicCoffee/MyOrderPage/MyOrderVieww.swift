@@ -7,17 +7,16 @@
 
 import SwiftUI
 
-struct MyOrderVieww: View {
+struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(alignment: .leading) {
-          
-                Text("My order")
+            
+            Text("My order")
                 .font(.system(size: 24))
                 .padding()
-            
             
             List {
                 ForEach(viewModel.coffees) { coffee in
@@ -34,34 +33,43 @@ struct MyOrderVieww: View {
                                 if coffee.iceAmount > 0 {
                                     Text("iced |")
                                 }
-                             
+                                
                             }
                             .foregroundStyle(.gray)
                             
                             HStack {
-                                Text(coffee.milk ?? "Regular milk")
+                                if coffee.milk  == "" {
+                                    Text("regular milk")
+                                } else {
+                                Text(coffee.milk ?? "")
+                                Text("milk")
+                                }
                                 Text("|")
                                 Text(coffee.syrup ?? "No syrup")
                             }
                             .foregroundStyle(.gray)
-                           
+                            
                             Text("x\(coffee.count)")
                         }
                         .font(.system(size: 16))
-
+                        
                         
                         Spacer()
                         
                         VStack {
                             Text("$ \(coffee.price)")
+                                .foregroundColor(.black)
+                                .padding()
+                                .font(.system(size: 20))
+                            Spacer()
                         }
                     }
                 }
                 .listRowBackground(Color.lightGrayBackground)
-
+                
             }
             .scrollContentBackground(.hidden)
-
+            
         }
         .poppinsFont(size: 16)
         .customBackButton {
@@ -71,5 +79,5 @@ struct MyOrderVieww: View {
 }
 
 #Preview {
-    MyOrderVieww(viewModel: OrderViewModel())
+    MyOrderView(viewModel: OrderViewModel())
 }

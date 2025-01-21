@@ -13,6 +13,7 @@ class OrderViewModel: ObservableObject {
     var coffees: [Coffee] = []
     var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
     @Published var coffeeCount = 1
+    @Published var coffeePrice = 0.0
     @Published var isOn = false
     @Published var isTakeAway = true
     @Published var coffeeName = ""

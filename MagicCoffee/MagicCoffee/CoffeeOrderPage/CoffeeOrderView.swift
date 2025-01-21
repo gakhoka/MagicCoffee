@@ -32,6 +32,7 @@ struct CoffeeOrderView: View {
             .poppinsFont(size: 16)
             .onAppear {
                 viewModel.coffeeName = coffee.name
+                viewModel.coffeePrice = coffee.price
             }
             .navigationTitle("Order")
             .customBackButton { dismiss() }
@@ -157,8 +158,9 @@ struct CoffeeOrderView: View {
                     .padding(.horizontal)
                     
                 Spacer()
-                Text("EUR 6.86")
+                Text(String(format: "%.2f", "$ \(coffee.price)"))
             }
+            
             .font(.system(size: 20))
             .padding(.horizontal)
             NavigationLink(destination: MyOrderView(viewModel: viewModel)                    .navigationBarBackButtonHidden(true)) {
@@ -213,21 +215,6 @@ struct CoffeeOrderView: View {
             }
         }
     }
-    
-    struct MyOrderView: UIViewControllerRepresentable {
-        var viewModel: OrderViewModel
-        func makeUIViewController(context: Context) -> MyOrderViewController {
-            let vc = MyOrderViewController(viewModel: viewModel)
-            return vc
-        }
-        
-        func updateUIViewController(_ uiViewController: MyOrderViewController, context: Context) {
-            
-        }
-        
-        typealias UIViewControllerType = MyOrderViewController
-    }
-        
 }
 
 #Preview {

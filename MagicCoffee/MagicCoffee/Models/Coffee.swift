@@ -25,7 +25,7 @@ struct Coffee: Identifiable, Codable {
     let score: Int
     let redeemPointsAmount: Int
     let validityDate: String
-    let price: Int
+    let price: Double
     
     
     enum CoffeeSize: String, Codable {

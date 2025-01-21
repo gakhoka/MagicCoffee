@@ -49,7 +49,7 @@ class HomePageViewModel: ObservableObject {
                     let score = data["score"] as? Int ?? 0
                     let redeemPointsAmount = data["redeemPointsAmount"] as? Int ?? 0
                     let validityDate = data["validityDate"] as? String ?? ""
-                    let price = data["price"] as? Int ?? 10
+                    let price = data["price"] as? Double ?? 1
                     
                     let coffee = Coffee(
                         count: count, name: name,
