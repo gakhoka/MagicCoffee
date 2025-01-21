@@ -135,11 +135,14 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-     func toggleAdditiveSelection(_ additive: String) {
+    func toggleAdditiveSelection(_ additive: String) {
+        
         if selectedAdditives.contains(additive) {
             selectedAdditives.removeAll { $0 == additive }
+            coffeePrice -= 1 * Double(coffeeCount)
         } else {
             selectedAdditives.append(additive)
+            coffeePrice += 1 * Double(coffeeCount)
         }
     }
 }
