@@ -10,6 +10,17 @@ import SwiftUI
 
 class MyOrderViewController: UIViewController {
     
+    var viewModel: OrderViewModel
+    
+    init(viewModel: OrderViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     private let leftBarButton = UIButton()
     
     private lazy var tableView: UITableView = {
@@ -83,7 +94,7 @@ class MyOrderViewController: UIViewController {
 
 extension MyOrderViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        5
+        viewModel.coffeeCount
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -121,7 +132,7 @@ struct MyOrderviewControllerRepresentable: UIViewControllerRepresentable {
     
     
     func makeUIViewController(context: Context) -> MyOrderViewController {
-        MyOrderViewController()
+        MyOrderViewController(viewModel: OrderViewModel())
     }
     
     func updateUIViewController(_ uiViewController: MyOrderViewController, context: Context) {

@@ -9,6 +9,7 @@ import Foundation
 
 
 struct Coffee: Identifiable, Codable {
+    var count: Int
     var id = UUID()
     let name: String
     let ristreto: Int
@@ -76,7 +77,7 @@ struct Coffee: Identifiable, Codable {
         }
     }
     
-    static let example = Coffee(name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "sd", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6)
+    static let example = Coffee(count: 2, name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "sd", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6)
 }
 
 extension Coffee {

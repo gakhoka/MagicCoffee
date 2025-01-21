@@ -50,9 +50,11 @@ struct CoffeeOrderView: View {
                             .foregroundColor(
                                 viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                             .onTapGesture {
-                                viewModel.volumeSize = viewModel.cupData[key] ?? 1
+                                viewModel.volumeSize = viewModel.cupData[key] ?? 2
+                                print(viewModel.volumeSize)
                             }
-                        Text("\(viewModel.cupData[key] ?? 0)")
+                        
+                        Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))")
                             .font(.headline)
                             .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                     }
@@ -159,7 +161,7 @@ struct CoffeeOrderView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal)
-            NavigationLink(destination: MyOrderView()                    .navigationBarBackButtonHidden(true)) {
+            NavigationLink(destination: MyOrderView(viewModel: viewModel)                    .navigationBarBackButtonHidden(true)) {
                 Text("Next")
                     .nextButtonAppearance()
             }
@@ -213,8 +215,9 @@ struct CoffeeOrderView: View {
     }
     
     struct MyOrderView: UIViewControllerRepresentable {
+        var viewModel: OrderViewModel
         func makeUIViewController(context: Context) -> MyOrderViewController {
-            let vc = MyOrderViewController()
+            let vc = MyOrderViewController(viewModel: viewModel)
             return vc
         }
         

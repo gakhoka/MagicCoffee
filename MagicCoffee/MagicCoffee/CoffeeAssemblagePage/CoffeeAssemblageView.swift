@@ -75,20 +75,18 @@ struct CoffeeAssemblageView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
-           
-                Button("Next") {
-                    let order = viewModel.createOrder()
-                    viewModel.uploadOrderToFirebase(order: order) { result in
-                        switch result {
-                        case .success(_):
-                            print("sent")
-                        case .failure(_):
-                            fatalError()
-                        }
-                    }
-                }
-                .nextButtonAppearance()
             
+            NavigationLink(
+                destination: MyOrderVieww(viewModel: viewModel)
+                    .navigationBarBackButtonHidden(true),
+                label: {
+                    Text("Next").nextButtonAppearance()
+                }
+            )
+            .simultaneousGesture(TapGesture().onEnded {
+                let coffee = viewModel.createCoffee()
+                viewModel.coffees.append(coffee)
+            })
         }
     }
     
@@ -242,7 +240,7 @@ struct CoffeeAssemblageView: View {
     
     struct MyOrderView: UIViewControllerRepresentable {
         func makeUIViewController(context: Context) -> MyOrderViewController {
-            let vc = MyOrderViewController()
+            let vc = MyOrderViewController(viewModel: OrderViewModel())
             return vc
         }
         

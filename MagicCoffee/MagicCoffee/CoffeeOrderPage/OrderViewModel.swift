@@ -10,6 +10,7 @@ import SwiftUI
 import FirebaseAuth
 
 class OrderViewModel: ObservableObject {
+    var coffees: [Coffee] = []
     var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
     @Published var coffeeCount = 1
     @Published var isOn = false
@@ -18,7 +19,7 @@ class OrderViewModel: ObservableObject {
     @Published var numberOfCoffees = 1
     @Published var volumeSize = 1
     @Published var ristrettoSize = 1
-    @Published var cupData = ["smallCup": 250, "mediumCup": 350, "largeCup": 450]
+    @Published var cupData = ["smallCup": 1, "mediumCup": 2, "largeCup": 3]
     @Published var selectedGrindSize =  0
     @Published var selectedRoastAmount = 1
     @Published var selectedIceAmount = 1
@@ -53,13 +54,14 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-    func createOrder() -> Order {
-        var coffees: [Coffee] = []
+    func createCoffee() -> Coffee {
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: "", sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: 5)
         
-        let coffee = Coffee(name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .small, image: "", sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: 5)
         
-        coffees.append(coffee)
-        
+        return coffee
+    }
+    
+    private func createOrder() -> Order {
         let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: 19, coffee: coffees)
         return order
     }

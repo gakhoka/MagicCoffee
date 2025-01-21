@@ -17,7 +17,7 @@ class RedeemViewModel: ObservableObject {
     private func createCoffee() {
         let coffeeItems = [
             Coffee(
-                name: "Latte",
+                count: 2, name: "Latte",
                 ristreto: 0,
                 size: .medium,
                 image: "coffee1",
@@ -33,7 +33,7 @@ class RedeemViewModel: ObservableObject {
                 validityDate: "04.07.21", price: 2
             ),
             Coffee(
-                name: "Cappuccino",
+                count: 2, name: "Cappuccino",
                 ristreto: 0,
                 size: .medium,
                 image: "coffee1",

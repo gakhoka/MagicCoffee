@@ -31,6 +31,7 @@ class HomePageViewModel: ObservableObject {
                 for document in snapshot.documents {
                     let data = document.data()
                     
+                    let count = data["count"] as? Int ?? 1
                     let name = data["name"] as? String ?? ""
                     let ristreto = data["ristreto"] as? Int ?? 0
                     let sizeRaw = data["size"] as? String ?? "small"
@@ -51,7 +52,7 @@ class HomePageViewModel: ObservableObject {
                     let price = data["price"] as? Int ?? 10
                     
                     let coffee = Coffee(
-                        name: name,
+                        count: count, name: name,
                         ristreto: ristreto,
                         size: size,
                         image: image,
