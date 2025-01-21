@@ -23,7 +23,7 @@ struct CoffeeOrderView: View {
                     volume
                     ristretto
                     timePicker
-                    NavigationLink(destination: CoffeeAssemblageView()) {
+                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel)) {
                         coffeeLoverAssemblage
                     }
                     nextButton
@@ -32,6 +32,7 @@ struct CoffeeOrderView: View {
             .poppinsFont(size: 16)
             .onAppear {
                 viewModel.coffeeName = coffee.name
+                viewModel.coffeePrice = coffee.price
             }
             .navigationTitle("Order")
             .customBackButton { dismiss() }
@@ -50,9 +51,11 @@ struct CoffeeOrderView: View {
                             .foregroundColor(
                                 viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                             .onTapGesture {
-                                viewModel.volumeSize = viewModel.cupData[key] ?? 1
+                                viewModel.volumeSize = viewModel.cupData[key] ?? 2
+                                print(viewModel.volumeSize)
                             }
-                        Text("\(viewModel.cupData[key] ?? 0)")
+                        
+                        Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))")
                             .font(.headline)
                             .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                     }
@@ -155,16 +158,15 @@ struct CoffeeOrderView: View {
                     .padding(.horizontal)
                     
                 Spacer()
-                Text("EUR 6.86")
+                Text(String(format: "%.2f", "$ \(coffee.price)"))
             }
+            
             .font(.system(size: 20))
             .padding(.horizontal)
-            Button(action: {
-                
-            }) {
+            NavigationLink(destination: MyOrderView(viewModel: viewModel)                    .navigationBarBackButtonHidden(true)) {
                 Text("Next")
+                    .nextButtonAppearance()
             }
-            .nextButtonAppearance()
         }
     }
     

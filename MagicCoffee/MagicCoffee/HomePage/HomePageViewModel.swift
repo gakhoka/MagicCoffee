@@ -31,35 +31,37 @@ class HomePageViewModel: ObservableObject {
                 for document in snapshot.documents {
                     let data = document.data()
                     
+                    let count = data["count"] as? Int ?? 1
                     let name = data["name"] as? String ?? ""
                     let ristreto = data["ristreto"] as? Int ?? 0
                     let sizeRaw = data["size"] as? String ?? "small"
                     let size = Coffee.CoffeeSize(rawValue: sizeRaw) ?? .small
                     let image = data["image"] as? String ?? ""
-                    let sortRaw = data["sort"] as? [String] ?? []
-                    let grindingRaw = data["grinding"] as? Int ?? 0
+                    let sortRaw = data["sort"] as? String ?? ""
+                    let grindingRaw = data["grinding"] as? String ?? ""
                     let grinding = Coffee.GrindingLevel(rawValue: grindingRaw) ?? .fine
-                    let milk = data["milk"] as? [String]
-                    let syrup = data["syrup"] as? [String]
+                    let milk = data["milk"] as? String
+                    let syrup = data["syrup"] as? String
                     let iceAmount = data["iceAmount"] as? Int ?? 0
                     let roastingLevel = data["roastingLevel"] as? Int ?? 0
+                    let roast = Coffee.RoastingLevel(roastingLevel) ?? .high
                     let additives = data["additives"] as? [String]
                     let score = data["score"] as? Int ?? 0
                     let redeemPointsAmount = data["redeemPointsAmount"] as? Int ?? 0
                     let validityDate = data["validityDate"] as? String ?? ""
-                    let price = data["price"] as? Int ?? 10
+                    let price = data["price"] as? Double ?? 1
                     
                     let coffee = Coffee(
-                        name: name,
+                        count: count, name: name,
                         ristreto: ristreto,
                         size: size,
                         image: image,
-                        sort: sortRaw,
+                        sortByOrigin: sortRaw,
                         grinding: grinding,
                         milk: milk,
                         syrup: syrup,
                         iceAmount: iceAmount,
-                        roastingLevel: roastingLevel,
+                        roastingLevel: roast,
                         additives: additives,
                         score: score,
                         redeemPointsAmount: redeemPointsAmount,

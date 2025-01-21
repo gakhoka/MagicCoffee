@@ -15,6 +15,8 @@ extension UIColor {
     static let tabItemColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
     static let lightRed = UIColor(red: 255/255, green: 229/255, blue: 229/255, alpha: 1)
     static let forestGreen = UIColor(red: 46/255, green: 111/255, blue: 64/255, alpha: 1)
+    static let lightGrayBackground = UIColor(red: 247 / 255, green: 248 / 255, blue: 247 / 255, alpha: 1)
+
 }
 
 extension Color {
@@ -27,4 +29,5 @@ extension Color {
     static let fireColor = Color(red: 128 / 255, green: 0 / 255, blue: 0 / 255)
     static let darkRed = Color(red: 191 / 255, green: 1 / 255, blue: 1 / 255)
     static let coffeeBeanColor = Color(red: 110 / 255, green: 78 / 255, blue: 54 / 255)
+    static let lightGrayBackground = Color(red: 247 / 255, green: 248 / 255, blue: 247 / 255)
 }

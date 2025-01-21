@@ -10,7 +10,7 @@ import SwiftUI
 struct CoffeeAssemblageView: View {
     
     @Environment(\.dismiss) var dismiss: DismissAction
-    @ObservedObject private var viewModel = OrderViewModel()
+    @ObservedObject var viewModel: OrderViewModel
     @State private var sliderValue = 0.0
     
     var body: some View {
@@ -75,12 +75,18 @@ struct CoffeeAssemblageView: View {
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
-            Button(action: {
-                //todo
-            }) {
-                Text("Next")
-            }
-            .nextButtonAppearance()
+            
+            NavigationLink(
+                destination: MyOrderView(viewModel: viewModel)
+                    .navigationBarBackButtonHidden(true),
+                label: {
+                    Text("Next").nextButtonAppearance()
+                }
+            )
+            .simultaneousGesture(TapGesture().onEnded {
+                let coffee = viewModel.createCoffee()
+                viewModel.coffees.append(coffee)
+            })
         }
     }
     
@@ -97,7 +103,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var additives: some View {
-        NavigationLink(destination: AdditivesView()) {
+        NavigationLink(destination: AdditivesView(viewModel: viewModel)) {
             HStack {
                 Text("Additives")
                 Spacer()
@@ -234,5 +240,5 @@ struct CoffeeAssemblageView: View {
 }
 
 #Preview {
-    CoffeeAssemblageView()
+    CoffeeAssemblageView(viewModel: OrderViewModel())
 }
