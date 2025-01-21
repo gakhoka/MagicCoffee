@@ -33,6 +33,8 @@ struct CoffeeOrderView: View {
             .onAppear {
                 viewModel.coffeeName = coffee.name
                 viewModel.coffeePrice = coffee.price
+                print("\(coffee.price)")
+
             }
             .navigationTitle("Order")
             .customBackButton { dismiss() }
@@ -51,8 +53,7 @@ struct CoffeeOrderView: View {
                             .foregroundColor(
                                 viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                             .onTapGesture {
-                                viewModel.volumeSize = viewModel.cupData[key] ?? 2
-                                print(viewModel.volumeSize)
+                                viewModel.updatePriceForSize(newSize: viewModel.cupData[key] ?? 1)
                             }
                         
                         Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))")
@@ -96,25 +97,20 @@ struct CoffeeOrderView: View {
             HStack {
                 Text("One")
                     .capsuleButton()
-                    .foregroundStyle(viewModel.ristrettoSize == 1  ? .black : .gray)
-                .onTapGesture {
-                    viewModel.ristrettoSize = 1
-                }
-                    
+                    .foregroundStyle(viewModel.ristrettoSize == 1 ? .black : .gray)
+                    .onTapGesture {
+                        viewModel.updateRistrettoOption(option: 1)
+                    }
                 
                 Text("Two")
                     .capsuleButton()
-                    .foregroundStyle(viewModel.ristrettoSize == 1  ? .gray : .black)
-                .onTapGesture {
-                    viewModel.ristrettoSize = 2
-                }
-
+                    .foregroundStyle(viewModel.ristrettoSize == 2 ? .black : .gray)
+                    .onTapGesture {
+                        viewModel.updateRistrettoOption(option: 2)
+                    }
             }
         }
-        .padding(.horizontal)
     }
-    
-
     
     private var coffeeAmount: some View {
         HStack {
@@ -138,6 +134,8 @@ struct CoffeeOrderView: View {
                 
                 Button(action: {
                     viewModel.coffeeCount += 1
+                    viewModel.coffeePrice *= Double(viewModel.coffeeCount)
+                    print(viewModel.coffeePrice)
                 }) {
                     Image(systemName: "plus")
                         .foregroundColor(.black)
@@ -158,7 +156,7 @@ struct CoffeeOrderView: View {
                     .padding(.horizontal)
                     
                 Spacer()
-                Text(String(format: "%.2f", "$ \(coffee.price)"))
+                Text(String(format: "%.2f", viewModel.coffeePrice))
             }
             
             .font(.system(size: 20))

@@ -67,6 +67,37 @@ class OrderViewModel: ObservableObject {
         return order
     }
     
+    func updatePriceForSize(newSize: Int) {
+        let oldSize = volumeSize
+        
+        if oldSize == 2 {
+            coffeePrice -= 0.5 * Double(coffeeCount)
+        } else if oldSize == 3 {
+            coffeePrice -= 1.0 * Double(coffeeCount)
+        }
+        
+        if newSize == 2 {
+            coffeePrice += 0.5 * Double(coffeeCount)
+        } else if newSize == 3 {
+            coffeePrice += 1.0 * Double(coffeeCount)
+        }
+        volumeSize = newSize
+    }
+    
+    func updateRistrettoOption(option: Int) {
+        let oldRistretto = ristrettoSize
+          
+        if oldRistretto == 2 {
+            coffeePrice -= 0.3 * Double(coffeeCount)
+          }
+          
+          if option == 2 {
+              coffeePrice += 0.3 * Double(coffeeCount)
+          }
+          
+        ristrettoSize = option
+      }
+
      func toggleCitySelection(_ city: String) {
         if selectedCity == city {
            selectedCity = ""
