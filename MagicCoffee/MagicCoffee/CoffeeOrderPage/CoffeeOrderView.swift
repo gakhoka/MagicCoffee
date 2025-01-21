@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CoffeeOrderView: View {
     
-    @StateObject var viewModel = OrderViewModel()
+    @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss: DismissAction
 
     var coffee: Coffee
@@ -23,26 +23,34 @@ struct CoffeeOrderView: View {
                     volume
                     ristretto
                     timePicker
-                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel)) {
+                    totalAmount
+                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, coffee: coffee)) {
                         coffeeLoverAssemblage
                     }
-                    nextButton
                 }
+                .scrollIndicators(.hidden)
             }
             .poppinsFont(size: 16)
-            .onAppear {
-                viewModel.coffeeName = coffee.name
-                viewModel.coffeePrice = coffee.price
-                print("\(coffee.price)")
-
-            }
+            .onAppear(perform: resetCoffee)
             .navigationTitle("Order")
             .customBackButton { dismiss() }
     }
     
+    func resetCoffee() {
+        if viewModel.coffeeName != coffee.name {
+            viewModel.coffeeName = coffee.name
+            viewModel.coffeePrice = coffee.price
+            viewModel.coffeeCount = 1
+            viewModel.volumeSize = 1
+            viewModel.ristrettoSize = 1
+            viewModel.coffeeImage = coffee.image
+        }
+    }
+    
+    
     private var volume: some View {
         HStack {
-            Text("Volume, ml")
+            Text("Cup size")
                 .padding()
             Spacer()
             HStack(alignment: .bottom, spacing: 30) {
@@ -56,8 +64,8 @@ struct CoffeeOrderView: View {
                                 viewModel.updatePriceForSize(newSize: viewModel.cupData[key] ?? 1)
                             }
                         
-                        Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))")
-                            .font(.headline)
+                        Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))ml")
+                            .font(.body)
                             .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                     }
                 }
@@ -110,6 +118,7 @@ struct CoffeeOrderView: View {
                     }
             }
         }
+        .padding(.horizontal)
     }
     
     private var coffeeAmount: some View {
@@ -150,29 +159,24 @@ struct CoffeeOrderView: View {
         .padding(.horizontal)
     }
     
-    private var nextButton: some View {
-        VStack {
-            HStack {
-                Text("Total Amount")
-                    .padding(.horizontal)
-                    
-                Spacer()
-                Text(String(format: "%.2f", viewModel.coffeePrice))
-            }
+    private var totalAmount: some View {
+        HStack {
+            Text("Total Amount")
+                .padding(.horizontal)
             
-            .font(.system(size: 20))
-            .padding(.horizontal)
-            NavigationLink(destination: MyOrderView(viewModel: viewModel)                    .navigationBarBackButtonHidden(true)) {
-                Text("Next")
-                    .nextButtonAppearance()
-            }
+            Spacer()
+            Text("$")
+            Text(String(format: "%.2f", viewModel.coffeePrice))
         }
+        .font(.system(size: 20))
+        .padding()
     }
     
     private var timePicker: some View {
-        HStack() {
-            Text("Prepare by a certain time today?")
+        HStack {
+            Text("Prepare for a certain time?")
                 .padding()
+            Spacer()
             VStack {
                 Toggle(isOn: $viewModel.isOn) {
                     
@@ -180,6 +184,7 @@ struct CoffeeOrderView: View {
                 .frame(width: 60)
             }
         }
+        .padding()
     }
     
     private var coffeeLoverAssemblage: some View {
@@ -217,6 +222,6 @@ struct CoffeeOrderView: View {
 }
 
 #Preview {
-    CoffeeOrderView(coffee: .example)
+    CoffeeOrderView(viewModel: OrderViewModel(), coffee: .example)
 }
 

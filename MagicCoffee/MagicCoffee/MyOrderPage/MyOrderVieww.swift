@@ -10,7 +10,9 @@ import SwiftUI
 struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    var coffee: Coffee?
     
+    let coffese = [Coffee(count: 1, name: "espresso", ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "lactosee", syrup: "macha", iceAmount: 1, roastingLevel: .high, additives: ["nutmeg"], score: 1, redeemPointsAmount: 1, validityDate: "", price: 5.25)]
     var body: some View {
         VStack(alignment: .leading) {
             
@@ -21,7 +23,13 @@ struct MyOrderView: View {
             List {
                 ForEach(viewModel.coffees) { coffee in
                     HStack {
-                        Image("coffee1")
+                        if let imageUrl = URL(string: coffee.image) {
+                            AsyncImage(url: imageUrl) { image in
+                                image.image?.resizable()
+                                    .scaledToFit()
+                                    .frame(width: 100, height: 100)
+                            }
+                        }
                         VStack(alignment: .leading, spacing: 10) {
                             Text(coffee.name)
                                 .font(.system(size: 18))
@@ -41,8 +49,8 @@ struct MyOrderView: View {
                                 if coffee.milk  == "" {
                                     Text("regular milk")
                                 } else {
-                                Text(coffee.milk ?? "")
-                                Text("milk")
+                                    Text(coffee.milk ?? "")
+                                    Text("milk")
                                 }
                                 Text("|")
                                 Text(coffee.syrup ?? "No syrup")
@@ -57,12 +65,16 @@ struct MyOrderView: View {
                         Spacer()
                         
                         VStack {
-                            Text("$ \(coffee.price)")
-                                .foregroundColor(.black)
-                                .padding()
-                                .font(.system(size: 20))
+                            Text("$")
+                            HStack(spacing: 0) {
+                                
+                                Text(String(format: "%.2f", coffee.price))
+                                    .foregroundColor(.black)
+                                    .font(.system(size: 20))
+                            }
                             Spacer()
                         }
+                        .padding(.top)
                     }
                 }
                 .listRowBackground(Color.lightGrayBackground)

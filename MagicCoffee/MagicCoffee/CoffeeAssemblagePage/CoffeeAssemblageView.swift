@@ -12,6 +12,7 @@ struct CoffeeAssemblageView: View {
     @Environment(\.dismiss) var dismiss: DismissAction
     @ObservedObject var viewModel: OrderViewModel
     @State private var sliderValue = 0.0
+    var coffee: Coffee
     
     var body: some View {
         VStack {
@@ -71,13 +72,14 @@ struct CoffeeAssemblageView: View {
             HStack {
                 Text("Total Amount")
                 Spacer()
-                Text("EUR 6.86")
+                Text("$")
+                Text(String(format: "%.2f", viewModel.coffeePrice))
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
             
             NavigationLink(
-                destination: MyOrderView(viewModel: viewModel)
+                destination: MyOrderView(viewModel: viewModel, coffee: coffee)
                     .navigationBarBackButtonHidden(true),
                 label: {
                     Text("Next").nextButtonAppearance()
@@ -240,5 +242,5 @@ struct CoffeeAssemblageView: View {
 }
 
 #Preview {
-    CoffeeAssemblageView(viewModel: OrderViewModel())
+    CoffeeAssemblageView(viewModel: OrderViewModel(), coffee: .example)
 }

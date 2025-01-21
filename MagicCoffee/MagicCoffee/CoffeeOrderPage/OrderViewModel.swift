@@ -35,6 +35,7 @@ class OrderViewModel: ObservableObject {
     @Published var additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
     @Published var selectedAdditives = [String]()
     @Published var selectedCity = ""
+    @Published var coffeeImage = ""
     
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
@@ -56,9 +57,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: "", sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: 5)
-        
-        
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: coffeePrice)
         return coffee
     }
     
