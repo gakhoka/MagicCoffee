@@ -60,11 +60,15 @@ struct CoffeeAssemblageView: View {
     }
     
     private var milkSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes) { milk in
+            viewModel.updatePriceForMilk(milk)
+        }
     }
     
     private var syrupSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes) { syrup in
+            viewModel.updatePriceForSyrup(syrup)
+        }
     }
     
     private var totalAmountNextButton: some View {

@@ -30,12 +30,15 @@ class OrderViewModel: ObservableObject {
     @Published var selectedSyrup = ""
     @Published var isMilkSelectionTapped = false
     @Published var isSyrupSelectionTapped = false
-    @Published var milkTypes = ["None", "Cow's", "Lactose-free", "Skimmed", "Vegetable"]
+    @Published var milkTypes = ["None", "Regular", "Lactose-free", "Skimmed", "Vegetable"]
     @Published var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
     @Published var additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
     @Published var selectedAdditives = [String]()
     @Published var selectedCity = ""
     @Published var coffeeImage = ""
+    private var previousMilk = "None"
+    private var previousSyrup = "None"
+
     
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
@@ -65,6 +68,33 @@ class OrderViewModel: ObservableObject {
         let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: 19, coffee: coffees)
         return order
     }
+    
+    func updatePriceForMilk(_ milkType: String) {
+
+        if previousMilk == "None" && milkType != "None" {
+            coffeePrice += 0.5 * Double(coffeeCount)
+        }
+        else if previousMilk != "None" && milkType == "None" {
+            coffeePrice -= 0.5 * Double(coffeeCount)
+        }
+        
+        previousMilk = selectedMilk
+        selectedMilk = milkType
+    }
+    
+    func updatePriceForSyrup(_ syrupType: String) {
+
+        if previousSyrup == "None" && syrupType != "None" {
+            coffeePrice += 0.3 * Double(coffeeCount)
+        }
+        else if previousSyrup != "None" && syrupType == "None" {
+            coffeePrice -= 0.3 * Double(coffeeCount)
+        }
+        
+        previousSyrup = selectedSyrup
+        selectedSyrup = syrupType
+    }
+
     
     func updatePriceForSize(newSize: Int) {
         let oldSize = volumeSize

@@ -14,6 +14,7 @@ struct OptionSelectionView: View {
     
     let title: String
     let options: [String]
+    var onSelect: ((String) -> Void)?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -26,6 +27,7 @@ struct OptionSelectionView: View {
                 ForEach(options, id: \.self) { option in
                     Button(action: {
                         selectedOption = option
+                        onSelect?(option)
                         dismiss()
                     }) {
                         Text(option)

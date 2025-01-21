@@ -11,8 +11,8 @@ struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     var coffee: Coffee?
+
     
-    let coffese = [Coffee(count: 1, name: "espresso", ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "lactosee", syrup: "macha", iceAmount: 1, roastingLevel: .high, additives: ["nutmeg"], score: 1, redeemPointsAmount: 1, validityDate: "", price: 5.25)]
     var body: some View {
         VStack(alignment: .leading) {
             
