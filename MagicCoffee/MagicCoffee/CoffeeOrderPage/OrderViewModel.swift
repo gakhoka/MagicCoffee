@@ -100,6 +100,11 @@ class OrderViewModel: ObservableObject {
         totalcoffeeCount = totalCoffees
     }
     
+    func removeOrder(_ coffee: Coffee) {
+        coffees.removeAll { $0.id == coffee.id }
+        updateTotalCoffeeCount()
+        updateTotalPrice()
+    }
     
     private func updateTotalPrice() {
         let sumOfPrices = coffees.reduce(0.0) { partialResult, coffee in

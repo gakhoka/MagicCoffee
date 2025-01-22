@@ -76,9 +76,16 @@ struct MyOrderView: View {
                         }
                         .padding(.top)
                     }
+                    .swipeActions {
+                        Button {
+                            viewModel.removeOrder(coffee)
+                        } label: {
+                            Image("TrashCan")
+                        }
+                        .tint(.lightRed)
+                    }
                 }
                 .listRowBackground(Color.lightGrayBackground)
-                
             }
             .scrollContentBackground(.hidden)
             
