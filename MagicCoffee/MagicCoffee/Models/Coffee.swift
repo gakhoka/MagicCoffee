@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct Coffee: Identifiable, Codable {
+struct Coffee: Identifiable, Codable, Hashable {
     var count: Int
     var id = UUID()
     let name: String
@@ -83,6 +83,7 @@ struct Coffee: Identifiable, Codable {
 extension Coffee {
     func asDictionary() -> [String: Any] {
         return [
+            "count": count,
             "name": name,
             "ristretto": ristreto,
             "size": size.rawValue,

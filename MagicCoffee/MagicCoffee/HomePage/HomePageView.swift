@@ -12,6 +12,7 @@ struct HomePageView: View {
     let columns = Array(repeating: GridItem(.flexible()), count: 2)
 
     @StateObject var viewModel = HomePageViewModel()
+    @StateObject var orderViewModel = OrderViewModel()
     
     var body: some View {
         NavigationView {
@@ -26,7 +27,7 @@ struct HomePageView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.coffees, id: \.id) { coffee in
-                                NavigationLink(destination: CoffeeOrderView(coffee: coffee)) {
+                                NavigationLink(destination: CoffeeOrderView(viewModel: orderViewModel, coffee: coffee)) {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 25)
                                             .fill(.white)

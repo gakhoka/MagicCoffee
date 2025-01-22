@@ -12,6 +12,7 @@ struct CoffeeAssemblageView: View {
     @Environment(\.dismiss) var dismiss: DismissAction
     @ObservedObject var viewModel: OrderViewModel
     @State private var sliderValue = 0.0
+    var coffee: Coffee
     
     var body: some View {
         VStack {
@@ -59,11 +60,15 @@ struct CoffeeAssemblageView: View {
     }
     
     private var milkSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes) { milk in
+            viewModel.updatePriceForMilk(milk)
+        }
     }
     
     private var syrupSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes)
+        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes) { syrup in
+            viewModel.updatePriceForSyrup(syrup)
+        }
     }
     
     private var totalAmountNextButton: some View {
@@ -71,21 +76,22 @@ struct CoffeeAssemblageView: View {
             HStack {
                 Text("Total Amount")
                 Spacer()
-                Text("EUR 6.86")
+                Text("$")
+                Text(String(format: "%.2f", viewModel.coffeePrice))
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)
             
             NavigationLink(
-                destination: MyOrderView(viewModel: viewModel)
+                destination: MyOrderView(viewModel: viewModel, coffee: coffee)
+                    .toolbar(.hidden, for: .tabBar)
                     .navigationBarBackButtonHidden(true),
                 label: {
                     Text("Next").nextButtonAppearance()
                 }
             )
             .simultaneousGesture(TapGesture().onEnded {
-                let coffee = viewModel.createCoffee()
-                viewModel.coffees.append(coffee)
+                viewModel.addCoffee()
             })
         }
     }
@@ -240,5 +246,5 @@ struct CoffeeAssemblageView: View {
 }
 
 #Preview {
-    CoffeeAssemblageView(viewModel: OrderViewModel())
+    CoffeeAssemblageView(viewModel: OrderViewModel(), coffee: .example)
 }

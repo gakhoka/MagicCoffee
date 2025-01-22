@@ -30,11 +30,17 @@ class OrderViewModel: ObservableObject {
     @Published var selectedSyrup = ""
     @Published var isMilkSelectionTapped = false
     @Published var isSyrupSelectionTapped = false
-    @Published var milkTypes = ["None", "Cow's", "Lactose-free", "Skimmed", "Vegetable"]
+    @Published var milkTypes = ["None", "Regular", "Lactose-free", "Skimmed", "Vegetable"]
     @Published var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
     @Published var additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
     @Published var selectedAdditives = [String]()
     @Published var selectedCity = ""
+    @Published var coffeeImage = ""
+    @Published var total = 0.0
+    @Published var totalcoffeeCount = 0
+    private var previousMilk = "None"
+    private var previousSyrup = "None"
+
     
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
@@ -55,18 +61,111 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-    func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: "", sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: 5)
-        
-        
-        return coffee
+    func placeOrder() {
+        uploadOrderToFirebase(order: createOrder()) { result in
+            switch result {
+            case .success(_):
+                print("order is sent")
+                print(self.totalcoffeeCount)
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
     }
     
-    private func createOrder() -> Order {
-        let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: 19, coffee: coffees)
+
+    func addCoffee() {
+        let coffee = createCoffee()
+        coffees.append(coffee)
+        updateTotalPrice()
+        updateTotalCoffeeCount()
+    }
+    
+    private func createCoffee() -> Coffee {
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) / 5, redeemPointsAmount: 0, validityDate: "", price: coffeePrice)
+        return coffee
+        
+    }
+    
+     func createOrder() -> Order {
+        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
         return order
     }
     
+    private func updateTotalCoffeeCount() {
+        let totalCoffees = coffees.reduce(0) { partialResult, coffee in
+            partialResult + coffee.count
+        }
+        
+        totalcoffeeCount = totalCoffees
+    }
+    
+    
+    private func updateTotalPrice() {
+        let sumOfPrices = coffees.reduce(0.0) { partialResult, coffee in
+            partialResult + coffee.price
+        }
+        total = sumOfPrices
+    }
+    
+    func updatePriceForMilk(_ milkType: String) {
+
+        if previousMilk == "None" && milkType != "None" {
+            coffeePrice += 0.5 * Double(coffeeCount)
+        }
+        else if previousMilk != "None" && milkType == "None" {
+            coffeePrice -= 0.5 * Double(coffeeCount)
+        }
+        
+        previousMilk = selectedMilk
+        selectedMilk = milkType
+    }
+    
+    func updatePriceForSyrup(_ syrupType: String) {
+
+        if previousSyrup == "None" && syrupType != "None" {
+            coffeePrice += 0.3 * Double(coffeeCount)
+        }
+        else if previousSyrup != "None" && syrupType == "None" {
+            coffeePrice -= 0.3 * Double(coffeeCount)
+        }
+        
+        previousSyrup = selectedSyrup
+        selectedSyrup = syrupType
+    }
+
+    
+    func updatePriceForSize(newSize: Int) {
+        let oldSize = volumeSize
+        
+        if oldSize == 2 {
+            coffeePrice -= 0.5 * Double(coffeeCount)
+        } else if oldSize == 3 {
+            coffeePrice -= 1.0 * Double(coffeeCount)
+        }
+        
+        if newSize == 2 {
+            coffeePrice += 0.5 * Double(coffeeCount)
+        } else if newSize == 3 {
+            coffeePrice += 1.0 * Double(coffeeCount)
+        }
+        volumeSize = newSize
+    }
+    
+    func updateRistrettoOption(option: Int) {
+        let oldRistretto = ristrettoSize
+          
+        if oldRistretto == 2 {
+            coffeePrice -= 0.3 * Double(coffeeCount)
+          }
+          
+          if option == 2 {
+              coffeePrice += 0.3 * Double(coffeeCount)
+          }
+          
+        ristrettoSize = option
+      }
+
      func toggleCitySelection(_ city: String) {
         if selectedCity == city {
            selectedCity = ""
@@ -75,11 +174,14 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-     func toggleAdditiveSelection(_ additive: String) {
+    func toggleAdditiveSelection(_ additive: String) {
+        
         if selectedAdditives.contains(additive) {
             selectedAdditives.removeAll { $0 == additive }
+            coffeePrice -= 1 * Double(coffeeCount)
         } else {
             selectedAdditives.append(additive)
+            coffeePrice += 1 * Double(coffeeCount)
         }
     }
 }
