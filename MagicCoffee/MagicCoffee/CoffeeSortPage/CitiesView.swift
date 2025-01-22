@@ -8,10 +8,11 @@
 import SwiftUI
 
 struct CitiesView: View {
-    let cities: [Country.City]
-
-    @ObservedObject private var viewModel = OrderViewModel()
+    
+    @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
+    let cities: [Country.City]
 
     var body: some View {
         NavigationView {
@@ -59,5 +60,5 @@ struct CitiesView: View {
 }
 
 #Preview {
-    CitiesView(cities: [Country.City(name: "")])
+    CitiesView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), cities: [Country.City(name: "")])
 }

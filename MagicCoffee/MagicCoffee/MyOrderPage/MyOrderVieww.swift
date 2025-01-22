@@ -12,7 +12,7 @@ struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
-    var coffee: Coffee?
+    var coffee: Coffee
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,6 +25,7 @@ struct MyOrderView: View {
             
                 Button {
                     path = NavigationPath()
+                    viewModel.resetCoffee(coffee: coffee)
                 } label: {
                     HStack {
                         Image("coffeecupicon")
@@ -46,8 +47,17 @@ struct MyOrderView: View {
                             }
                         }
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(coffee.name)
-                                .font(.system(size: 18))
+                            HStack {
+                                Text(coffee.name)
+                                    .font(.system(size: 18))
+                                Spacer()
+                                HStack(spacing: 0) {
+                                    Text("$")
+                                    Text(String(format: "%.2f", coffee.price))
+                                        .foregroundColor(.black)
+                                }
+                                .font(.system(size: 16 ))
+                            }
                             HStack {
                                 Text(coffee.size.rawValue)
                                 Text("|")
@@ -76,19 +86,7 @@ struct MyOrderView: View {
                         }
                         .font(.system(size: 16))
                         
-                        
                         Spacer()
-                        
-                        VStack {
-                            HStack(spacing: 0) {
-                                Text("$")
-                                Text(String(format: "%.2f", coffee.price))
-                                    .foregroundColor(.black)
-                            }
-                            .font(.system(size: 16 ))
-                            Spacer()
-                        }
-                        .padding(.top)
                     }
                     .swipeActions {
                         Button {
@@ -137,5 +135,5 @@ struct MyOrderView: View {
 }
 
 #Preview {
-    MyOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
+    MyOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), coffee: .example)
 }
