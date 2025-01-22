@@ -53,6 +53,11 @@ struct HomePageView: View {
                     .padding(.horizontal)
                     
                 }
+                .onAppear {
+                    print("\(viewModel.username)")
+
+                }
+                
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
                 .edgesIgnoringSafeArea(.bottom)
                 
@@ -61,13 +66,14 @@ struct HomePageView: View {
     }
     
     private var topView: some View {
-        HStack() {
+        HStack {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Welcome !")
                     .foregroundStyle(.gray)
                     .poppinsFont(size: 12)
                 Text(viewModel.username)
                     .poppinsFont(size: 16)
+
             }
             
             Spacer()

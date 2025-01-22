@@ -101,9 +101,7 @@ struct CoffeeAssemblageView: View {
             Text("Ice")
                 .foregroundStyle(.gray)
             Spacer()
-            ForEach(0..<3) { index in
-                iceAmountView(amount: index)
-            }
+            CompositionLevelView(rating: $viewModel.selectedIceAmount, onImage: Image(systemName:"snowflake"), onColor: .blue)
         }
         .padding()
     }
@@ -175,11 +173,7 @@ struct CoffeeAssemblageView: View {
         HStack {
             Text("Roasting")
             Spacer()
-            HStack(spacing: 20) {
-                ForEach(0..<3) { index in
-                    roastingAmountView(amount: index)
-                }
-            }
+            CompositionLevelView(rating: $viewModel.selectedRoastAmount, onImage: Image("fire"), onColor: .fireColor)
         }
         .padding()
     }
@@ -220,28 +214,6 @@ struct CoffeeAssemblageView: View {
             }
         }
         .padding()
-    }
-    
-    func iceAmountView(amount: Int) -> some View {
-        Button(action: { viewModel.selectedIceAmount = amount }) {
-            HStack(spacing: 2) {
-                ForEach(0..<amount + 1, id: \.self) { _ in
-                    Image("Ice")
-                }
-            }
-            .foregroundColor(viewModel.selectedIceAmount == amount ? .black : .gray)
-        }
-    }
-    
-    func roastingAmountView(amount: Int) -> some View {
-        Button(action: { viewModel.selectedRoastAmount = amount }) {
-            HStack(spacing: 2) {
-                ForEach(0..<amount + 1, id: \.self) { _ in
-                    Image("fire")
-                }
-            }
-            .foregroundColor(viewModel.selectedRoastAmount == amount ? .fireColor : .gray)
-        }
     }
 }
 
