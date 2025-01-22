@@ -189,13 +189,8 @@ class LoginPageViewController: UIViewController {
                 switch result {
                 case .success(_):
                     self?.navigateToHomePage()
-                case .failure(let error):
-                    if let authError = error as? AuthError {
-                        self?.showLoginError(authError.message)
-                    } else {
-                        let errorMessage = self?.viewModel.getFirebaseErrorMessage(error) ?? error.localizedDescription
-                        self?.showLoginError(errorMessage)
-                    }
+                case .failure(_):
+                    self?.showLoginError("Incorrect email or password")
                 }
             }
         }

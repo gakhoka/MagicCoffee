@@ -12,6 +12,7 @@ struct CoffeeAssemblageView: View {
     @Environment(\.dismiss) var dismiss: DismissAction
     @ObservedObject var viewModel: OrderViewModel
     @State private var sliderValue = 0.0
+    @Binding var path: NavigationPath
     var coffee: Coffee
     
     var body: some View {
@@ -50,15 +51,6 @@ struct CoffeeAssemblageView: View {
         }
     }
     
-    var btnBack : some View {
-        Button(action: {
-            dismiss()
-        })  {
-            Image(systemName: "arrow.left")
-                .foregroundStyle(.black)
-        }
-    }
-    
     private var milkSheet: some View {
         OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes) { milk in
             viewModel.updatePriceForMilk(milk)
@@ -83,8 +75,7 @@ struct CoffeeAssemblageView: View {
             .padding(.horizontal, 30)
             
             NavigationLink(
-                destination: MyOrderView(viewModel: viewModel, coffee: coffee)
-                    .toolbar(.hidden, for: .tabBar)
+                destination: MyOrderView(viewModel: viewModel, path: $path, coffee: coffee)
                     .navigationBarBackButtonHidden(true),
                 label: {
                     Text("Next").nextButtonAppearance()
@@ -99,9 +90,8 @@ struct CoffeeAssemblageView: View {
     private var ice: some View {
         HStack {
             Text("Ice")
-                .foregroundStyle(.gray)
             Spacer()
-            CompositionLevelView(rating: $viewModel.selectedIceAmount, onImage: Image(systemName:"snowflake"), onColor: .blue)
+            CompositionLevelView(rating: $viewModel.selectedIceAmount, onImage: Image("cube"), onColor: .cubeColor)
         }
         .padding()
     }
@@ -218,5 +208,5 @@ struct CoffeeAssemblageView: View {
 }
 
 #Preview {
-    CoffeeAssemblageView(viewModel: OrderViewModel(), coffee: .example)
+    CoffeeAssemblageView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), coffee: .example)
 }

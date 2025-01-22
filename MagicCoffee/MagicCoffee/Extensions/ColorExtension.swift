@@ -13,7 +13,6 @@ import SwiftUI
 extension UIColor {
     static let navyGreen = UIColor(red: 50/255, green: 74/255, blue: 90/255, alpha: 1)
     static let tabItemColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
-    static let lightRed = UIColor(red: 255/255, green: 229/255, blue: 229/255, alpha: 1)
     static let forestGreen = UIColor(red: 46/255, green: 111/255, blue: 64/255, alpha: 1)
     static let lightGrayBackground = UIColor(red: 247 / 255, green: 248 / 255, blue: 247 / 255, alpha: 1)
 
@@ -30,4 +29,7 @@ extension Color {
     static let darkRed = Color(red: 191 / 255, green: 1 / 255, blue: 1 / 255)
     static let coffeeBeanColor = Color(red: 110 / 255, green: 78 / 255, blue: 54 / 255)
     static let lightGrayBackground = Color(red: 247 / 255, green: 248 / 255, blue: 247 / 255)
+    static let lightRed = Color(red: 255/255, green: 229/255, blue: 229/255)
+    static let cubeColor = Color(red: 84/255, green: 218/255, blue: 254/255)
+
 }

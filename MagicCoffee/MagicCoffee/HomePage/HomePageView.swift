@@ -13,9 +13,10 @@ struct HomePageView: View {
 
     @StateObject var viewModel = HomePageViewModel()
     @StateObject var orderViewModel = OrderViewModel()
+    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             VStack {
                 topView
                     .padding()
@@ -27,7 +28,7 @@ struct HomePageView: View {
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
                             ForEach(viewModel.coffees, id: \.id) { coffee in
-                                NavigationLink(destination: CoffeeOrderView(viewModel: orderViewModel, coffee: coffee)) {
+                                NavigationLink(value: coffee) {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 25)
                                             .fill(.white)
@@ -60,7 +61,9 @@ struct HomePageView: View {
                 
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
                 .edgesIgnoringSafeArea(.bottom)
-                
+                .navigationDestination(for: Coffee.self) { coffee in
+                    CoffeeOrderView(viewModel: orderViewModel, path: $path, coffee: coffee)
+                }
             }
         }
     }
