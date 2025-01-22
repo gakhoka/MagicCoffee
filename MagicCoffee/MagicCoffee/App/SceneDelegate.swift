@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -15,16 +16,37 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(
         _ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-            guard let windowScene = (scene as? UIWindowScene) else { return }
+            guard let scene = (scene as? UIWindowScene) else { return }
+
+            let window = UIWindow(windowScene: scene)
             
-            window = UIWindow(windowScene: windowScene)
+            if Auth.auth().currentUser != nil {
+                let host = UIHostingController(rootView: TabBarView())
+                let navigationController = UINavigationController(rootViewController: host)
+                navigationController.setNavigationBarHidden(true, animated: false)
+                window.rootViewController = navigationController
+            } else {
+                let welcomeViewController = WelcomePageViewController()
+                let navigationController = UINavigationController(rootViewController: welcomeViewController)
+                navigationController.setNavigationBarHidden(true, animated: false)
+                window.rootViewController = navigationController
+            }
             
-          //  let host = UIHostingController(rootView: TabBarView())
-            let rootViewController = WelcomePageViewController()
-            let navigationController = UINavigationController(rootViewController: rootViewController)
-            
-            window?.rootViewController = navigationController
-            window?.makeKeyAndVisible()
+//            let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+//            
+//            if isLoggedIn {
+//                let host = UIHostingController(rootView: TabBarView())
+//                let navigationController = UINavigationController(rootViewController: host)
+//                navigationController.setNavigationBarHidden(true, animated: false)
+//                window.rootViewController = navigationController
+//            } else {
+//                let welcomeViewController = WelcomePageViewController()
+//                let navigationController = UINavigationController(rootViewController: welcomeViewController)
+//                navigationController.setNavigationBarHidden(true, animated: false)
+//                window.rootViewController = navigationController
+//            }
+            self.window = window
+            window.makeKeyAndVisible()
         }
 
     func sceneDidDisconnect(_ scene: UIScene) {
