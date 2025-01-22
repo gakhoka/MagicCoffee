@@ -15,10 +15,15 @@ struct MyOrderView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            
-            Text("My order")
-                .font(.system(size: 24))
-                .padding()
+            HStack {
+                Text("My order")
+                    .padding()
+                Spacer()
+                Text("$")
+                Text(String(format: "%.2f", viewModel.total))
+                    .padding()
+            }
+            .poppinsFont(size: 24)
             
             List {
                 ForEach(viewModel.coffees) { coffee in

@@ -90,8 +90,7 @@ struct CoffeeAssemblageView: View {
                 }
             )
             .simultaneousGesture(TapGesture().onEnded {
-                let coffee = viewModel.createCoffee()
-                viewModel.coffees.append(coffee)
+                viewModel.addCoffee()
             })
         }
     }

@@ -36,6 +36,7 @@ class OrderViewModel: ObservableObject {
     @Published var selectedAdditives = [String]()
     @Published var selectedCity = ""
     @Published var coffeeImage = ""
+    @Published var total = 0.0
     private var previousMilk = "None"
     private var previousSyrup = "None"
 
@@ -59,14 +60,30 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-    func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: 2, redeemPointsAmount: 0, validityDate: "", price: coffeePrice)
+
+    func addCoffee() {
+        let coffee = createCoffee()
+        coffees.append(coffee)
+        updateTotalPrice()
+    }
+    
+    private func createCoffee() -> Coffee {
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) / 5, redeemPointsAmount: 0, validityDate: "", price: coffeePrice)
         return coffee
+        
     }
     
     private func createOrder() -> Order {
-        let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: 19, coffee: coffees)
+        let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
         return order
+    }
+    
+    
+    private func updateTotalPrice() {
+        let sumOfPrices = coffees.reduce(0.0) { partialResult, coffee in
+            partialResult + coffee.price
+        }
+        total = sumOfPrices
     }
     
     func updatePriceForMilk(_ milkType: String) {

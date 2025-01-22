@@ -12,7 +12,7 @@ struct Order: Identifiable, Codable {
     var id = UUID()
     let coffeeAmount: Int
     let isTakeAway: Bool
-    let price: Int
+    let price: Double
     let coffee: [Coffee]
 }
 
