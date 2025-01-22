@@ -9,8 +9,9 @@ import SwiftUI
 
 struct CoffeeCountryView: View {
     
-    @ObservedObject private var viewModel = OrderViewModel()
+    @ObservedObject  var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
 
     var body: some View {
             VStack(alignment: .leading) {
@@ -19,10 +20,8 @@ struct CoffeeCountryView: View {
                     .padding()
                 List {
                     ForEach(viewModel.coffeeCountries) { country in
-                        NavigationLink(destination: CitiesView(cities: country.cities)) {
-
+                        NavigationLink(destination: CitiesView(viewModel: viewModel, path: $path, cities: country.cities)) {
                             Text(country.name)
-                            
                         }
                     }
                 }
@@ -36,5 +35,5 @@ struct CoffeeCountryView: View {
 }
 
 #Preview {
-    CoffeeCountryView()
+    CoffeeCountryView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }

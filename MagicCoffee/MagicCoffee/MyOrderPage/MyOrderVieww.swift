@@ -12,7 +12,7 @@ struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
-    var coffee: Coffee?
+    var coffee: Coffee
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -25,6 +25,7 @@ struct MyOrderView: View {
             
                 Button {
                     path = NavigationPath()
+                    viewModel.resetCoffee(coffee: coffee)
                 } label: {
                     HStack {
                         Image("coffeecupicon")
@@ -137,5 +138,5 @@ struct MyOrderView: View {
 }
 
 #Preview {
-    MyOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
+    MyOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), coffee: .example)
 }

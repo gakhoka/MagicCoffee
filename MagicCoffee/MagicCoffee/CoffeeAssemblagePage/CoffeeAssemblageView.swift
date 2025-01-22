@@ -11,7 +11,6 @@ struct CoffeeAssemblageView: View {
     
     @Environment(\.dismiss) var dismiss: DismissAction
     @ObservedObject var viewModel: OrderViewModel
-    @State private var sliderValue = 0.0
     @Binding var path: NavigationPath
     var coffee: Coffee
     
@@ -78,7 +77,8 @@ struct CoffeeAssemblageView: View {
                 destination: MyOrderView(viewModel: viewModel, path: $path, coffee: coffee)
                     .navigationBarBackButtonHidden(true),
                 label: {
-                    Text("Next").nextButtonAppearance()
+                    Text("Next")
+                    .nextButtonAppearance()
                 }
             )
             .simultaneousGesture(TapGesture().onEnded {
@@ -97,7 +97,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var additives: some View {
-        NavigationLink(destination: AdditivesView(viewModel: viewModel)) {
+        NavigationLink(destination: AdditivesView(viewModel: viewModel, path: $path)) {
             HStack {
                 Text("Additives")
                 Spacer()
@@ -169,7 +169,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var coffeeSort: some View {
-        NavigationLink(destination: CoffeeCountryView()) {
+        NavigationLink(destination: CoffeeCountryView(viewModel: viewModel, path: $path)) {
             HStack {
                 Text("Coffee sort")
                 Spacer()
@@ -186,17 +186,17 @@ struct CoffeeAssemblageView: View {
             Text("Coffee type")
             Spacer()
             VStack {
-                Slider(value: $viewModel.value, in: 0...1)
+                Slider(value: $viewModel.coffeeType, in: 0...1)
                     .frame(width: 225)
                     .accentColor(.fireColor)
                 HStack {
                     Text("Arabica")
-                        .foregroundColor(.black.opacity(max(0.3,1 - viewModel.value)))
-                        .animation(.easeIn, value: viewModel.value)
+                        .foregroundColor(.black.opacity(max(0.3,1 - viewModel.coffeeType)))
+                        .animation(.easeIn, value: viewModel.coffeeType)
                     Spacer()
                     Text("Robusta")
-                        .foregroundColor(.black.opacity(max(0.3, viewModel.value)))
-                        .animation(.easeIn, value: viewModel.value)
+                        .foregroundColor(.black.opacity(max(0.3, viewModel.coffeeType)))
+                        .animation(.easeIn, value: viewModel.coffeeType)
                     
                 }
                 .foregroundStyle(.gray)

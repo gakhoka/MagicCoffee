@@ -12,6 +12,7 @@ struct AdditivesView: View {
     
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
     
     var body: some View {
         VStack {
@@ -57,5 +58,5 @@ struct AdditivesView: View {
 }
 
 #Preview {
-    AdditivesView(viewModel: OrderViewModel())
+    AdditivesView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }

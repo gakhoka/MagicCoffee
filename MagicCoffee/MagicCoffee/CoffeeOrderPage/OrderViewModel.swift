@@ -25,7 +25,7 @@ class OrderViewModel: ObservableObject {
     @Published var selectedRoastAmount = 1
     @Published var selectedIceAmount = 1
     @Published var isGrindingSelected = false
-    @Published var value = 0.5
+    @Published var coffeeType = 0.5
     @Published var selectedMilk = ""
     @Published var selectedSyrup = ""
     @Published var isMilkSelectionTapped = false
@@ -73,7 +73,6 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-
     func addCoffee() {
         let coffee = createCoffee()
         coffees.append(coffee)
@@ -90,6 +89,22 @@ class OrderViewModel: ObservableObject {
      func createOrder() -> Order {
         let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
         return order
+    }
+    
+    func resetCoffee(coffee: Coffee) {
+        coffeeName = coffee.name
+        coffeePrice = coffee.price
+        coffeeCount = 1
+        volumeSize = 1
+        ristrettoSize = 1
+        selectedAdditives = [""]
+        selectedCity = ""
+        selectedSyrup = ""
+        selectedMilk = ""
+        selectedGrindSize = 1
+        selectedIceAmount = 1
+        selectedRoastAmount = 1
+        coffeeType = 0.5
     }
     
     private func updateTotalCoffeeCount() {
