@@ -37,6 +37,7 @@ class OrderViewModel: ObservableObject {
     @Published var selectedCity = ""
     @Published var coffeeImage = ""
     @Published var total = 0.0
+    @Published var totalcoffeeCount = 0
     private var previousMilk = "None"
     private var previousSyrup = "None"
 
@@ -60,11 +61,24 @@ class OrderViewModel: ObservableObject {
         }
     }
     
+    func placeOrder() {
+        uploadOrderToFirebase(order: createOrder()) { result in
+            switch result {
+            case .success(_):
+                print("order is sent")
+                print(self.totalcoffeeCount)
+            case .failure(let failure):
+                print(failure.localizedDescription)
+            }
+        }
+    }
+    
 
     func addCoffee() {
         let coffee = createCoffee()
         coffees.append(coffee)
         updateTotalPrice()
+        updateTotalCoffeeCount()
     }
     
     private func createCoffee() -> Coffee {
@@ -73,9 +87,17 @@ class OrderViewModel: ObservableObject {
         
     }
     
-    private func createOrder() -> Order {
-        let order = Order(coffeeAmount: coffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
+     func createOrder() -> Order {
+        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
         return order
+    }
+    
+    private func updateTotalCoffeeCount() {
+        let totalCoffees = coffees.reduce(0) { partialResult, coffee in
+            partialResult + coffee.count
+        }
+        
+        totalcoffeeCount = totalCoffees
     }
     
     

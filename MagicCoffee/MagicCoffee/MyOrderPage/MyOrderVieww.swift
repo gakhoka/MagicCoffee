@@ -8,22 +8,17 @@
 import SwiftUI
 
 struct MyOrderView: View {
+    
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     var coffee: Coffee?
 
-    
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Text("My order")
-                    .padding()
-                Spacer()
-                Text("$")
-                Text(String(format: "%.2f", viewModel.total))
-                    .padding()
-            }
-            .poppinsFont(size: 24)
+        
+            Text("My order")
+                .padding()
+                .poppinsFont(size: 24)
             
             List {
                 ForEach(viewModel.coffees) { coffee in
@@ -87,10 +82,49 @@ struct MyOrderView: View {
             }
             .scrollContentBackground(.hidden)
             
+            HStack {
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Total price")
+                        .foregroundStyle(.gray)
+                    HStack {
+                        Text("$")
+                        Text(String(format: "%.2f", viewModel.total))
+                            .font(.system(size: 24))
+                    }
+                }
+                .padding(.leading)
+                Spacer()
+                Button {
+                    viewModel.placeOrder()
+                } label: {
+                    HStack {
+                        Image("Cart")
+                        Text("Next")
+                    }
+                }
+                .nextButtonAppearance()
+                .frame(width: UIScreen.main.bounds.width / 2)
+
+            }
+            .padding(.horizontal)
+            
         }
         .poppinsFont(size: 16)
         .customBackButton {
             dismiss()
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    
+                } label: {
+                    Text("New")
+                        .foregroundColor(Color.navyGreen)
+                        .poppinsFont(size: 14)
+                    Image(systemName: "cup.and.saucer.fill")
+                }
+
+            }
         }
     }
 }

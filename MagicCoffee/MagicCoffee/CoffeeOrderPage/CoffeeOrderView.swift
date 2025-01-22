@@ -15,25 +15,24 @@ struct CoffeeOrderView: View {
     var coffee: Coffee
     
     var body: some View {
-            VStack {
-                coffeeImage
-                ScrollView {
-                    coffeeAmount
-                    onsiteOrTakeAway
-                    volume
-                    ristretto
-                    timePicker
-                    totalAmount
-                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, coffee: coffee)) {
-                        coffeeLoverAssemblage
-                    }
+        VStack {
+            coffeeImage
+            ScrollView {
+                coffeeAmount
+                onsiteOrTakeAway
+                cupSize
+                ristretto
+                timePicker
+                totalAmount
+                NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, coffee: coffee)) {
+                    coffeeLoverAssemblage
                 }
-                .scrollIndicators(.hidden)
             }
-            .poppinsFont(size: 16)
-            .onAppear(perform: resetCoffee)
-            .navigationTitle("Order")
-            .customBackButton { dismiss() }
+        }
+        .poppinsFont(size: 16)
+        .onAppear(perform: resetCoffee)
+        .navigationTitle("Order")
+        .customBackButton { dismiss() }
     }
     
     func resetCoffee() {
@@ -48,7 +47,7 @@ struct CoffeeOrderView: View {
     }
     
     
-    private var volume: some View {
+    private var cupSize: some View {
         HStack {
             Text("Cup size")
                 .padding()
@@ -65,8 +64,9 @@ struct CoffeeOrderView: View {
                             }
                         
                         Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))ml")
-                            .font(.body)
                             .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
+                            .font(.system(size: 12))
+
                     }
                 }
             }
@@ -103,14 +103,14 @@ struct CoffeeOrderView: View {
                 .padding()
             Spacer()
             HStack {
-                Text("One")
+                Text("Single")
                     .capsuleButton()
                     .foregroundStyle(viewModel.ristrettoSize == 1 ? .black : .gray)
                     .onTapGesture {
                         viewModel.updateRistrettoOption(option: 1)
                     }
                 
-                Text("Two")
+                Text("Double")
                     .capsuleButton()
                     .foregroundStyle(viewModel.ristrettoSize == 2 ? .black : .gray)
                     .onTapGesture {

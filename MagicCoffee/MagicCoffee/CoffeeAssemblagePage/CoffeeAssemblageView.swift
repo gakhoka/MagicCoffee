@@ -84,6 +84,7 @@ struct CoffeeAssemblageView: View {
             
             NavigationLink(
                 destination: MyOrderView(viewModel: viewModel, coffee: coffee)
+                    .toolbar(.hidden, for: .tabBar)
                     .navigationBarBackButtonHidden(true),
                 label: {
                     Text("Next").nextButtonAppearance()
