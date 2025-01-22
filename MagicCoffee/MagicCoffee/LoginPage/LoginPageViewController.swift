@@ -12,6 +12,7 @@ class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
     private let viewModel = LoginViewModel()
+    private let keychainManager = KeychainManager()
     
     private var emailField: UITextField?
     private var passwordField: UITextField?
@@ -189,6 +190,7 @@ class LoginPageViewController: UIViewController {
                 switch result {
                 case .success(_):
                     self?.navigateToHomePage()
+//                    self?.keychainManager.saveCredentials(email: email, password: password)
                 case .failure(_):
                     self?.showLoginError("Incorrect email or password")
                 }

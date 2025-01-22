@@ -40,7 +40,7 @@ class LoginViewModel {
     }
     
     
-     func getFirebaseErrorMessage(_ error: Error) -> String {
+    func getFirebaseErrorMessage(_ error: Error) -> String {
         let nsError = error as NSError
         switch nsError.code {
         case AuthErrorCode.wrongPassword.rawValue:
