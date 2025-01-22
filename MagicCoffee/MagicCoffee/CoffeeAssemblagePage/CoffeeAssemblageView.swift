@@ -91,7 +91,12 @@ struct CoffeeAssemblageView: View {
         HStack {
             Text("Ice")
             Spacer()
-            CompositionLevelView(rating: $viewModel.selectedIceAmount, onImage: Image("cube"), onColor: .cubeColor)
+            CompositionLevelView(level: $viewModel.selectedIceAmount, onImage: Image("cube"), onColor: .cubeColor)
+                .onTapGesture(count: 2) {
+                    withAnimation(.easeOut(duration: 0.4)) {
+                        viewModel.selectedIceAmount = 0
+                    }
+                }
         }
         .padding()
     }
@@ -163,7 +168,7 @@ struct CoffeeAssemblageView: View {
         HStack {
             Text("Roasting")
             Spacer()
-            CompositionLevelView(rating: $viewModel.selectedRoastAmount, onImage: Image("fire"), onColor: .fireColor)
+            CompositionLevelView(level: $viewModel.selectedRoastAmount, onImage: Image("fire"), onColor: .fireColor)
         }
         .padding()
     }

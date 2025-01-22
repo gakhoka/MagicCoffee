@@ -23,7 +23,7 @@ class OrderViewModel: ObservableObject {
     @Published var cupData = ["smallCup": 1, "mediumCup": 2, "largeCup": 3]
     @Published var selectedGrindSize =  0
     @Published var selectedRoastAmount = 1
-    @Published var selectedIceAmount = 1
+    @Published var selectedIceAmount = 0
     @Published var isGrindingSelected = false
     @Published var coffeeType = 0.5
     @Published var selectedMilk = ""
@@ -41,7 +41,6 @@ class OrderViewModel: ObservableObject {
     private var previousMilk = "None"
     private var previousSyrup = "None"
 
-    
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
         guard  let currentUser = Auth.auth().currentUser else { return }

@@ -30,6 +30,5 @@ extension Color {
     static let coffeeBeanColor = Color(red: 110 / 255, green: 78 / 255, blue: 54 / 255)
     static let lightGrayBackground = Color(red: 247 / 255, green: 248 / 255, blue: 247 / 255)
     static let lightRed = Color(red: 255/255, green: 229/255, blue: 229/255)
-    static let cubeColor = Color(red: 84/255, green: 218/255, blue: 254/255)
-
+    static let cubeColor = Color(red: 0.0 / 255, green: 208.0 / 255, blue: 251.0 / 255)
 }

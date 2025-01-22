@@ -47,8 +47,17 @@ struct MyOrderView: View {
                             }
                         }
                         VStack(alignment: .leading, spacing: 10) {
-                            Text(coffee.name)
-                                .font(.system(size: 18))
+                            HStack {
+                                Text(coffee.name)
+                                    .font(.system(size: 18))
+                                Spacer()
+                                HStack(spacing: 0) {
+                                    Text("$")
+                                    Text(String(format: "%.2f", coffee.price))
+                                        .foregroundColor(.black)
+                                }
+                                .font(.system(size: 16 ))
+                            }
                             HStack {
                                 Text(coffee.size.rawValue)
                                 Text("|")
@@ -77,19 +86,7 @@ struct MyOrderView: View {
                         }
                         .font(.system(size: 16))
                         
-                        
                         Spacer()
-                        
-                        VStack {
-                            HStack(spacing: 0) {
-                                Text("$")
-                                Text(String(format: "%.2f", coffee.price))
-                                    .foregroundColor(.black)
-                            }
-                            .font(.system(size: 16 ))
-                            Spacer()
-                        }
-                        .padding(.top)
                     }
                     .swipeActions {
                         Button {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CompositionLevelView: View {
     
-    @Binding var rating: Int
+    @Binding var level: Int
     var onImage: Image
     var onColor: Color
     var maximumLevel = 3
@@ -20,23 +20,23 @@ struct CompositionLevelView: View {
         HStack {
             ForEach(1..<maximumLevel + 1, id: \.self) { number in
                 image(for: number)
-                    .foregroundColor(number > rating ? offColor : onColor)
+                    .foregroundColor(level > 0 && number <= level ? onColor : offColor)
                     .onTapGesture {
-                        rating = number
+                        level = number
                 }
             }
         }
     }
     
     func image(for number: Int) -> Image {
-        if number > rating {
-            return offimage ?? onImage 
-        } else {
+        if level > 0 && number <= level {
             return onImage
+        } else {
+            return offimage ?? onImage
         }
     }
 }
 
 #Preview {
-    CompositionLevelView(rating: .constant(2), onImage: Image("Fire"), onColor: .gray)
+    CompositionLevelView(level: .constant(2), onImage: Image("Fire"), onColor: .gray)
 }
