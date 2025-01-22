@@ -11,6 +11,7 @@ struct CoffeeOrderView: View {
     
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss: DismissAction
+    @Binding var path: NavigationPath
 
     var coffee: Coffee
     
@@ -24,7 +25,7 @@ struct CoffeeOrderView: View {
                 ristretto
                 timePicker
                 totalAmount
-                NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, coffee: coffee)) {
+                NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, path: $path, coffee: coffee)) {
                     coffeeLoverAssemblage
                 }
             }
@@ -222,6 +223,6 @@ struct CoffeeOrderView: View {
 }
 
 #Preview {
-    CoffeeOrderView(viewModel: OrderViewModel(), coffee: .example)
+    CoffeeOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), coffee: .example)
 }
 

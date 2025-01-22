@@ -11,14 +11,29 @@ struct MyOrderView: View {
     
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
     var coffee: Coffee?
-
+    
     var body: some View {
         VStack(alignment: .leading) {
-        
-            Text("My order")
-                .padding()
-                .poppinsFont(size: 24)
+            
+            HStack {
+                Text("My order")
+                    .padding()
+                    .poppinsFont(size: 24)
+                Spacer()
+            
+                Button {
+                    path = NavigationPath()
+                } label: {
+                    HStack {
+                        Image("coffeecupicon")
+                        Image(systemName: "plus")
+                    }
+                }
+                .tint(.coffeeBeanColor)
+            }
+            .padding(.horizontal)
             
             List {
                 ForEach(viewModel.coffees) { coffee in
@@ -65,13 +80,12 @@ struct MyOrderView: View {
                         Spacer()
                         
                         VStack {
-                            Text("$")
                             HStack(spacing: 0) {
-                                
+                                Text("$")
                                 Text(String(format: "%.2f", coffee.price))
                                     .foregroundColor(.black)
-                                    .font(.system(size: 20))
                             }
+                            .font(.system(size: 16 ))
                             Spacer()
                         }
                         .padding(.top)
@@ -106,12 +120,11 @@ struct MyOrderView: View {
                 } label: {
                     HStack {
                         Image("Cart")
-                        Text("Next")
+                        Text("Pay Now")
                     }
                 }
                 .nextButtonAppearance()
                 .frame(width: UIScreen.main.bounds.width / 2)
-
             }
             .padding(.horizontal)
             
@@ -120,22 +133,9 @@ struct MyOrderView: View {
         .customBackButton {
             dismiss()
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    
-                } label: {
-                    Text("New")
-                        .foregroundColor(Color.navyGreen)
-                        .poppinsFont(size: 14)
-                    Image(systemName: "cup.and.saucer.fill")
-                }
-
-            }
-        }
     }
 }
 
 #Preview {
-    MyOrderView(viewModel: OrderViewModel())
+    MyOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }
