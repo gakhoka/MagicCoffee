@@ -15,6 +15,10 @@ class ProfileViewModel {
     var username = ""
     var email = ""
     
+    init() {
+        fetchUserProfile()
+    }
+    
     var updateHandler: (() -> Void)?
     
     func fetchUserProfile() {
