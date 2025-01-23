@@ -11,10 +11,37 @@ import UIKit
 
 class ProfilePageViewController: UIViewController {
     
-    private let stackView = UIStackView()
+ 
     private let viewModel = ProfileViewModel()
     private let qrcodeGenerator = QRcodeGenerator()
     private let qrImage = UIImageView()
+    
+    private lazy var signOutButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "logout"), for: .normal)
+        button.tintColor = .black
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.signOutButtonTapped()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
+    private let mainstackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        stackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        stackView.isLayoutMarginsRelativeArrangement = true
+        return stackView
+    }()
+    
+    private lazy var logOutLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "Log out", textColor: .systemGray2, font: 16)
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,32 +50,53 @@ class ProfilePageViewController: UIViewController {
         configureViewModel()
     }
     
+    private func setupUI() {
+        placeViews()
+        setupConstraints()
+        qrCodeSetup()
+    }
+    
+    private func placeViews() {
+        view.addSubview(signOutButton)
+        view.addSubview(qrImage)
+        view.addSubview(mainstackView)
+        view.addSubview(logOutLabel)
+    }
+    
     private func configureViewModel() {
         viewModel.updateHandler = { [weak self] in
             self?.setupProfileItems()
         }
     }
     
-    private func setupUI() {
-        setupStackView()
-        qrCodeSetup()
-    }
-    
     private func qrCodeSetup() {
-        view.addSubview(qrImage)
-
         let credentials = qrcodeGenerator.generateQRCode(from: "\(viewModel.username)")
         
         qrImage.translatesAutoresizingMaskIntoConstraints = false
         qrImage.image = credentials
-        
-        NSLayoutConstraint.activate([
-            qrImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            qrImage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        ])
-        
+
     }
     
+    private func signOutButtonTapped() {
+        viewModel.signOut { [weak self] in
+
+            guard self == self else { return }
+            let loginPageViewController = WelcomePageViewController()
+            let navigationController = UINavigationController(rootViewController: loginPageViewController)
+            
+            UIView.transition(
+                with: (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window ?? UIWindow(),
+                duration: 0.3,
+                options: .transitionCrossDissolve,
+                animations: {
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.rootViewController = navigationController
+                },
+                completion: nil
+            )
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.window?.makeKeyAndVisible()
+        }
+    }
+
     private func updateqr() {
         viewModel.updateHandler = { [weak self] in
             guard let username = self?.viewModel.username else { return }
@@ -123,23 +171,25 @@ class ProfilePageViewController: UIViewController {
         return containerView
     }
     
-    private func setupStackView() {
-        view.addSubview(stackView)
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.layoutMargins = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-        stackView.isLayoutMarginsRelativeArrangement = true
-        
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
-            stackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
-            stackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            mainstackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
+            mainstackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            mainstackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
+            
+            qrImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            qrImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
+            signOutButton.topAnchor.constraint(equalTo: mainstackView.bottomAnchor, constant: 30),
+            signOutButton.leftAnchor.constraint(equalTo: mainstackView.leftAnchor, constant: 45),
+            
+            logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 20),
+            logOutLabel.centerYAnchor.constraint(equalTo: signOutButton.centerYAnchor)
         ])
     }
     
     private func setupProfileItems() {
-        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        mainstackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         let items = [
             ("Profile", "Name", viewModel.username),
@@ -149,7 +199,7 @@ class ProfilePageViewController: UIViewController {
         
         items.forEach { icon, title, value in
             let itemView = self.createProfileItemView(icon: icon, title: title, value: value)
-            self.stackView.addArrangedSubview(itemView)
+            self.mainstackView.addArrangedSubview(itemView)
         }
     }
     
