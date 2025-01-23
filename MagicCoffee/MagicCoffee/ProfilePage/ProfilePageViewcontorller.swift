@@ -13,13 +13,14 @@ class ProfilePageViewController: UIViewController {
     
     private let stackView = UIStackView()
     private let viewModel = ProfileViewModel()
-    
+    private let qrcodeGenerator = QRcodeGenerator()
+    private let qrImage = UIImageView()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
         configureViewModel()
-        viewModel.fetchUserProfile()
     }
     
     private func configureViewModel() {
@@ -30,6 +31,33 @@ class ProfilePageViewController: UIViewController {
     
     private func setupUI() {
         setupStackView()
+        qrCodeSetup()
+    }
+    
+    private func qrCodeSetup() {
+        view.addSubview(qrImage)
+
+        let credentials = qrcodeGenerator.generateQRCode(from: "\(viewModel.username)")
+        
+        qrImage.translatesAutoresizingMaskIntoConstraints = false
+        qrImage.image = credentials
+        
+        NSLayoutConstraint.activate([
+            qrImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
+            qrImage.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+        
+    }
+    
+    private func updateqr() {
+        viewModel.updateHandler = { [weak self] in
+            guard let username = self?.viewModel.username else { return }
+            print(username)
+            let qrCodeImage = self?.qrcodeGenerator.generateQRCode(from: username)
+            DispatchQueue.main.async {
+                self?.qrImage.image = qrCodeImage
+            }
+        }
     }
     
     private func createProfileItemView(icon: String, title: String, value: String) -> UIView {
@@ -137,7 +165,9 @@ class ProfilePageViewController: UIViewController {
             valueTextField.isEnabled = false
             
             if titleLabel.text == "Name" {
-                viewModel.updateProfile(username: valueTextField.text ?? "", email: viewModel.email) { _ in }
+                viewModel.updateProfile(username: valueTextField.text ?? "", email: viewModel.email) { _ in
+                    self.updateqr()
+                }
             } else if titleLabel.text == "Email" {
                 viewModel.updateProfile(username: viewModel.username, email: valueTextField.text ?? "") { _ in }
             } else if titleLabel.text == "Password" {

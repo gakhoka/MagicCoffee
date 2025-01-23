@@ -15,7 +15,7 @@ extension UIColor {
     static let tabItemColor = UIColor(red: 216/255, green: 216/255, blue: 216/255, alpha: 1)
     static let forestGreen = UIColor(red: 46/255, green: 111/255, blue: 64/255, alpha: 1)
     static let lightGrayBackground = UIColor(red: 247 / 255, green: 248 / 255, blue: 247 / 255, alpha: 1)
-
+    static let darkBrown = UIColor(red: 76 / 255, green: 35 / 255, blue: 23 / 255, alpha: 1)
 }
 
 extension Color {
