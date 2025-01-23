@@ -48,7 +48,7 @@ class CustomTextField {
         if showPasswordIcon {
             eyeButton = UIButton(type: .system)
             eyeButton?.setImage(UIImage(named: "Eyeoff"), for: .normal)
-            eyeButton?.tintColor = .gray
+            eyeButton?.tintColor = .black
             eyeButton?.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(eyeButton!)
             
@@ -78,8 +78,8 @@ class CustomTextField {
             NSLayoutConstraint.activate([
                 eyeButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
                 eyeButton.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-                eyeButton.widthAnchor.constraint(equalToConstant: 30),
-                eyeButton.heightAnchor.constraint(equalToConstant: 26)
+                eyeButton.widthAnchor.constraint(equalToConstant: 24),
+                eyeButton.heightAnchor.constraint(equalToConstant: 20)
             ])
         }
         return (container, textField)
@@ -92,9 +92,11 @@ class CustomTextField {
         if textField.isSecureTextEntry {
             textField.isSecureTextEntry = false
             sender.setImage(UIImage(named: "Eye"), for: .normal)
+            sender.tintColor = .black
         } else {
             textField.isSecureTextEntry = true
             sender.setImage(UIImage(named: "Eyeoff"), for: .normal)
+            sender.tintColor = .black
         }
     }
 }
