@@ -11,7 +11,6 @@ import UIKit
 
 class ProfilePageViewController: UIViewController {
     
- 
     private let viewModel = ProfileViewModel()
     private let qrcodeGenerator = QRcodeGenerator()
     private let qrImage = UIImageView()
@@ -39,7 +38,7 @@ class ProfilePageViewController: UIViewController {
     
     private lazy var logOutLabel: UILabel = {
         let label = UILabel()
-        label.create(text: "Log out", textColor: .systemGray2, font: 16)
+        label.create(text: "Log out", textColor: .black, font: 14)
         return label
     }()
 
@@ -102,7 +101,7 @@ class ProfilePageViewController: UIViewController {
             guard let username = self?.viewModel.username else { return }
             print(username)
             let qrCodeImage = self?.qrcodeGenerator.generateQRCode(from: username)
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.qrImage.image = qrCodeImage
             }
         }

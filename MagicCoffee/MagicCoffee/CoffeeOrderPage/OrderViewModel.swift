@@ -143,10 +143,10 @@ class OrderViewModel: ObservableObject {
     func updatePriceForSyrup(_ syrupType: String) {
 
         if previousSyrup == "None" && syrupType != "None" {
-            coffeePrice += 0.3 * Double(coffeeCount)
+            coffeePrice += 0.1 * Double(coffeeCount)
         }
         else if previousSyrup != "None" && syrupType == "None" {
-            coffeePrice -= 0.3 * Double(coffeeCount)
+            coffeePrice -= 0.1 * Double(coffeeCount)
         }
         
         previousSyrup = selectedSyrup
@@ -197,10 +197,10 @@ class OrderViewModel: ObservableObject {
         
         if selectedAdditives.contains(additive) {
             selectedAdditives.removeAll { $0 == additive }
-            coffeePrice -= 1 * Double(coffeeCount)
+            coffeePrice -= 0.3 * Double(coffeeCount)
         } else {
             selectedAdditives.append(additive)
-            coffeePrice += 1 * Double(coffeeCount)
+            coffeePrice += 0.3 * Double(coffeeCount)
         }
     }
 }

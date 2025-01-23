@@ -90,7 +90,9 @@ struct MyOrderView: View {
                     }
                     .swipeActions {
                         Button {
-                            viewModel.removeOrder(coffee)
+                            withAnimation(.easeOut(duration: 0.3)) {
+                                viewModel.removeOrder(coffee)
+                            }
                         } label: {
                             Image("TrashCan")
                         }

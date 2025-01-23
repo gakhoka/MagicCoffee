@@ -50,9 +50,10 @@ struct HomePageView: View {
                                 }
                             }
                         }
+                        .padding(.bottom, 120)
                     }
+                    .scrollIndicators(.hidden)
                     .padding(.horizontal)
-                    
                 }
                 .onAppear {
                     viewModel.fetchUser()
@@ -72,19 +73,11 @@ struct HomePageView: View {
             VStack(alignment: .leading, spacing: 5) {
                 Text("Welcome !")
                     .foregroundStyle(.gray)
-                    .poppinsFont(size: 12)
-                Text(viewModel.username)
                     .poppinsFont(size: 16)
-
+                Text(viewModel.username)
+                    .poppinsFont(size: 20)
             }
-            
             Spacer()
-            
-            HStack(spacing: 20){
-                Image("Cart")
-                Image("Profile")
-            }
-            .padding(.horizontal)
         }
     }
     
