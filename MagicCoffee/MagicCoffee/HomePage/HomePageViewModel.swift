@@ -48,7 +48,7 @@ class HomePageViewModel: ObservableObject {
         let database = Firestore.firestore()
         guard let uid = Auth.auth().currentUser?.uid else { return }
         
-        database.collection("users").document(uid).getDocument { document, error in
+        database.collection("users").document(uid).getDocument { [weak self] document, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
@@ -63,7 +63,7 @@ class HomePageViewModel: ObservableObject {
             
             if let userData = document.data() {
                 if let currentUser = try? Firestore.Decoder().decode(User.self, from: userData) {
-                    self.user = currentUser
+                    self?.user = currentUser
                 }
             }
         }

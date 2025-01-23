@@ -55,8 +55,7 @@ struct HomePageView: View {
                     
                 }
                 .onAppear {
-                    print("\(viewModel.username)")
-
+                    viewModel.fetchUser()
                 }
                 
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
