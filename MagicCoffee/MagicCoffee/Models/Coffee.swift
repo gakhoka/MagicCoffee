@@ -9,24 +9,24 @@ import Foundation
 
 
 struct Coffee: Identifiable, Codable, Hashable {
-    var count: Int
     var id = UUID()
-    let name: String
-    let ristreto: Int
-    let size: CoffeeSize
-    let image: String
-    let sortByOrigin: String
-    let grinding: GrindingLevel
-    let milk: String?
-    let syrup: String?
-    let iceAmount: Int
-    let roastingLevel: RoastingLevel
-    let additives: [String]?
-    let score: Int
-    let redeemPointsAmount: Int
-    let validityDate: String
-    let price: Double
-    let orderDate: Date
+    var count = 1
+    var name: String
+    var ristreto = 1
+    var size: CoffeeSize = .small
+    var image = ""
+    var sortByOrigin = ""
+    var grinding: GrindingLevel = .fine
+    var milk = ""
+    var syrup = ""
+    var iceAmount = 0
+    var roastingLevel: RoastingLevel = .medium
+    var additives = [""]
+    var score = 0
+    var redeemPointsAmount = 0
+    var validityDate = ""
+    var price = 0.0
+    var orderDate: Date = Date.now
     
     
     enum CoffeeSize: String, Codable {
@@ -91,14 +91,13 @@ extension Coffee {
             "image": image,
             "sortByOrigin": sortByOrigin,
             "grinding": grinding.rawValue,
-            "milk": milk ?? "",
-            "syrup": syrup ?? "",
+            "milk": milk,
+            "syrup": syrup,
             "iceAmount": iceAmount,
             "roastingLevel": roastingLevel.rawValue,
-            "additives": additives ?? [],
+            "additives": additives,
             "score": score,
             "redeemPointsAmount": redeemPointsAmount,
-            "validityDate": validityDate,
             "price": price,
             "orderDate": orderDate
         ]

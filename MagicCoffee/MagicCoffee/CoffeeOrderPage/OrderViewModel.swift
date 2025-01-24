@@ -22,7 +22,7 @@ class OrderViewModel: ObservableObject {
     @Published var ristrettoSize = 1
     @Published var cupData = ["smallCup": 1, "mediumCup": 2, "largeCup": 3]
     @Published var selectedGrindSize =  0
-    @Published var selectedRoastAmount = 1
+    @Published var selectedRoastAmount = 2
     @Published var selectedIceAmount = 0
     @Published var isGrindingSelected = false
     @Published var coffeeType = 0.5
@@ -80,7 +80,7 @@ class OrderViewModel: ObservableObject {
     }
     
     private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, redeemPointsAmount: 0, validityDate: "", price: coffeePrice, orderDate: Date.now)
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: coffeePrice, orderDate: Date.now)
         return coffee
         
     }

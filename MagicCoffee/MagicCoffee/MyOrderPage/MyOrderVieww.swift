@@ -71,14 +71,10 @@ struct MyOrderView: View {
                             .foregroundStyle(.gray)
                             
                             HStack {
-                                if coffee.milk  == "" {
-                                    Text("regular milk")
-                                } else {
-                                    Text(coffee.milk ?? "")
-                                    Text("milk")
-                                }
+                                Text(coffee.milk == "" ? "Regular Milk": coffee.milk)
+                                
                                 Text("|")
-                                Text(coffee.syrup ?? "No syrup")
+                                Text(coffee.syrup == "" ? "No Syrup" : coffee.syrup)
                             }
                             .foregroundStyle(.gray)
                             
