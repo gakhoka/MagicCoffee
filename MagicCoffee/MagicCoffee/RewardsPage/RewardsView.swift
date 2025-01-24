@@ -16,11 +16,13 @@ struct RewardsView: View {
            Reward(name: "Flat White", date: "12 May | 11:25", points: "+ 12 Pts")
        ]
     
+    @StateObject var viewModel = RewardsViewModel()
+    
     var body: some View {
         VStack(spacing: 20) {
             Text("Rewards")
             
-            LoyaltyView()
+            LoyaltyView(viewModel: viewModel)
                 
             RedeemPointsView()
             HStack {
@@ -51,6 +53,7 @@ struct RewardsView: View {
             .scrollContentBackground(.hidden)
         }
         .poppinsFont(size: 24)
+        .onAppear(perform: viewModel.fetchUserOrders)
     }
 }
 
