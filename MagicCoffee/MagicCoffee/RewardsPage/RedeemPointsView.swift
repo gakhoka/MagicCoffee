@@ -8,13 +8,16 @@
 import SwiftUI
 
 struct RedeemPointsView: View {
+    
+    @ObservedObject var viewModel: RewardsViewModel
+    
     var body: some View {
         ZStack {
             HStack(spacing: 70) {
                 VStack(alignment: .leading, spacing: 25) {
                     Text("My points")
                         .font(.system(size: 16))
-                    Text("2065")
+                    Text("\(viewModel.userPoints)")
                 }
                 .foregroundColor(.nardoGray)
                 
@@ -47,5 +50,5 @@ struct RedeemPointsView: View {
 }
 
 #Preview {
-    RedeemPointsView()
+    RedeemPointsView(viewModel: RewardsViewModel())
 }

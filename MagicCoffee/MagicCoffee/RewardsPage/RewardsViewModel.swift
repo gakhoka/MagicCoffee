@@ -13,6 +13,7 @@ import FirebaseAuth
 class RewardsViewModel: ObservableObject {
     
     @Published var userOrderCount = 0
+    @Published var userPoints = 0
     
     init() {
         fetchUserOrders()
@@ -31,9 +32,19 @@ class RewardsViewModel: ObservableObject {
             }
             
             if let snapshot = snapshot {
-                let orderCount = snapshot.count
+                self?.userOrderCount = snapshot.count
                 
-                self?.userOrderCount = orderCount
+                var totalPoints = 0
+                for document in snapshot.documents {
+                    if let coffees = document.get("coffee") as? [[String: Any]] {
+                        for coffee in coffees {
+                            if let score = coffee["score"] as? Int {
+                                totalPoints += score
+                                self?.userPoints = totalPoints
+                            }
+                        }
+                    }
+                }
             }
         }
     }

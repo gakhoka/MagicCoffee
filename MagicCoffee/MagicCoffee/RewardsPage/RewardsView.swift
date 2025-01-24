@@ -24,7 +24,7 @@ struct RewardsView: View {
             
             LoyaltyView(viewModel: viewModel)
                 
-            RedeemPointsView()
+            RedeemPointsView(viewModel: viewModel)
             HStack {
                 Text("History Rewards")
                     .font(.system(size: 20))
