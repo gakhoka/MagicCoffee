@@ -45,7 +45,7 @@ class RewardsViewModel: ObservableObject {
                                let name = coffee["name"] as? String,
                                let timestamp = coffee["orderDate"] as? Timestamp {
                                 let orderDate = timestamp.dateValue()
-                                let mycoffe = Coffee(count: 1, name: name, ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "", syrup: "", iceAmount: 0, roastingLevel: .high, additives: [""], score: score, redeemPointsAmount: 0, validityDate: "", price: 0, orderDate: orderDate)
+                                let mycoffe = Coffee(name: name, score: score, orderDate: orderDate)
                                 totalPoints += score
                                 self?.userPoints = totalPoints
                                 coffeeList.append(mycoffe)

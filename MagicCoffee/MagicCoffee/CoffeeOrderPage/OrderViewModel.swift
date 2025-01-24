@@ -10,6 +10,12 @@ import SwiftUI
 import FirebaseAuth
 
 class OrderViewModel: ObservableObject {
+    
+    init() {
+        self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
+        fetchUserOrders()
+    }
+    
     var coffees: [Coffee] = []
     var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
     @Published var coffeeCount = 1
@@ -38,6 +44,14 @@ class OrderViewModel: ObservableObject {
     @Published var coffeeImage = ""
     @Published var total = 0.0
     @Published var totalcoffeeCount = 0
+    @Published var isFreeDrinkSelected = false
+    @Published var userOrderCount: Int {
+        didSet {
+            UserDefaults.standard.set(userOrderCount, forKey: "count")
+        }
+    }
+    @Published var isGiftCoffeeSelected = false
+    
     private var previousMilk = "None"
     private var previousSyrup = "None"
 
@@ -60,12 +74,37 @@ class OrderViewModel: ObservableObject {
         }
     }
     
+    func fetchUserOrders() {
+        let database = Firestore.firestore()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let referrnce = database.collection("users").document(uid).collection("orders")
+        
+        referrnce.getDocuments { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                self?.userOrderCount = snapshot.count
+                
+            }
+        }
+    }
+    
     func placeOrder() {
-        uploadOrderToFirebase(order: createOrder()) { result in
+        if isGiftCoffeeSelected {
+               total = coffees.filter { $0.price > 0 }.reduce(0.0) { $0 + $1.price }
+           } else {
+               updateTotalPrice() 
+           }
+
+        uploadOrderToFirebase(order: createOrder()) { [weak self] result in
             switch result {
             case .success(_):
                 print("order is sent")
-                print(self.totalcoffeeCount)
+                print(self?.totalcoffeeCount)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -73,6 +112,10 @@ class OrderViewModel: ObservableObject {
     }
     
     func addCoffee() {
+        if coffees.first(where: { $0.name == coffeeName }) != nil {
+            return
+        }
+        
         let coffee = createCoffee()
         coffees.append(coffee)
         updateTotalPrice()
@@ -80,7 +123,7 @@ class OrderViewModel: ObservableObject {
     }
     
     private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: coffeePrice, orderDate: Date.now)
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: Date.now)
         return coffee
         
     }
@@ -104,6 +147,8 @@ class OrderViewModel: ObservableObject {
         selectedIceAmount = 1
         selectedRoastAmount = 1
         coffeeType = 0.5
+        
+        isGiftCoffeeSelected = false
     }
     
     private func updateTotalCoffeeCount() {
