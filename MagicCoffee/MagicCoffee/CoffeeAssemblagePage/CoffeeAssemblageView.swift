@@ -68,7 +68,7 @@ struct CoffeeAssemblageView: View {
                 Text("Total Amount")
                 Spacer()
                 Text("$")
-                Text(String(format: "%.2f", viewModel.coffeePrice))
+                Text(viewModel.isGiftCoffeeSelected ? "0.0": String(format: "%.2f", viewModel.coffeePrice) )
             }
             .font(.system(size: 20))
             .padding(.horizontal, 30)

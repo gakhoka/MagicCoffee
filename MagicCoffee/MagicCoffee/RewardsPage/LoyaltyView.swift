@@ -8,19 +8,22 @@
 import SwiftUI
 
 struct LoyaltyView: View {
+    
+    @ObservedObject var viewModel: RewardsViewModel
+    
     var body: some View {
         ZStack {
             VStack {
                 HStack(spacing: 150) {
                     Text("Loyalty card")
                     
-                    Text("4/8")
+                    Text("\(viewModel.userOrderCount % 8)/8")
                 }
                 .foregroundColor(.nardoGray)
                 HStack(spacing: 15) {
-                    ForEach(0..<8, id: \.self) { _ in
+                    ForEach(0..<8, id: \.self) { index in
                         Image("coffeeImage")
-                            .foregroundColor(.gray)
+                            .foregroundColor(index < (viewModel.userOrderCount % 8) ? .coffeeBeanColor : .gray)
                     }
                 }
                 .roundedRect(height: 50, color: .white)
@@ -34,5 +37,5 @@ struct LoyaltyView: View {
 }
 
 #Preview {
-    LoyaltyView()
+    LoyaltyView(viewModel: RewardsViewModel())
 }

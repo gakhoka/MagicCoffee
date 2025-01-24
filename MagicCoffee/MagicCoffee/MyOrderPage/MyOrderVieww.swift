@@ -22,20 +22,23 @@ struct MyOrderView: View {
                     .padding()
                     .poppinsFont(size: 24)
                 Spacer()
-            
+            }
+            .padding(.horizontal)
+            HStack {
+                Spacer()
                 Button {
                     path = NavigationPath()
                     viewModel.resetCoffee(coffee: coffee)
                 } label: {
                     HStack {
-                        Image("coffeecupicon")
-                        Image(systemName: "plus")
+                        Image("addcoffee")
+                            .padding(.horizontal)
+                            .foregroundColor(.black)
                     }
                 }
-                .tint(.coffeeBeanColor)
+                .tint(.navyGreen)
             }
             .padding(.horizontal)
-            
             List {
                 ForEach(viewModel.coffees) { coffee in
                     HStack {
@@ -71,14 +74,10 @@ struct MyOrderView: View {
                             .foregroundStyle(.gray)
                             
                             HStack {
-                                if coffee.milk  == "" {
-                                    Text("regular milk")
-                                } else {
-                                    Text(coffee.milk ?? "")
-                                    Text("milk")
-                                }
+                                Text(coffee.milk == "" ? "Regular Milk": coffee.milk)
+                                
                                 Text("|")
-                                Text(coffee.syrup ?? "No syrup")
+                                Text(coffee.syrup == "" ? "No Syrup" : coffee.syrup)
                             }
                             .foregroundStyle(.gray)
                             
@@ -101,6 +100,7 @@ struct MyOrderView: View {
                 }
                 .listRowBackground(Color.lightGrayBackground)
             }
+            .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)
             
             HStack {
@@ -116,12 +116,13 @@ struct MyOrderView: View {
                 .padding(.leading)
                 Spacer()
                 Button {
-                    viewModel.placeOrder()
-                } label: {
-                    HStack {
-                        Image("Cart")
-                        Text("Pay Now")
+                    withAnimation {
+                        viewModel.placeOrder()
+                        print(viewModel.userOrderCount)
+                        viewModel.coffees = []
                     }
+                } label: {
+                    Text("Next")
                 }
                 .nextButtonAppearance()
                 .frame(width: UIScreen.main.bounds.width / 2)
@@ -129,9 +130,33 @@ struct MyOrderView: View {
             .padding(.horizontal)
             
         }
+        .onAppear {
+            viewModel.fetchUserOrders()
+            print(viewModel.userOrderCount)
+        }
         .poppinsFont(size: 16)
         .customBackButton {
             dismiss()
+        }
+        
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    viewModel.isGiftCoffeeSelected.toggle()
+                    path = NavigationPath()
+                } label: {
+                    Image("coffeeImage")
+                        .opacity(viewModel.userOrderCount % 8 == 0 ? 1.0 : 0.0)
+                        .scaleEffect(viewModel.userOrderCount % 8 == 0 ? 1.2 : 1.0)
+                        .animation(
+                            viewModel.userOrderCount % 8 == 0
+                            ? .easeInOut(duration: 1).repeatForever(autoreverses: true)
+                            : nil,
+                            value: viewModel.userOrderCount
+                        )
+                        .foregroundColor(viewModel.userOrderCount % 8 == 0 ? Color.brown : .gray)
+                }
+            }
         }
     }
 }

@@ -19,7 +19,9 @@ struct CoffeeOrderView: View {
         VStack {
             coffeeImage
             ScrollView {
-                coffeeAmount
+                if !viewModel.isGiftCoffeeSelected {
+                    coffeeAmount
+                }
                 onsiteOrTakeAway
                 cupSize
                 ristretto
@@ -32,6 +34,7 @@ struct CoffeeOrderView: View {
         }
         .poppinsFont(size: 16)
         .onAppear(perform: resetCoffee)
+        .onAppear(perform: viewModel.fetchUserOrders)
         .navigationTitle("Order")
         .customBackButton { dismiss() }
     }
@@ -67,7 +70,6 @@ struct CoffeeOrderView: View {
                         Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))ml")
                             .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
                             .font(.system(size: 12))
-
                     }
                 }
             }
@@ -142,7 +144,6 @@ struct CoffeeOrderView: View {
                 Text("\(viewModel.coffeeCount)")
                     .font(.title3)
                     .foregroundColor(.black)
-
                 
                 Button(action: {
                     viewModel.coffeeCount += 1
@@ -150,12 +151,9 @@ struct CoffeeOrderView: View {
                 }) {
                     Image(systemName: "plus")
                         .foregroundColor(.black)
-
                 }
-                
             }
             .capsuleButton()
-            
         }
         .padding(.horizontal)
     }
@@ -167,7 +165,7 @@ struct CoffeeOrderView: View {
             
             Spacer()
             Text("$")
-            Text(String(format: "%.2f", viewModel.coffeePrice))
+            Text(viewModel.isGiftCoffeeSelected ? "0.0": String(format: "%.2f", viewModel.coffeePrice) )
         }
         .font(.system(size: 20))
         .padding()

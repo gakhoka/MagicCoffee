@@ -35,8 +35,7 @@ class HomePageViewModel: ObservableObject {
                     let image = data["image"] as? String ?? ""
                     let price = data["price"] as? Double ?? 0.0
                     
-                    let coffee = Coffee(
-                        count: 0, name: name, ristreto: 1, size: .large, image: image, sortByOrigin: "", grinding: .fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: .high, additives: [""], score: 1, redeemPointsAmount: 1, validityDate: "", price: price)
+                    let coffee = Coffee(name: name, image: image, price: price)
                     self.coffees.append(coffee)
                 }
             }

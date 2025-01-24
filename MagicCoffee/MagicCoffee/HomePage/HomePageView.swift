@@ -57,6 +57,7 @@ struct HomePageView: View {
                 }
                 .onAppear {
                     viewModel.fetchUser()
+                    orderViewModel.fetchUserOrders()
                 }
                 
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
@@ -78,6 +79,7 @@ struct HomePageView: View {
                     .poppinsFont(size: 20)
             }
             Spacer()
+           
         }
     }
     

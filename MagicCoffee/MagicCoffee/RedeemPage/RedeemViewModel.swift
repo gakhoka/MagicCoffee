@@ -23,14 +23,11 @@ class RedeemViewModel: ObservableObject {
                 image: "coffee1",
                 sortByOrigin: "",
                 grinding: .fine,
-                milk: nil,
-                syrup: nil,
                 iceAmount: 0,
                 roastingLevel: .low,
-                additives: nil,
                 score: 0,
                 redeemPointsAmount: 1340,
-                validityDate: "04.07.21", price: 2
+                validityDate: "04.07.21", price: 2, orderDate: Date.now
             ),
             Coffee(
                 count: 2, name: "Cappuccino",
@@ -39,15 +36,12 @@ class RedeemViewModel: ObservableObject {
                 image: "coffee1",
                 sortByOrigin: "",
                 grinding: .fine,
-                milk: nil,
-                syrup: nil,
                 iceAmount: 0,
                 roastingLevel: .low,
-                additives: nil,
                 score: 0,
                 redeemPointsAmount: 1340,
                 validityDate: "04.07.21",
-                price: 1
+                price: 1, orderDate: Date.now
             )
         ]
         coffees.append(contentsOf: coffeeItems)
