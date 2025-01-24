@@ -42,11 +42,14 @@ class RewardsViewModel: ObservableObject {
                     if let coffees = document.get("coffee") as? [[String: Any]] {
                         for coffee in coffees {
                             if let score = coffee["score"] as? Int,
-                               let name = coffee["name"] as? String {
-                                let mycoffe = Coffee(count: 1, name: name, ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "", syrup: "", iceAmount: 0, roastingLevel: .high, additives: [""], score: score, redeemPointsAmount: 0, validityDate: "", price: 0)
+                               let name = coffee["name"] as? String,
+                               let timestamp = coffee["orderDate"] as? Timestamp {
+                                let orderDate = timestamp.dateValue()
+                                let mycoffe = Coffee(count: 1, name: name, ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "", syrup: "", iceAmount: 0, roastingLevel: .high, additives: [""], score: score, redeemPointsAmount: 0, validityDate: "", price: 0, orderDate: orderDate)
                                 totalPoints += score
                                 self?.userPoints = totalPoints
                                 coffeeList.append(mycoffe)
+                                coffeeList.sort { $0.orderDate > $1.orderDate }
                                 self?.coffeeHistory = coffeeList
                             }
                         }

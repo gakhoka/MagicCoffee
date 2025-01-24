@@ -26,6 +26,7 @@ struct Coffee: Identifiable, Codable, Hashable {
     let redeemPointsAmount: Int
     let validityDate: String
     let price: Double
+    let orderDate: Date
     
     
     enum CoffeeSize: String, Codable {
@@ -77,7 +78,7 @@ struct Coffee: Identifiable, Codable, Hashable {
         }
     }
     
-    static let example = Coffee(count: 2, name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "sd", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6)
+    static let example = Coffee(count: 2, name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "sd", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6, orderDate: Date())
 }
 
 extension Coffee {
@@ -98,7 +99,8 @@ extension Coffee {
             "score": score,
             "redeemPointsAmount": redeemPointsAmount,
             "validityDate": validityDate,
-            "price": price
+            "price": price,
+            "orderDate": orderDate
         ]
     }
 }

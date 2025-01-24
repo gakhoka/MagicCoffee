@@ -30,9 +30,12 @@ struct RewardsView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 20) {
                             Text(coffee.name)
+                            Text(coffee.orderDate.formattedDate())
+                                .foregroundStyle(.gray)
+                                .font(.system(size: 15))
                         }
                         Spacer()
-                        Text("+\(coffee.score)")
+                        Text("+ \(coffee.score)")
                     }
                     .poppinsFont(size: 18)
                 }
@@ -41,6 +44,7 @@ struct RewardsView: View {
             .poppinsFont(size: 24)
             .onAppear(perform: viewModel.fetchUserOrders)
             .scrollContentBackground(.hidden)
+            .scrollIndicators(.hidden)
         }
     }
 }
