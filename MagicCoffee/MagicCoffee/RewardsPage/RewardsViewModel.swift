@@ -14,6 +14,7 @@ class RewardsViewModel: ObservableObject {
     
     @Published var userOrderCount = 0
     @Published var userPoints = 0
+    @Published var coffeeHistory: [Coffee] = []
     
     init() {
         fetchUserOrders()
@@ -35,12 +36,18 @@ class RewardsViewModel: ObservableObject {
                 self?.userOrderCount = snapshot.count
                 
                 var totalPoints = 0
+                var coffeeList: [Coffee] = []
+
                 for document in snapshot.documents {
                     if let coffees = document.get("coffee") as? [[String: Any]] {
                         for coffee in coffees {
-                            if let score = coffee["score"] as? Int {
+                            if let score = coffee["score"] as? Int,
+                               let name = coffee["name"] as? String {
+                                let mycoffe = Coffee(count: 1, name: name, ristreto: 1, size: .large, image: "", sortByOrigin: "", grinding: .fine, milk: "", syrup: "", iceAmount: 0, roastingLevel: .high, additives: [""], score: score, redeemPointsAmount: 0, validityDate: "", price: 0)
                                 totalPoints += score
                                 self?.userPoints = totalPoints
+                                coffeeList.append(mycoffe)
+                                self?.coffeeHistory = coffeeList
                             }
                         }
                     }

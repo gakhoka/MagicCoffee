@@ -9,13 +9,6 @@ import SwiftUI
 
 struct RewardsView: View {
     
-    let rewards: [Reward] = [
-           Reward(name: "Americano", date: "24 June | 12:30", points: "+ 12 Pts"),
-           Reward(name: "Latte", date: "22 June | 08:30", points: "+ 12 Pts"),
-           Reward(name: "Raf", date: "16 June | 10:48", points: "+ 12 Pts"),
-           Reward(name: "Flat White", date: "12 May | 11:25", points: "+ 12 Pts")
-       ]
-    
     @StateObject var viewModel = RewardsViewModel()
     
     var body: some View {
@@ -23,7 +16,7 @@ struct RewardsView: View {
             Text("Rewards")
             
             LoyaltyView(viewModel: viewModel)
-                
+            
             RedeemPointsView(viewModel: viewModel)
             HStack {
                 Text("History Rewards")
@@ -32,28 +25,23 @@ struct RewardsView: View {
                 Spacer()
             }
             
-            List(rewards) { reward in
-                HStack {
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text(reward.name)
-                            .font(.system(size: 16))
-                        
-                        Text(reward.date)
-                            .font(.system(size: 12))
-                            .padding(.bottom)
-
+            List {
+                ForEach(viewModel.coffeeHistory) { coffee in
+                    HStack {
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text(coffee.name)
+                        }
+                        Spacer()
+                        Text("+\(coffee.score)")
                     }
-                    Spacer()
-                    Text(reward.points)
-                        .font(.system(size: 14))
-
+                    .poppinsFont(size: 18)
                 }
                 .listRowSeparator(.visible)
             }
+            .poppinsFont(size: 24)
+            .onAppear(perform: viewModel.fetchUserOrders)
             .scrollContentBackground(.hidden)
         }
-        .poppinsFont(size: 24)
-        .onAppear(perform: viewModel.fetchUserOrders)
     }
 }
 
