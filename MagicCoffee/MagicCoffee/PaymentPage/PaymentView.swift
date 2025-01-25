@@ -13,6 +13,8 @@ struct PaymentView: View {
     @State private var isCardTapped = false
     @StateObject var cardViewModel = CreditCardViewmodel()
     @State private var selectedCardIndex: Int? = nil
+    @State private var isPaymentMethodSelected = false
+    @State private var noMethodsSelected = false
 
     
     let username = UserDefaults.standard.string(forKey: "username")
@@ -20,7 +22,11 @@ struct PaymentView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 20) {
-                Spacer()
+                
+                Text(noMethodsSelected ? "Please select payment method": "")
+                        .foregroundStyle(.red)
+                        .font(.system(size: 14))
+                
                 HStack {
                     Text("Order payment")
                         .fontWeight(.bold)
@@ -90,7 +96,8 @@ struct PaymentView: View {
                             if selectedCardIndex == index {
                                 selectedCardIndex = nil
                             } else {
-                                selectedCardIndex = index 
+                                selectedCardIndex = index
+                                isPaymentMethodSelected = true
                             }
                         }
                     }
@@ -135,6 +142,13 @@ struct PaymentView: View {
                         }
                         .nextButtonAppearance()
                         .frame(width: UIScreen.main.bounds.width / 2)
+                        .onTapGesture {
+                            if isPaymentMethodSelected {
+                                viewModel.placeOrder()
+                            } else {
+                                noMethodsSelected.toggle()
+                            }
+                        }
                     }
                     .poppinsFont(size: 14)
                 }
@@ -142,6 +156,7 @@ struct PaymentView: View {
             .padding()
             .poppinsFont(size: 24)
         }
+        
         .onAppear(perform: cardViewModel.getGreditCard)
     }
 }
