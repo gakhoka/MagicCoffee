@@ -104,7 +104,6 @@ class OrderViewModel: ObservableObject {
             switch result {
             case .success(_):
                 print("order is sent")
-                print(self?.totalcoffeeCount)
             case .failure(let failure):
                 print(failure.localizedDescription)
             }

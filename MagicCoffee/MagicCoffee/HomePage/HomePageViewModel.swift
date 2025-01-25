@@ -63,6 +63,7 @@ class HomePageViewModel: ObservableObject {
             if let userData = document.data() {
                 if let currentUser = try? Firestore.Decoder().decode(User.self, from: userData) {
                     self?.user = currentUser
+                    UserDefaults.standard.set(self?.user?.username, forKey: "username")
                 }
             }
         }
