@@ -14,4 +14,5 @@ struct User: Identifiable, Codable {
     let email: String
     var orders: [Order] = []
     var points: Int? = 0
+    var creditCards: [CreditCard] = []
 }

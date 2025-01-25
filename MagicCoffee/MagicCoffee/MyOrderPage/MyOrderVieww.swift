@@ -131,7 +131,7 @@ struct MyOrderView: View {
         }
         .sheet(isPresented: $isPresented, content: {
             PaymentView(viewModel: viewModel)
-                .presentationDetents([.height(500)])
+                .presentationDetents([.height(600)])
         })
         
         .onAppear {
