@@ -78,6 +78,12 @@ struct PaymentView: View {
                                 Image("mastercard")
                             }
                         }
+                        .contextMenu {
+                            Button("Delete") {
+                                cardViewModel.removeCard(at: index)
+                            }
+                            .tint(.red)
+                        }
                         .roundedRectangleStyle(color: .lightGrayBackground)
                         .frame(height: 100)
                         .onTapGesture {
@@ -88,6 +94,7 @@ struct PaymentView: View {
                             }
                         }
                     }
+                  
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
                 }

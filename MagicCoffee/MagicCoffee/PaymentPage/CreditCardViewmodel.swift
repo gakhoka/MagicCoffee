@@ -10,7 +10,7 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class CreditCardViewmodel: ObservableObject {
-    @Published var total: Double = 0.0
+    @Published var total = 0.0
     @Published var user: User?
     @Published var userCards: [CreditCard] = []
     
@@ -43,7 +43,26 @@ class CreditCardViewmodel: ObservableObject {
         }
 
     }
+    
+    func removeCard(at index: Int) {
+        let cardToRemove = userCards[index]
+        deleteCardFromFirebase(cardId: cardToRemove.id.uuidString)
+        userCards.remove(at: index)
+    }
+    
+    func deleteCardFromFirebase(cardId: String) {
+        guard let currentUser = Auth.auth().currentUser else { return }
+        let userId = currentUser.uid
 
+        let db = Firestore.firestore()
+        let cardRef = db.collection("users").document(userId).collection("userCards").document(cardId)
+
+        cardRef.delete { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
     
     func addCreditCard(_ card: CreditCard) {
         user?.creditCards.append(card)
@@ -64,8 +83,6 @@ class CreditCardViewmodel: ObservableObject {
         creditCardsRef.addDocument(data: cardData) { error in
             if let error = error {
                 print(error.localizedDescription)
-            } else {
-                print("Credit card successfully added to Firestore!")
             }
         }
     }
