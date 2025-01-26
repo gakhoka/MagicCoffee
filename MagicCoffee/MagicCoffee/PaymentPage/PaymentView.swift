@@ -16,6 +16,7 @@ struct PaymentView: View {
     @State private var isPaymentMethodSelected = false
     @State private var noMethodsSelected = false
     @State private var shouldNavigate = false
+    @State private var applePayMethod = false
     @Binding var path: NavigationPath
 
     
@@ -111,13 +112,32 @@ struct PaymentView: View {
                 .scrollContentBackground(.hidden)
 
                 HStack {
-                    Image(systemName:"apple.logo")
-                    Text("Pay")
+                    if isPaymentMethodSelected == false {
+                        Image(systemName:"apple.logo")
+                        Text("Pay")
+                    } else {
+                        ZStack {
+                            Circle()
+                                .fill(.green)
+                                .frame(width: 30, height: 30)
+                            Image(systemName: "checkmark")
+                                .foregroundStyle(.white)
+                        }
+                    }
                 }
                 .foregroundStyle(.white)
                 .roundedRectangleStyle(color: .black)
-                .frame(height: 70)
+                .frame(width: 300, height: 60)
                 .padding(.horizontal)
+                .animation(.easeIn(duration: 0.6), value: isPaymentMethodSelected)
+                .onTapGesture {
+                    isPaymentMethodSelected = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        viewModel.placeOrder()
+                        shouldNavigate = true
+                        applePayMethod = true
+                    }
+                }
                 
                 HStack {
                     VStack(alignment: .leading, spacing: 10) {
@@ -151,6 +171,7 @@ struct PaymentView: View {
                         }
                         .nextButtonAppearance()
                     }
+                    .disabled(applePayMethod)
                     .frame(width: UIScreen.main.bounds.width / 2)
                 }
             }
