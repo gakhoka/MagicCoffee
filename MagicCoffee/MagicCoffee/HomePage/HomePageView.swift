@@ -14,6 +14,7 @@ struct HomePageView: View {
     @StateObject var viewModel = HomePageViewModel()
     @StateObject var orderViewModel = OrderViewModel()
     @State private var path = NavigationPath()
+    @State private var text = ""
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -27,7 +28,9 @@ struct HomePageView: View {
                     
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.coffees, id: \.id) { coffee in
+                            ForEach(viewModel.coffees.filter { coffee in
+                                text.isEmpty || coffee.name.localizedCaseInsensitiveContains(text)
+                            }, id: \.id) { coffee in
                                 NavigationLink(value: coffee) {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 25)
@@ -80,7 +83,12 @@ struct HomePageView: View {
                     .poppinsFont(size: 20)
             }
             Spacer()
-           
+
+            Spacer()
+            TextField("Search coffee...", text: $text)
+                .padding(10)
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
         }
     }
     
