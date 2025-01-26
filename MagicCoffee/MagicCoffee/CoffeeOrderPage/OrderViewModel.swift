@@ -13,6 +13,7 @@ class OrderViewModel: ObservableObject {
     
     init() {
         self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
+        self.freeCoffees = UserDefaults.standard.integer(forKey: "free")
         fetchUserOrders()
     }
     
@@ -52,6 +53,11 @@ class OrderViewModel: ObservableObject {
     }
     @Published var isGiftCoffeeSelected = false
     @Published var orderDate = Date.now
+    @Published var freeCoffees: Int {
+        didSet {
+            UserDefaults.standard.set(freeCoffees, forKey: "free")
+        }
+    }
     
     private var previousMilk = "None"
     private var previousSyrup = "None"
@@ -105,6 +111,7 @@ class OrderViewModel: ObservableObject {
             case .success(_):
                 print("order is sent")
                 self?.coffees.removeAll()
+                self?.saveFreeCoffees()
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -130,6 +137,12 @@ class OrderViewModel: ObservableObject {
     
     var readyDate: Date {
         return orderDate.adding(minutes: 45)
+    }
+    
+    func saveFreeCoffees() {
+        if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
+            freeCoffees += 1            
+        }
     }
     
      func createOrder() -> Order {
