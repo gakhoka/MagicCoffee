@@ -10,9 +10,9 @@ import Foundation
 
 struct User: Identifiable, Codable {
     var id: String
-    let username: String
-    let email: String
+    var username: String
+    var email: String
     var orders: [Order] = []
     var points: Int? = 0
-    var creditCards: [CreditCard] = []
+    var creditCard: [CreditCard] = []
 }

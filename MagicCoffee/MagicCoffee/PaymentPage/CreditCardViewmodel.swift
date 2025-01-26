@@ -65,7 +65,7 @@ class CreditCardViewmodel: ObservableObject {
     }
     
     func addCreditCard(_ card: CreditCard) {
-        user?.creditCards.append(card)
+        user?.creditCard.append(card)
         
         guard let currentUser = Auth.auth().currentUser else { return}
         
@@ -85,5 +85,12 @@ class CreditCardViewmodel: ObservableObject {
                 print(error.localizedDescription)
             }
         }
+    }
+    
+    var username: String {
+        if let username = UserDefaults.standard.string(forKey: "username") {
+            return username
+        }
+        return "no"
     }
 }

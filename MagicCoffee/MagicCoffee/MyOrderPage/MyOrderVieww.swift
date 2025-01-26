@@ -130,7 +130,7 @@ struct MyOrderView: View {
             
         }
         .sheet(isPresented: $isPresented, content: {
-            PaymentView(viewModel: viewModel)
+            PaymentView(viewModel: viewModel, path: $path)
                 .presentationDetents([.height(600)])
         })
         

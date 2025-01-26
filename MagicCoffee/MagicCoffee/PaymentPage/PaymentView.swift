@@ -15,6 +15,8 @@ struct PaymentView: View {
     @State private var selectedCardIndex: Int? = nil
     @State private var isPaymentMethodSelected = false
     @State private var noMethodsSelected = false
+    @State private var shouldNavigate = false
+    @Binding var path: NavigationPath
 
     
     let username = UserDefaults.standard.string(forKey: "username")
@@ -133,34 +135,36 @@ struct PaymentView: View {
                     
                     Spacer()
                     
+                    
                     Button {
-                        
+                        if isPaymentMethodSelected {
+                            viewModel.placeOrder()
+                            shouldNavigate = true
+                        } else {
+                            noMethodsSelected.toggle()
+                        }
                     } label: {
                         HStack {
                             Image("card")
                             Text("Pay Now")
+                                .poppinsFont(size: 14)
                         }
                         .nextButtonAppearance()
-                        .frame(width: UIScreen.main.bounds.width / 2)
-                        .onTapGesture {
-                            if isPaymentMethodSelected {
-                                viewModel.placeOrder()
-                            } else {
-                                noMethodsSelected.toggle()
-                            }
-                        }
                     }
-                    .poppinsFont(size: 14)
+                    .frame(width: UIScreen.main.bounds.width / 2)
                 }
             }
             .padding()
             .poppinsFont(size: 24)
         }
-        
+        .fullScreenCover(isPresented: $shouldNavigate, content: {
+            FinalOrderDetailsView(cardViewModel: cardViewModel, viewModel: viewModel, path: $path)
+                .navigationBarBackButtonHidden(true)
+        })
         .onAppear(perform: cardViewModel.getGreditCard)
     }
 }
 
 #Preview {
-    PaymentView(viewModel: OrderViewModel())
+    PaymentView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }

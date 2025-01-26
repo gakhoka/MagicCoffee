@@ -13,6 +13,7 @@ import FirebaseAuth
 class HomePageViewModel: ObservableObject {
     @Published var coffees: [Coffee] = []
     @Published var user: User?
+    @Published var username = ""
     
     init() {
         fetchCoffees()
@@ -60,19 +61,7 @@ class HomePageViewModel: ObservableObject {
             
             print(data)
             
-            if let userData = document.data() {
-                if let currentUser = try? Firestore.Decoder().decode(User.self, from: userData) {
-                    self?.user = currentUser
-                    UserDefaults.standard.set(self?.user?.username, forKey: "username")
-                }
-            }
+            self?.username = data["username"] as? String ?? "No username"
         }
-    }
-    
-    var username: String {
-        if let displayName = user?.username {
-            return displayName
-        }
-        return ""
     }
 }
