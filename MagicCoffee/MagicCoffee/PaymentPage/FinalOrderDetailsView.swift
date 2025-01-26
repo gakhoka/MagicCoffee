@@ -38,7 +38,7 @@ struct FinalOrderDetailsView: View {
             Text("\(String(describing: cardViewModel.username)) your order has successfully been placed")
                 .foregroundColor(.gray)
             
-            Text("Your order will be ready today at \(viewModel.orderDate.formattedDate())")
+            Text("Your order will be ready today at \(viewModel.randomeTime().formattedDate())")
            
             
             Text("Submit your personal QR code at a coffee shop to receive an order")

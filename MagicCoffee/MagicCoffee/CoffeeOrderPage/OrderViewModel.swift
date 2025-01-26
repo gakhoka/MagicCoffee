@@ -60,7 +60,7 @@ class OrderViewModel: ObservableObject {
     
     private var previousMilk = "None"
     private var previousSyrup = "None"
-
+    
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
         guard  let currentUser = Auth.auth().currentUser else { return }
@@ -106,7 +106,7 @@ class OrderViewModel: ObservableObject {
         } else {
             updateTotalPrice()
         }
-
+        
         uploadOrderToFirebase(order: createOrder()) { [weak self] result in
             switch result {
             case .success(_):
@@ -133,10 +133,6 @@ class OrderViewModel: ObservableObject {
             return
         }
         
-    
-        
-        print(isGiftCoffeeSelected)
-        
         let coffee = createCoffee()
         coffees.append(coffee)
         updateTotalPrice()
@@ -146,11 +142,11 @@ class OrderViewModel: ObservableObject {
     private func createCoffee() -> Coffee {
         let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate)
         return coffee
-        
     }
     
-    var readyDate: Date {
-        return orderDate.adding(minutes: 45)
+    func randomeTime() -> Date {
+        let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
+        return date
     }
     
     func saveFreeCoffees() {
@@ -159,7 +155,7 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-     func createOrder() -> Order {
+    func createOrder() -> Order {
         let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
         return order
     }
@@ -186,7 +182,6 @@ class OrderViewModel: ObservableObject {
         let totalCoffees = coffees.reduce(0) { partialResult, coffee in
             partialResult + coffee.count
         }
-        
         totalcoffeeCount = totalCoffees
     }
     
@@ -204,7 +199,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func updatePriceForMilk(_ milkType: String) {
-
+        
         if previousMilk == "None" && milkType != "None" {
             coffeePrice += 0.5 * Double(coffeeCount)
         }
@@ -217,7 +212,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func updatePriceForSyrup(_ syrupType: String) {
-
+        
         if previousSyrup == "None" && syrupType != "None" {
             coffeePrice += 0.1 * Double(coffeeCount)
         }
@@ -228,7 +223,7 @@ class OrderViewModel: ObservableObject {
         previousSyrup = selectedSyrup
         selectedSyrup = syrupType
     }
-
+    
     
     func updatePriceForSize(newSize: Int) {
         let oldSize = volumeSize
@@ -249,21 +244,21 @@ class OrderViewModel: ObservableObject {
     
     func updateRistrettoOption(option: Int) {
         let oldRistretto = ristrettoSize
-          
+        
         if oldRistretto == 2 {
             coffeePrice -= 0.3 * Double(coffeeCount)
-          }
-          
-          if option == 2 {
-              coffeePrice += 0.3 * Double(coffeeCount)
-          }
-          
+        }
+        
+        if option == 2 {
+            coffeePrice += 0.3 * Double(coffeeCount)
+        }
+        
         ristrettoSize = option
-      }
-
-     func toggleCitySelection(_ city: String) {
+    }
+    
+    func toggleCitySelection(_ city: String) {
         if selectedCity == city {
-           selectedCity = ""
+            selectedCity = ""
         } else {
             selectedCity = city
         }
