@@ -146,9 +146,8 @@ struct MyOrderView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
-                    viewModel.isGiftCoffeeSelected.toggle()
+                    viewModel.getFreeCoffee()
                     path = NavigationPath()
-                    viewModel.freeCoffees -= 1
                 } label: {
                     Text(viewModel.freeCoffees > 0 ? "\(viewModel.freeCoffees)" : "")
                     Image("coffeeImage")
