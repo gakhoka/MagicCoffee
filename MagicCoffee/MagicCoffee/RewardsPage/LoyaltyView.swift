@@ -23,7 +23,7 @@ struct LoyaltyView: View {
                 HStack(spacing: 15) {
                     ForEach(0..<8, id: \.self) { index in
                         Image("coffeeImage")
-                            .foregroundColor(index < (viewModel.userOrderCount % 8) ? .coffeeBeanColor : .gray)
+                            .foregroundColor(index < (viewModel.userOrderCount % 8) ? .brownColor : .gray)
                     }
                 }
                 .roundedRect(height: 50, color: .white)

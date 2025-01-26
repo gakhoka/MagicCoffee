@@ -13,4 +13,8 @@ extension Date {
         formatter.dateFormat = "MMMM d, h:mm a" 
         return formatter.string(from: self)
     }
+    
+    func adding(minutes: Int) -> Date {
+        return Calendar.current.date(byAdding: .minute, value: minutes, to: self) ?? self
+    }
 }

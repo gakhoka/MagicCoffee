@@ -13,6 +13,7 @@ class OrderViewModel: ObservableObject {
     
     init() {
         self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
+        self.freeCoffees = UserDefaults.standard.integer(forKey: "free")
         fetchUserOrders()
     }
     
@@ -51,6 +52,12 @@ class OrderViewModel: ObservableObject {
         }
     }
     @Published var isGiftCoffeeSelected = false
+    @Published var orderDate = Date.now
+    @Published var freeCoffees: Int {
+        didSet {
+            UserDefaults.standard.set(freeCoffees, forKey: "free")
+        }
+    }
     
     private var previousMilk = "None"
     private var previousSyrup = "None"
@@ -88,7 +95,6 @@ class OrderViewModel: ObservableObject {
             
             if let snapshot = snapshot {
                 self?.userOrderCount = snapshot.count
-                
             }
         }
     }
@@ -104,7 +110,8 @@ class OrderViewModel: ObservableObject {
             switch result {
             case .success(_):
                 print("order is sent")
-                print(self?.totalcoffeeCount)
+                self?.coffees.removeAll()
+                self?.saveFreeCoffees()
             case .failure(let failure):
                 print(failure.localizedDescription)
             }
@@ -123,9 +130,19 @@ class OrderViewModel: ObservableObject {
     }
     
     private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: Date.now)
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate)
         return coffee
         
+    }
+    
+    var readyDate: Date {
+        return orderDate.adding(minutes: 45)
+    }
+    
+    func saveFreeCoffees() {
+        if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
+            freeCoffees += 1            
+        }
     }
     
      func createOrder() -> Order {

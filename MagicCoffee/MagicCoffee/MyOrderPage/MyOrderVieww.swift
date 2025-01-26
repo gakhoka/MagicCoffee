@@ -12,6 +12,7 @@ struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
+    @State private var isPresented = false
     var coffee: Coffee
     
     var body: some View {
@@ -114,22 +115,25 @@ struct MyOrderView: View {
                     }
                 }
                 .padding(.leading)
+                
                 Spacer()
+                
                 Button {
-                    withAnimation {
-                        viewModel.placeOrder()
-                        print(viewModel.userOrderCount)
-                        viewModel.coffees = []
-                    }
+                    isPresented.toggle()
                 } label: {
                     Text("Next")
+                        .nextButtonAppearance()
+                        .frame(width: UIScreen.main.bounds.width / 2)
                 }
-                .nextButtonAppearance()
-                .frame(width: UIScreen.main.bounds.width / 2)
             }
             .padding(.horizontal)
             
         }
+        .sheet(isPresented: $isPresented, content: {
+            PaymentView(viewModel: viewModel, path: $path)
+                .presentationDetents([.height(600)])
+        })
+        
         .onAppear {
             viewModel.fetchUserOrders()
             print(viewModel.userOrderCount)
@@ -144,17 +148,17 @@ struct MyOrderView: View {
                 Button {
                     viewModel.isGiftCoffeeSelected.toggle()
                     path = NavigationPath()
+                    viewModel.freeCoffees -= 1
                 } label: {
+                    Text(viewModel.freeCoffees > 0 ? "\(viewModel.freeCoffees)" : "")
                     Image("coffeeImage")
-                        .opacity(viewModel.userOrderCount % 8 == 0 ? 1.0 : 0.0)
-                        .scaleEffect(viewModel.userOrderCount % 8 == 0 ? 1.2 : 1.0)
-                        .animation(
-                            viewModel.userOrderCount % 8 == 0
-                            ? .easeInOut(duration: 1).repeatForever(autoreverses: true)
+                        .opacity(viewModel.freeCoffees > 0 ? 1.0 : 0.0)
+                        .scaleEffect(viewModel.freeCoffees > 0 ? 1.2 : 0.0)
+                        .animation(viewModel.freeCoffees > 0 ?  .easeInOut(duration: 1).repeatForever(autoreverses: true)
                             : nil,
-                            value: viewModel.userOrderCount
+                                   value: viewModel.freeCoffees
                         )
-                        .foregroundColor(viewModel.userOrderCount % 8 == 0 ? Color.brown : .gray)
+                        .foregroundColor(viewModel.freeCoffees > 0 ?  .coffeeBeanColor : .gray)
                 }
             }
         }
