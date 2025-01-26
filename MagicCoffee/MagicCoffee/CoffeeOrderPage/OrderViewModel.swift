@@ -45,7 +45,6 @@ class OrderViewModel: ObservableObject {
     @Published var coffeeImage = ""
     @Published var total = 0.0
     @Published var totalcoffeeCount = 0
-    @Published var isFreeDrinkSelected = false
     @Published var userOrderCount: Int {
         didSet {
             UserDefaults.standard.set(userOrderCount, forKey: "count")
@@ -100,11 +99,13 @@ class OrderViewModel: ObservableObject {
     }
     
     func placeOrder() {
+        
         if isGiftCoffeeSelected {
-               total = coffees.filter { $0.price > 0 }.reduce(0.0) { $0 + $1.price }
-           } else {
-               updateTotalPrice() 
-           }
+            total = coffees.filter { $0.price > 0 }.reduce(0.0) { $0 + $1.price }
+            freeCoffees -= 1
+        } else {
+            updateTotalPrice()
+        }
 
         uploadOrderToFirebase(order: createOrder()) { [weak self] result in
             switch result {
@@ -118,10 +119,23 @@ class OrderViewModel: ObservableObject {
         }
     }
     
+    func getFreeCoffee() {
+        if freeCoffees > 0 {
+            isGiftCoffeeSelected = true
+            freeCoffees -= 1
+        } else {
+            isGiftCoffeeSelected.toggle()
+        }
+    }
+    
     func addCoffee() {
         if coffees.first(where: { $0.name == coffeeName }) != nil {
             return
         }
+        
+    
+        
+        print(isGiftCoffeeSelected)
         
         let coffee = createCoffee()
         coffees.append(coffee)
@@ -141,7 +155,7 @@ class OrderViewModel: ObservableObject {
     
     func saveFreeCoffees() {
         if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
-            freeCoffees += 1            
+            freeCoffees += 1
         }
     }
     
