@@ -9,12 +9,12 @@ import SwiftUI
 
 struct HomePageView: View {
     
-    let columns = Array(repeating: GridItem(.flexible()), count: 2)
-
     @StateObject var viewModel = HomePageViewModel()
-    @StateObject var orderViewModel = OrderViewModel()
+    @ObservedObject var orderViewModel: OrderViewModel
     @State private var path = NavigationPath()
     @State private var text = ""
+    
+    private let columns = Array(repeating: GridItem(.flexible()), count: 2)
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -37,12 +37,7 @@ struct HomePageView: View {
                                             .fill(.white)
                                             .frame(width: 175)
                                         VStack {
-                                            if let imageUrl = URL(string: coffee.image) {
-                                                AsyncImage(url: imageUrl) { image in
-                                                    image.image?.resizable()
-                                                        .scaledToFit()
-                                                }
-                                            }
+                                            AsyncCoffeeView(image: coffee.image)
                                             Text(coffee.name)
                                                 .foregroundStyle(.black)
                                         }
@@ -102,5 +97,5 @@ struct HomePageView: View {
 }
 
 #Preview {
-    HomePageView()
+    HomePageView(orderViewModel: OrderViewModel())
 }

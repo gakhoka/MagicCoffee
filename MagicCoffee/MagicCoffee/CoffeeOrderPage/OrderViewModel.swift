@@ -62,18 +62,31 @@ class OrderViewModel: ObservableObject {
     private var previousSyrup = "None"
     
     
+    func addRedeemedCoffee(_ coffee: Coffee) {
+        coffees.append(coffee)
+    }
+    
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
         guard  let currentUser = Auth.auth().currentUser else { return }
         
         let userId = currentUser.uid
-        let db = Firestore.firestore()
-        let userOrdersRef = db.collection("users").document(userId).collection("orders")
+        let database = Firestore.firestore()
+        let userOrdersRef = database.collection("users").document(userId).collection("orders")
+        let userRef = database.collection("users").document(userId)
         
         let orderData = order.asDictionary()
         
         userOrdersRef.addDocument(data: orderData) { error in
             if let error = error {
                 completion(.failure(error))
+            } else {
+                completion(.success(()))
+            }
+        }
+        
+        userRef.updateData(["score": FieldValue.increment(Int64(total * 5))]) { error in
+            if let error = error {
+                completion(.failure((error)))
             } else {
                 completion(.success(()))
             }
@@ -110,8 +123,8 @@ class OrderViewModel: ObservableObject {
         uploadOrderToFirebase(order: createOrder()) { [weak self] result in
             switch result {
             case .success(_):
-                print("order is sent")
                 self?.coffees.removeAll()
+                self?.total = 0.0
                 self?.saveFreeCoffees()
             case .failure(let failure):
                 print(failure.localizedDescription)

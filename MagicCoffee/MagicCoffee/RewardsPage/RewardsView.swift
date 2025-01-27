@@ -9,46 +9,54 @@ import SwiftUI
 
 struct RewardsView: View {
     
-    @StateObject var viewModel = RewardsViewModel()
-    
+    @ObservedObject var orderViewModel: OrderViewModel
+    @StateObject private var viewModel: RewardsViewModel
+        
+    init(orderViewModel: OrderViewModel) {
+        self.orderViewModel = orderViewModel
+        _viewModel = StateObject(wrappedValue: RewardsViewModel(orderViewModel: orderViewModel))
+    }
+
     var body: some View {
-        VStack(spacing: 20) {
-            Text("Rewards")
-            
-            LoyaltyView(viewModel: viewModel)
-            
-            RedeemPointsView(viewModel: viewModel)
-            HStack {
-                Text("History Rewards")
-                    .font(.system(size: 20))
-                    .padding(.horizontal, 20)
-                Spacer()
-            }
-            
-            List {
-                ForEach(viewModel.coffeeHistory) { coffee in
-                    HStack {
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text(coffee.name)
-                            Text(coffee.orderDate.formattedDate())
-                                .foregroundStyle(.gray)
-                                .font(.system(size: 15))
-                        }
-                        Spacer()
-                        Text("+ \(coffee.score)")
-                    }
-                    .poppinsFont(size: 18)
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Rewards")
+                
+                LoyaltyView(viewModel: viewModel)
+                
+                RedeemPointsView(viewModel: viewModel, orderViewModel: orderViewModel)
+                HStack {
+                    Text("History Rewards")
+                        .font(.system(size: 20))
+                        .padding(.horizontal, 20)
+                    Spacer()
                 }
-                .listRowSeparator(.visible)
+                
+                List {
+                    ForEach(viewModel.coffeeHistory) { coffee in
+                        HStack {
+                            VStack(alignment: .leading, spacing: 20) {
+                                Text(coffee.name)
+                                Text(coffee.orderDate.formattedDate())
+                                    .foregroundStyle(.gray)
+                                    .font(.system(size: 15))
+                            }
+                            Spacer()
+                            Text("+ \(coffee.score)")
+                        }
+                        .poppinsFont(size: 18)
+                    }
+                    .listRowSeparator(.visible)
+                }
+                .poppinsFont(size: 24)
+                .onAppear(perform: viewModel.fetchUserOrders)
+                .scrollContentBackground(.hidden)
+                .scrollIndicators(.hidden)
             }
-            .poppinsFont(size: 24)
-            .onAppear(perform: viewModel.fetchUserOrders)
-            .scrollContentBackground(.hidden)
-            .scrollIndicators(.hidden)
         }
     }
 }
 
 #Preview {
-    RewardsView()
+    RewardsView(orderViewModel: OrderViewModel())
 }

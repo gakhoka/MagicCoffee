@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TabBarView: View {
+    @StateObject var viewModel = OrderViewModel()
     
     init() {
         UITabBar.appearance().backgroundColor = .lightGrayBackground
@@ -17,13 +18,13 @@ struct TabBarView: View {
     
     var body: some View {
         TabView(selection: $selection) {
-            HomePageView()
+            HomePageView(orderViewModel: viewModel)
                 .tag(1)
                 .tabItem {
                     Image("Home")
                 }
             
-            RewardsView()
+            RewardsView(orderViewModel: viewModel)
                 .tag(2)
                 .tabItem {
                     Image("Reward")

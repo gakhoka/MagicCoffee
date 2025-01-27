@@ -10,6 +10,7 @@ import SwiftUI
 struct RedeemPointsView: View {
     
     @ObservedObject var viewModel: RewardsViewModel
+    @ObservedObject var orderViewModel: OrderViewModel
     
     var body: some View {
         ZStack {
@@ -32,9 +33,7 @@ struct RedeemPointsView: View {
     }
     
     private var redeemButton: some View {
-        Button(action:  {
-            //todo
-        }) {
+        NavigationLink(destination: RedeemView(viewModel: viewModel, orderViewmodel: orderViewModel).navigationBarBackButtonHidden(true)) {
             Text("Redeem Drinks")
                 .redeemButton()
         }
@@ -50,5 +49,5 @@ struct RedeemPointsView: View {
 }
 
 #Preview {
-    RedeemPointsView(viewModel: RewardsViewModel())
+    RedeemPointsView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()), orderViewModel: OrderViewModel())
 }
