@@ -37,5 +37,5 @@ struct LoyaltyView: View {
 }
 
 #Preview {
-    LoyaltyView(viewModel: RewardsViewModel())
+    LoyaltyView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()))
 }

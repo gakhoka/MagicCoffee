@@ -10,16 +10,15 @@ import SwiftUI
 struct PaymentView: View {
     
     @ObservedObject var viewModel: OrderViewModel
-    @State private var isCardTapped = false
     @StateObject var cardViewModel = CreditCardViewmodel()
     @State private var selectedCardIndex: Int? = nil
+    @State private var isCardTapped = false
     @State private var isPaymentMethodSelected = false
     @State private var noMethodsSelected = false
     @State private var shouldNavigate = false
     @State private var applePayMethod = false
     @Binding var path: NavigationPath
 
-    
     let username = UserDefaults.standard.string(forKey: "username")
     
     var body: some View {
@@ -112,14 +111,14 @@ struct PaymentView: View {
                 .scrollContentBackground(.hidden)
 
                 HStack {
-                    if isPaymentMethodSelected == false {
+                    if applePayMethod == false {
                         Image(systemName:"apple.logo")
                         Text("Pay")
                     } else {
                         ZStack {
                             Circle()
                                 .fill(.green)
-                                .frame(width: 30, height: 30)
+                                .frame(width: 35, height: 35)
                             Image(systemName: "checkmark")
                                 .foregroundStyle(.white)
                         }
@@ -129,13 +128,12 @@ struct PaymentView: View {
                 .roundedRectangleStyle(color: .black)
                 .frame(width: 300, height: 60)
                 .padding(.horizontal)
-                .animation(.easeIn(duration: 0.6), value: isPaymentMethodSelected)
+                .animation(.easeIn(duration: 0.6), value: applePayMethod)
                 .onTapGesture {
-                    isPaymentMethodSelected = true
+                    applePayMethod = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         viewModel.placeOrder()
                         shouldNavigate = true
-                        applePayMethod = true
                     }
                 }
                 
@@ -157,7 +155,7 @@ struct PaymentView: View {
                     
                     
                     Button {
-                        if isPaymentMethodSelected {
+                        if isPaymentMethodSelected  {
                             viewModel.placeOrder()
                             shouldNavigate = true
                         } else {
