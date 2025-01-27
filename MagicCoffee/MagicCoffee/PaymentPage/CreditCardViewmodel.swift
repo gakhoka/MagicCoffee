@@ -46,20 +46,33 @@ class CreditCardViewmodel: ObservableObject {
     
     func removeCard(at index: Int) {
         let cardToRemove = userCards[index]
-        deleteCardFromFirebase(cardId: cardToRemove.id.uuidString)
+        deleteCardByNumber(cardNumber: cardToRemove.cardNumber)
         userCards.remove(at: index)
     }
     
-    func deleteCardFromFirebase(cardId: String) {
+    func deleteCardByNumber(cardNumber: String) {
         guard let currentUser = Auth.auth().currentUser else { return }
         let userId = currentUser.uid
 
         let db = Firestore.firestore()
-        let cardRef = db.collection("users").document(userId).collection("userCards").document(cardId)
+        let creditCardsRef = db.collection("users").document(userId).collection("creditCards")
 
-        cardRef.delete { error in
+        creditCardsRef.whereField("cardNumber", isEqualTo: cardNumber).getDocuments { [weak self] snapshot, error in
+            guard let self = self else { return }
             if let error = error {
                 print(error.localizedDescription)
+                return
+            }
+
+            guard let documents = snapshot?.documents, !documents.isEmpty else { return }
+
+            for document in documents {
+                document.reference.delete { error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+                   
+                }
             }
         }
     }
@@ -80,10 +93,12 @@ class CreditCardViewmodel: ObservableObject {
             "cvv": card.cvv
         ]
         
-        creditCardsRef.addDocument(data: cardData) { error in
+        creditCardsRef.addDocument(data: cardData) { [weak self] error in
             if let error = error {
                 print(error.localizedDescription)
             }
+            
+            self?.userCards.append(card)
         }
     }
     
