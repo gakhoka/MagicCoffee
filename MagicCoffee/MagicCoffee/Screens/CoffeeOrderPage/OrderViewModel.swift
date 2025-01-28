@@ -45,16 +45,17 @@ class OrderViewModel: ObservableObject {
     @Published var coffeeImage = ""
     @Published var total = 0.0
     @Published var totalcoffeeCount = 0
-    @Published var userOrderCount: Int {
-        didSet {
-            UserDefaults.standard.set(userOrderCount, forKey: "count")
-        }
-    }
     @Published var isGiftCoffeeSelected = false
     @Published var orderDate = Date.now
     @Published var freeCoffees: Int {
         didSet {
             UserDefaults.standard.set(freeCoffees, forKey: "free")
+        }
+    }
+    
+    @Published var userOrderCount: Int {
+        didSet {
+            UserDefaults.standard.set(userOrderCount, forKey: "count")
         }
     }
     
@@ -153,11 +154,11 @@ class OrderViewModel: ObservableObject {
     }
     
     private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate)
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate, prepTime: prepareTime())
         return coffee
     }
     
-    func randomeTime() -> Date {
+    func prepareTime() -> Date {
         let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
         return date
     }

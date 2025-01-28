@@ -23,41 +23,31 @@ class HistoryViewModel {
     func fetchOrders() {
         let database = Firestore.firestore()
         guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        let userRef = database.collection("users").document(uid)
-        
-        userRef.getDocument { document, error in
-            if let error = error {
-                print("Error fetching user document: \(error.localizedDescription)")
-                return
-            }
-            print("Fetched user document: \(String(describing: document?.data()))")
-        }
-        
-        let ordersRef = userRef.collection("orders")
+            
+        let ordersRef = database.collection("users").document(uid).collection("orders")
+
         ordersRef.getDocuments { [weak self] snapshot, error in
             if let error = error {
-                print("Error fetching orders: \(error.localizedDescription)")
+                print(error.localizedDescription)
                 return
             }
             
             if let snapshot = snapshot {
-            
                 
                 var coffeeList: [Coffee] = []
                 for document in snapshot.documents {
-                    print("Order document data: \(document.data())")
-                    
+
                     if let coffees = document.get("coffee") as? [[String: Any]] {
                         for coffee in coffees {
                             if let name = coffee["name"] as? String,
+                               let prepTime = coffee["prepTime"] as? Timestamp,
                                let timestamp = coffee["orderDate"] as? Timestamp,
                                let size = coffee["size"] as? String,
                                let price = coffee["price"] as? Double {
                                 let orderDate = timestamp.dateValue()
-                                let myCoffee = Coffee(name: name, size: Coffee.CoffeeSize(rawValue: size) ?? .large, price: price, orderDate: orderDate)
+                                let prepDate = prepTime.dateValue()
+                                let myCoffee = Coffee(name: name, size: Coffee.CoffeeSize(rawValue: size) ?? .large, price: price, orderDate: orderDate, prepTime: prepDate)
                                 coffeeList.append(myCoffee)
-                                print("Added coffee: \(myCoffee)")
                             }
                         }
                     }

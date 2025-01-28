@@ -11,6 +11,7 @@ import UIKit
 class OrdersTableViewCell: UITableViewCell {
     
     var coffee: Coffee?
+    var order: Order?
    
     private let dateLabel: UILabel = {
         let label = UILabel()
@@ -72,9 +73,11 @@ class OrdersTableViewCell: UITableViewCell {
     func configure(with coffee: Coffee) {
         coffeeName.text = coffee.name
         price.text = "\(String(format: "%.2f", coffee.price)) $"
-        dateLabel.text = "At \(coffee.orderDate.formattedDate())"
         sizeLabel.text = coffee.size.rawValue
+        dateLabel.text = coffee.prepTime.formatToDay()
     }
+    
+    func configureDate() {}
     
     private func placeViews() {
         contentView.addSubview(dateLabel)
