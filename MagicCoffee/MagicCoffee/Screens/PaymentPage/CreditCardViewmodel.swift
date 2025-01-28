@@ -58,7 +58,7 @@ class CreditCardViewmodel: ObservableObject {
         let creditCardsRef = db.collection("users").document(userId).collection("creditCards")
 
         creditCardsRef.whereField("cardNumber", isEqualTo: cardNumber).getDocuments { [weak self] snapshot, error in
-            guard let self = self else { return }
+            guard self != nil else { return }
             if let error = error {
                 print(error.localizedDescription)
                 return
