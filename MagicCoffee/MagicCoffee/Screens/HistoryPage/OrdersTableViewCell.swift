@@ -9,44 +9,47 @@ import SwiftUI
 import UIKit
 
 class OrdersTableViewCell: UITableViewCell {
+    
+    var coffee: Coffee?
    
     private let dateLabel: UILabel = {
         let label = UILabel()
-        label.create(text: "24 june | 12: 30 | by 18:30", textColor: .gray, font: 12)
+        label.create(text: "", textColor: .gray, font: 14)
         return label
     }()
     
     private lazy var coffeCup: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "CoffeeCup")
+        imageView.image = UIImage(named: "cupofcoffee")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .black
         return imageView
     }()
     
-    private lazy var locationImage: UIImageView = {
+    private lazy var desctiptionImage: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "Location")
+        imageView.image = UIImage(named: "description")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.tintColor = .black
         return imageView
     }()
 
-    private let CoffeeName: UILabel = {
+    private let coffeeName: UILabel = {
         let label = UILabel()
-        label.create(text: "Americano", font: 14)
+        label.create(text: "aosfd")
+        label.font = UIFont.systemFont(ofSize: 19)
         return label
     }()
     
-    private let locationLabel: UILabel = {
+    private let sizeLabel: UILabel = {
         let label = UILabel()
-        label.create(text: "Barcelona", font: 14)
+        label.create(text: "", font: 16)
         return label
     }()
     
     private let price: UILabel = {
         let label = UILabel()
-        label.create(text: "Eur 5.93", font: 18)
+        label.create(text: "", font: 18)
         return label
     }()
 
@@ -66,12 +69,19 @@ class OrdersTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
+    func configure(with coffee: Coffee) {
+        coffeeName.text = coffee.name
+        price.text = "\(String(format: "%.2f", coffee.price)) $"
+        dateLabel.text = "At \(coffee.orderDate.formattedDate())"
+        sizeLabel.text = coffee.size.rawValue
+    }
+    
     private func placeViews() {
         contentView.addSubview(dateLabel)
-        contentView.addSubview(CoffeeName)
+        contentView.addSubview(coffeeName)
         contentView.addSubview(coffeCup)
-        contentView.addSubview(locationImage)
-        contentView.addSubview(locationLabel)
+        contentView.addSubview(desctiptionImage)
+        contentView.addSubview(sizeLabel)
         contentView.addSubview(price)
     }
 
@@ -82,20 +92,26 @@ class OrdersTableViewCell: UITableViewCell {
             dateLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
             
             coffeCup.leftAnchor.constraint(equalTo: dateLabel.leftAnchor),
-            coffeCup.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 10),
+            coffeCup.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 20),
+            coffeCup.heightAnchor.constraint(equalToConstant: 25),
+            coffeCup.widthAnchor.constraint(equalToConstant: 25),
 
-            CoffeeName.leftAnchor.constraint(equalTo: coffeCup.rightAnchor, constant: 10),
-            CoffeeName.centerYAnchor.constraint(equalTo: coffeCup.centerYAnchor),
+            coffeeName.leftAnchor.constraint(equalTo: coffeCup.rightAnchor, constant: 10),
+            coffeeName.centerYAnchor.constraint(equalTo: coffeCup.centerYAnchor),
             
-            locationImage.topAnchor.constraint(equalTo: coffeCup.bottomAnchor, constant: 10),
-            locationImage.leftAnchor.constraint(equalTo: dateLabel.leftAnchor),
+            desctiptionImage.topAnchor.constraint(equalTo: coffeCup.bottomAnchor, constant: 20),
+            desctiptionImage.leftAnchor.constraint(equalTo: dateLabel.leftAnchor, constant: 3),
+            desctiptionImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
+            desctiptionImage.heightAnchor.constraint(equalToConstant: 20),
+            desctiptionImage.widthAnchor.constraint(equalToConstant: 20),
             
-            locationLabel.centerYAnchor.constraint(equalTo: locationImage.centerYAnchor),
-            locationLabel.leftAnchor.constraint(equalTo: locationImage.rightAnchor, constant: 10),
-            locationImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            sizeLabel.centerYAnchor.constraint(equalTo: desctiptionImage.centerYAnchor),
+            sizeLabel.leftAnchor.constraint(equalTo: desctiptionImage.rightAnchor, constant: 10),
+
             
-            price.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30),
-            price.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15)
+            
+            price.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
+            price.centerYAnchor.constraint(equalTo: coffeeName.centerYAnchor)
         ])
     }
 }

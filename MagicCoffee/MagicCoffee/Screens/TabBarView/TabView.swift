@@ -29,6 +29,13 @@ struct TabBarView: View {
                 .tabItem {
                     Image("Reward")
                 }
+            
+            Historyview()
+                .tag(3)
+                .tabItem {
+                    Image("History")
+                }
+            
             ProfilePageView()
                 .tag(3)
                 .tabItem {
@@ -49,6 +56,22 @@ struct TabBarView: View {
         }
         
         typealias UIViewControllerType = ProfilePageViewController
+    }
+    
+    struct Historyview: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> HistoryViewController {
+            HistoryViewController()
+        }
+        
+        func updateUIViewController(_ uiViewController: HistoryViewController, context: Context) {
+            
+        }
+        
+        typealias UIViewControllerType = HistoryViewController
+        
+        
+        
+        
     }
 }
 

@@ -13,6 +13,8 @@ class HistoryViewController: UIViewController {
 
     
     private var underlineLeadingConstraint: NSLayoutConstraint!
+    
+    var viewModel = HistoryViewModel()
 
     private lazy var ongoingButton: UIButton = {
         let button = UIButton(type: .system)
@@ -53,6 +55,7 @@ class HistoryViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(OrdersTableViewCell.self, forCellReuseIdentifier: "OrderCell")
         return tableView
@@ -60,11 +63,22 @@ class HistoryViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
-        title = "My Order"
         
         setupUI()
+        updateViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.fetchOrders()
+    }
+    
+    func updateViewModel() {
+        viewModel.updateCoffees = { [weak self] in
+            DispatchQueue.main.async { [weak self] in                self?.tableView.reloadData()
+            }
+        }
     }
     
     private func setupUI() {
@@ -77,8 +91,8 @@ class HistoryViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: ongoingButton.bottomAnchor, constant: 30),
-            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
     }
@@ -138,12 +152,17 @@ class HistoryViewController: UIViewController {
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+
+        viewModel.coffeeHistory.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell {
+            let selectedCoffee = viewModel.coffeeHistory[indexPath.row]
+            cell.configure(with: selectedCoffee)
+            cell.coffee = selectedCoffee
             return cell
+            
         }
         return UITableViewCell()
     }

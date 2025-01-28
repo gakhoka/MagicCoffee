@@ -21,7 +21,7 @@ class QRcodeGenerator {
         qrFilter.setValue("Q", forKey: "inputCorrectionLevel")
   
         colorFilter.setValue(qrFilter.outputImage, forKey: "inputImage")
-        colorFilter.setValue(CIColor(color: UIColor.darkBrown), forKey: "inputColor0")
+        colorFilter.setValue(CIColor(color: UIColor.navyGreen), forKey: "inputColor0")
         colorFilter.setValue(CIColor(color: .clear), forKey: "inputColor1")
         
         let transform = CGAffineTransform(scaleX: 7, y: 7)
