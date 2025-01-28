@@ -12,7 +12,6 @@ class LoginPageViewController: UIViewController {
     
     private let textFieldCenter = CustomTextField()
     private let viewModel = LoginViewModel()
-    private let keychainManager = KeychainManager()
     
     private var emailField: UITextField?
     private var passwordField: UITextField?
