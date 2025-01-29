@@ -47,7 +47,6 @@ struct PaymentView: View {
                             .foregroundStyle(.gray)
                     }
                     .padding(.horizontal)
-                    Spacer()
                     
                     NavigationLink(destination: CardDetailsView(cardsViewModel: cardViewModel).navigationBarBackButtonHidden(true)) {
                         Image("addcard")
@@ -179,6 +178,7 @@ struct PaymentView: View {
         .fullScreenCover(isPresented: $shouldNavigate, content: {
             FinalOrderDetailsView(cardViewModel: cardViewModel, viewModel: viewModel, path: $path)
                 .navigationBarBackButtonHidden(true)
+                .presentationDetents([.height(300)])
         })
         .onAppear(perform: cardViewModel.getGreditCard)
     }

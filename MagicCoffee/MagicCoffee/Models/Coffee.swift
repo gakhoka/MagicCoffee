@@ -26,7 +26,8 @@ struct Coffee: Identifiable, Codable, Hashable {
     var redeemPointsAmount = 0
     var validityDate = ""
     var price = 0.0
-    var orderDate: Date = Date.now
+    var orderDate = Date.now
+    var prepTime = Date.now
     
     
     enum CoffeeSize: String, Codable {
@@ -99,7 +100,8 @@ extension Coffee {
             "score": score,
             "redeemPointsAmount": redeemPointsAmount,
             "price": price,
-            "orderDate": orderDate
+            "orderDate": orderDate,
+            "prepTime": prepTime
         ]
     }
 }

@@ -13,6 +13,14 @@ class HistoryViewController: UIViewController {
 
     
     private var underlineLeadingConstraint: NSLayoutConstraint!
+    private var isOngoingSelected = true
+    var viewModel = HistoryViewModel()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "History", font: 20)
+        return label
+    }()
 
     private lazy var ongoingButton: UIButton = {
         let button = UIButton(type: .system)
@@ -53,6 +61,7 @@ class HistoryViewController: UIViewController {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.showsVerticalScrollIndicator = false
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(OrdersTableViewCell.self, forCellReuseIdentifier: "OrderCell")
         return tableView
@@ -60,16 +69,37 @@ class HistoryViewController: UIViewController {
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .white
-        title = "My Order"
         
         setupUI()
+        updateViewModel()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        viewModel.fetchOrders()
+    }
+    
+    func updateViewModel() {
+        viewModel.updateCoffees = { [weak self] in
+            DispatchQueue.main.async { [weak self] in                self?.tableView.reloadData()
+            }
+        }
     }
     
     private func setupUI() {
         setupButtons()
         setupTableView()
+        setupTitleLabel()
+    }
+    
+    private func setupTitleLabel() {
+        view.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
     }
     
     private func setupTableView() {
@@ -77,8 +107,8 @@ class HistoryViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: ongoingButton.bottomAnchor, constant: 30),
-            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            tableView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 30),
+            tableView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -40)
         ])
     }
@@ -94,7 +124,7 @@ class HistoryViewController: UIViewController {
         view.addSubview(grayUnderLineView)
         
         NSLayoutConstraint.activate([
-            buttonStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            buttonStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             buttonStack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 70),
             buttonStack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -70),
             buttonStack.heightAnchor.constraint(equalToConstant: 50),
@@ -116,11 +146,15 @@ class HistoryViewController: UIViewController {
    
     
     private func didTapOngoing() {
+        isOngoingSelected = true
         updateTabSelection(selectedButton: ongoingButton, unselectedButton: historyButton)
+        tableView.reloadData()
     }
     
      private func didTapHistory() {
+        isOngoingSelected = false
         updateTabSelection(selectedButton: historyButton, unselectedButton: ongoingButton)
+         tableView.reloadData()
     }
     
     private func updateTabSelection(selectedButton: UIButton, unselectedButton: UIButton) {
@@ -138,12 +172,17 @@ class HistoryViewController: UIViewController {
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+
+        return isOngoingSelected ? viewModel.ongoingOrder.count : viewModel.ordersHistory.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell {
+            let selectedCoffee = isOngoingSelected ? viewModel.ongoingOrder[indexPath.row] : viewModel.ordersHistory[indexPath.row]
+            cell.configure(with: selectedCoffee, isonGoing: isOngoingSelected)
+            cell.coffee = selectedCoffee
             return cell
+            
         }
         return UITableViewCell()
     }

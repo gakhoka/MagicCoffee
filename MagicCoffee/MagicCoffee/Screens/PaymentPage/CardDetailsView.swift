@@ -57,6 +57,7 @@ struct CardDetailsView: View {
                     .roundedRectangleStyle(color: .navyGreen)
                     .frame(width: 300, height: 60)
             }
+            Spacer()
         }
         .customBackButton {
             dismiss()
