@@ -26,7 +26,7 @@ class ProfilePageViewController: UIViewController {
         return button
     }()
     
-    private let mainstackView: UIStackView = {
+    private lazy var mainstackView: UIStackView = {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -73,7 +73,15 @@ class ProfilePageViewController: UIViewController {
         
         qrImage.translatesAutoresizingMaskIntoConstraints = false
         qrImage.image = credentials
+        qrImage.isUserInteractionEnabled = true
 
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(qrImageTapped))
+        qrImage.addGestureRecognizer(tapGesture)
+    }
+
+    @objc private func qrImageTapped() {
+        let qrVC = QRCodeViewController(qrImage: qrImage.image)
+        navigationController?.pushViewController(qrVC, animated: true)
     }
     
     private func signOutButtonTapped() {
@@ -176,14 +184,17 @@ class ProfilePageViewController: UIViewController {
             mainstackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             mainstackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             
-            qrImage.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
-            qrImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            signOutButton.topAnchor.constraint(equalTo: mainstackView.bottomAnchor, constant: 30),
+            signOutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
             signOutButton.leftAnchor.constraint(equalTo: mainstackView.leftAnchor, constant: 45),
             
             logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 20),
-            logOutLabel.centerYAnchor.constraint(equalTo: signOutButton.centerYAnchor)
+            logOutLabel.centerYAnchor.constraint(equalTo: signOutButton.centerYAnchor),
+            
+            qrImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            qrImage.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
+            
+            qrImage.heightAnchor.constraint(equalToConstant: 30),
+            qrImage.widthAnchor.constraint(equalToConstant: 30)
         ])
     }
     
@@ -191,9 +202,9 @@ class ProfilePageViewController: UIViewController {
         mainstackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         let items = [
-            ("Profile", "Name", viewModel.username),
-            ("Message", "Email", viewModel.email),
-            ("Lock", "Password", "*********")
+            ("person.circle", "Name", viewModel.username),
+            ("envelope", "Email", viewModel.email),
+            ("lock", "Password", "*********")
         ]
         
         items.forEach { icon, title, value in
