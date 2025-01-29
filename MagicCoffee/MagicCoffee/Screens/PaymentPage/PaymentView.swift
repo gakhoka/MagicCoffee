@@ -24,41 +24,24 @@ struct PaymentView: View {
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
+            VStack {
                 
                 Text(selectOnePaymentAlert ? "Please select one payment" : (noMethodsSelected ? "Please select payment method" : ""))
                     .foregroundStyle(.red)
                     .font(.system(size: 14))
                     .animation(.easeOut(duration: 0.5), value: selectOnePaymentAlert)
-                    .animation(.easeInOut(duration: 0.5), value: noMethodsSelected)
-                
+                    .animation(.easeInOut(duration: 0.5), value: noMethodsSelected)                
                 
                 HStack {
                     Text("Order payment")
                         .fontWeight(.bold)
                     Spacer()
-                }
-                .padding(.horizontal)
-                
-                HStack(spacing: 10) {
-                    Image("paymentCart")
-                        .frame(width: 40, height: 40)
-                        .background(Color.lightGrayBackground)
-                    VStack(alignment: .leading) {
-                        Text(username ?? "")
-                            .poppinsFont(size: 16)
-                        Text("Magic coffee store")
-                            .foregroundStyle(.gray)
-                    }
-                    .padding(.horizontal)
-                    
                     NavigationLink(destination: CardDetailsView(cardsViewModel: cardViewModel).navigationBarBackButtonHidden(true)) {
                         Image("addcard")
                             .foregroundColor(.black)
                     }
                 }
-                .padding()
-                .poppinsFont(size: 14)
+                .padding(.horizontal)
                 
                 List {
                     ForEach(cardViewModel.userCards.indices, id: \.self) { index in
@@ -97,7 +80,6 @@ struct PaymentView: View {
                             .tint(.red)
                         }
                         .roundedRectangleStyle(color: .lightGrayBackground)
-                        .frame(height: 100)
                         .onTapGesture {
                             if selectedCardIndex == index {
                                 selectedCardIndex = nil
@@ -109,11 +91,14 @@ struct PaymentView: View {
                             }
                         }
                     }
+                    .frame(height: 100)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 20, trailing: 0))
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
                 }
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
+                .padding(.bottom)
                 
                 HStack {
                     if applePayMethod == false {
@@ -198,6 +183,7 @@ struct PaymentView: View {
                 .presentationDetents([.height(300)])
         })
         .onAppear(perform: cardViewModel.getGreditCard)
+        Spacer()
     }
 }
 
