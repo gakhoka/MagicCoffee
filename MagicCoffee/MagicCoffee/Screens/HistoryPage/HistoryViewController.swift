@@ -15,6 +15,12 @@ class HistoryViewController: UIViewController {
     private var underlineLeadingConstraint: NSLayoutConstraint!
     private var isOngoingSelected = true
     var viewModel = HistoryViewModel()
+    
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "History", font: 20)
+        return label
+    }()
 
     private lazy var ongoingButton: UIButton = {
         let button = UIButton(type: .system)
@@ -84,6 +90,16 @@ class HistoryViewController: UIViewController {
     private func setupUI() {
         setupButtons()
         setupTableView()
+        setupTitleLabel()
+    }
+    
+    private func setupTitleLabel() {
+        view.addSubview(titleLabel)
+        
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+        titleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
     }
     
     private func setupTableView() {
@@ -108,7 +124,7 @@ class HistoryViewController: UIViewController {
         view.addSubview(grayUnderLineView)
         
         NSLayoutConstraint.activate([
-            buttonStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30),
+            buttonStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 40),
             buttonStack.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 70),
             buttonStack.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -70),
             buttonStack.heightAnchor.constraint(equalToConstant: 50),
