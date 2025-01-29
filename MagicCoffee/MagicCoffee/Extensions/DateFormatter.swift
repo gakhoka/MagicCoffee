@@ -14,7 +14,8 @@ extension Date {
         return formatter.string(from: self)
     }
 
-    func formatToDay() -> String {
+    func formatToDay(isOngoing: Bool) -> String {
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "MMMM d"
         let formattedDate = formatter.string(from: self)
@@ -22,7 +23,11 @@ extension Date {
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm"
         let formattedTime = timeFormatter.string(from: self)
-       
-        return "\(formattedDate) | By \(formattedTime)"
+        
+        if isOngoing {
+            return "\(formattedDate) | By \(formattedTime)"
+        } else {
+            return "\(formattedDate) | At \(formattedTime)"
+        }
     }
 }

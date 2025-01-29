@@ -11,9 +11,26 @@ import UIKit
 class OrdersTableViewCell: UITableViewCell {
     
     var coffee: Coffee?
-    var order: Order?
+    
+    private lazy var milkLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "", textColor: .gray, font: 16)
+        return label
+    }()
+    
+    private lazy var grindingLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "", textColor: .gray, font: 16)
+        return label
+    }()
+    
+    private lazy var roastingLabel: UILabel = {
+        let label = UILabel()
+        label.create(text: "", textColor: .gray, font: 16)
+        return label
+    }()
    
-    private let dateLabel: UILabel = {
+    private lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.create(text: "", textColor: .gray, font: 14)
         return label
@@ -44,7 +61,7 @@ class OrdersTableViewCell: UITableViewCell {
     
     private let sizeLabel: UILabel = {
         let label = UILabel()
-        label.create(text: "", font: 16)
+        label.create(text: "", textColor: .gray, font: 16)
         return label
     }()
     
@@ -70,11 +87,18 @@ class OrdersTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
-    func configure(with coffee: Coffee) {
+    func configure(with coffee: Coffee, isonGoing: Bool) {
         coffeeName.text = coffee.name
         price.text = "\(String(format: "%.2f", coffee.price)) $"
-        sizeLabel.text = coffee.size.rawValue
-        dateLabel.text = coffee.prepTime.formatToDay()
+        sizeLabel.text = "\(coffee.size.rawValue) cup |"
+        dateLabel.text = coffee.prepTime.formatToDay(isOngoing: isonGoing)
+        roastingLabel.text = "\(coffee.roastingLevel.rawValue) roasting"
+        grindingLabel.text = "\(coffee.grinding.rawValue) grinding |"
+        if coffee.milk == "" {
+            milkLabel.text = "Regular Milk"
+        } else {
+            milkLabel.text = coffee.milk
+        }
     }
     
     func configureDate() {}
@@ -86,13 +110,16 @@ class OrdersTableViewCell: UITableViewCell {
         contentView.addSubview(desctiptionImage)
         contentView.addSubview(sizeLabel)
         contentView.addSubview(price)
+        contentView.addSubview(roastingLabel)
+        contentView.addSubview(grindingLabel)
+        contentView.addSubview(milkLabel)
     }
 
     private func setupConstraints() {
     
         NSLayoutConstraint.activate([
             dateLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20),
-            dateLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20),
+            dateLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10),
             
             coffeCup.leftAnchor.constraint(equalTo: dateLabel.leftAnchor),
             coffeCup.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 20),
@@ -104,16 +131,25 @@ class OrdersTableViewCell: UITableViewCell {
             
             desctiptionImage.topAnchor.constraint(equalTo: coffeCup.bottomAnchor, constant: 20),
             desctiptionImage.leftAnchor.constraint(equalTo: dateLabel.leftAnchor, constant: 3),
-            desctiptionImage.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -30),
+      
             desctiptionImage.heightAnchor.constraint(equalToConstant: 20),
             desctiptionImage.widthAnchor.constraint(equalToConstant: 20),
             
             sizeLabel.centerYAnchor.constraint(equalTo: desctiptionImage.centerYAnchor),
             sizeLabel.leftAnchor.constraint(equalTo: desctiptionImage.rightAnchor, constant: 10),
+            
+            roastingLabel.leftAnchor.constraint(equalTo: sizeLabel.rightAnchor, constant: 5),
+            roastingLabel.centerYAnchor.constraint(equalTo: sizeLabel.centerYAnchor),
 
+            grindingLabel.topAnchor.constraint(equalTo: sizeLabel.bottomAnchor, constant: 10),
+            grindingLabel.leftAnchor.constraint(equalTo: sizeLabel.leftAnchor),
+            grindingLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20),
+            
+            milkLabel.leftAnchor.constraint(equalTo: grindingLabel.rightAnchor, constant: 5),
+            milkLabel.topAnchor.constraint(equalTo: grindingLabel.topAnchor),
             
             
-            price.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20),
+            price.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10),
             price.centerYAnchor.constraint(equalTo: coffeeName.centerYAnchor)
         ])
     }

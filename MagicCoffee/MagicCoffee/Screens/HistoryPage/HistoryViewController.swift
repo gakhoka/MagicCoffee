@@ -13,7 +13,7 @@ class HistoryViewController: UIViewController {
 
     
     private var underlineLeadingConstraint: NSLayoutConstraint!
-    
+    private var isOngoingSelected = true
     var viewModel = HistoryViewModel()
 
     private lazy var ongoingButton: UIButton = {
@@ -130,11 +130,15 @@ class HistoryViewController: UIViewController {
    
     
     private func didTapOngoing() {
+        isOngoingSelected = true
         updateTabSelection(selectedButton: ongoingButton, unselectedButton: historyButton)
+        tableView.reloadData()
     }
     
      private func didTapHistory() {
+        isOngoingSelected = false
         updateTabSelection(selectedButton: historyButton, unselectedButton: ongoingButton)
+         tableView.reloadData()
     }
     
     private func updateTabSelection(selectedButton: UIButton, unselectedButton: UIButton) {
@@ -153,13 +157,13 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        viewModel.coffeeHistory.count
+        return isOngoingSelected ? viewModel.ongoingOrder.count : viewModel.ordersHistory.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell {
-            let selectedCoffee = viewModel.coffeeHistory[indexPath.row]
-            cell.configure(with: selectedCoffee)
+            let selectedCoffee = isOngoingSelected ? viewModel.ongoingOrder[indexPath.row] : viewModel.ordersHistory[indexPath.row]
+            cell.configure(with: selectedCoffee, isonGoing: isOngoingSelected)
             cell.coffee = selectedCoffee
             return cell
             
