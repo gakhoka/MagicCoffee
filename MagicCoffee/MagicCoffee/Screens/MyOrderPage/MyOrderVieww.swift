@@ -160,6 +160,9 @@ struct MyOrderView: View {
             path = NavigationPath()
             viewModel.resetCoffee(coffee: coffee)
         }
+        .onAppear {
+            viewModel.addCoffee()
+        }
     }
 }
 

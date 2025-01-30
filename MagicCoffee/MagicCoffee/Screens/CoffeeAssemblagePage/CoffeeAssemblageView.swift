@@ -82,7 +82,8 @@ struct CoffeeAssemblageView: View {
                 }
             )
             .simultaneousGesture(TapGesture().onEnded {
-                viewModel.addCoffee()
+               // viewModel.addCoffee()
+                
             })
         }
     }
