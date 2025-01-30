@@ -85,11 +85,12 @@ class OrderViewModel: ObservableObject {
             }
         }
         
-        userRef.updateData(["score": FieldValue.increment(Int64(total * 5))]) { error in
+        userRef.updateData(["score": FieldValue.increment(Int64(total * 5))]) { [weak self] error in
             if let error = error {
                 completion(.failure((error)))
             } else {
                 completion(.success(()))
+                self?.saveFreeCoffees()
             }
         }
     }
@@ -126,11 +127,10 @@ class OrderViewModel: ObservableObject {
             case .success(_):
                 self?.coffees.removeAll()
                 self?.total = 0.0
-                self?.saveFreeCoffees()
                 self?.isGiftCoffeeSelected = false
 
-            case .failure(let failure):
-                print(failure.localizedDescription)
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
@@ -145,7 +145,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func addCoffee() {
-        if coffees.first(where: { $0.name == coffeeName }) != nil {
+        if coffees.first(where: { $0.name == coffeeName }) != nil && isGiftCoffeeSelected == false {
             return
         }
         

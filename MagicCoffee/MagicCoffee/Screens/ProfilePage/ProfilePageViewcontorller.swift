@@ -107,7 +107,7 @@ class ProfilePageViewController: UIViewController {
     private func updateqr() {
         viewModel.updateHandler = { [weak self] in
             guard let username = self?.viewModel.username else { return }
-            print(username)
+            
             let qrCodeImage = self?.qrcodeGenerator.generateQRCode(from: username)
             DispatchQueue.main.async { [weak self] in
                 self?.qrImage.image = qrCodeImage
@@ -119,8 +119,8 @@ class ProfilePageViewController: UIViewController {
         let containerView = UIView()
         
         let iconImage = UIImageView()
-        iconImage.image = UIImage(named: icon)
-        iconImage.tintColor = .systemGray
+        iconImage.image = UIImage(systemName: icon)
+        iconImage.tintColor = .black
         iconImage.contentMode = .scaleAspectFit
         
         let labelsStack = UIStackView()
