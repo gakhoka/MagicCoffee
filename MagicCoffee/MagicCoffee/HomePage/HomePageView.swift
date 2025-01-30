@@ -22,9 +22,17 @@ struct HomePageView: View {
                 topView
                     .padding()
                 
-                VStack(alignment: .leading) {
+                VStack {
                     
-                    selectYourCoffee
+                    HStack {
+                        selectYourCoffee
+                        Spacer()
+                        Text(orderViewModel.isGiftCoffeeSelected ? "Free coffee" : "")
+                            .poppinsFont(size: 20)
+                            .foregroundColor(.creamColor)
+                            .padding()
+                    }
+                    
                     
                     ScrollView {
                         LazyVGrid(columns: columns, spacing: 20) {

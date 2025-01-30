@@ -127,6 +127,8 @@ class OrderViewModel: ObservableObject {
                 self?.coffees.removeAll()
                 self?.total = 0.0
                 self?.saveFreeCoffees()
+                self?.isGiftCoffeeSelected = false
+
             case .failure(let failure):
                 print(failure.localizedDescription)
             }

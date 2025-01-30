@@ -17,44 +17,31 @@ struct PaymentView: View {
     @State private var noMethodsSelected = false
     @State private var shouldNavigate = false
     @State private var applePayMethod = false
+    @State private var selectOnePaymentAlert = false
     @Binding var path: NavigationPath
-
+    
     let username = UserDefaults.standard.string(forKey: "username")
     
     var body: some View {
         NavigationView {
-            VStack(spacing: 20) {
+            VStack {
                 
-                Text(noMethodsSelected ? "Please select payment method": "")
-                        .foregroundStyle(.red)
-                        .font(.system(size: 14))
+                Text(selectOnePaymentAlert ? "Please select one payment" : (noMethodsSelected ? "Please select payment method" : ""))
+                    .foregroundStyle(.red)
+                    .font(.system(size: 14))
+                    .animation(.easeOut(duration: 0.5), value: selectOnePaymentAlert)
+                    .animation(.easeInOut(duration: 0.5), value: noMethodsSelected)                
                 
                 HStack {
                     Text("Order payment")
                         .fontWeight(.bold)
                     Spacer()
-                }
-                .padding(.horizontal)
-                
-                HStack(spacing: 10) {
-                    Image("paymentCart")
-                        .frame(width: 40, height: 40)
-                        .background(Color.lightGrayBackground)
-                    VStack(alignment: .leading) {
-                        Text(username ?? "")
-                            .poppinsFont(size: 16)
-                        Text("Magic coffee store")
-                            .foregroundStyle(.gray)
-                    }
-                    .padding(.horizontal)
-                    
                     NavigationLink(destination: CardDetailsView(cardsViewModel: cardViewModel).navigationBarBackButtonHidden(true)) {
                         Image("addcard")
                             .foregroundColor(.black)
                     }
                 }
-                .padding()
-                .poppinsFont(size: 14)
+                .padding(.horizontal)
                 
                 List {
                     ForEach(cardViewModel.userCards.indices, id: \.self) { index in
@@ -71,6 +58,7 @@ struct PaymentView: View {
                                     .frame(width: 10, height: 10)
                                     .padding()
                             }
+                            
                             VStack(alignment: .leading) {
                                 Text("Credit Card")
                                     .poppinsFont(size: 18)
@@ -78,7 +66,7 @@ struct PaymentView: View {
                                     .poppinsFont(size: 14)
                                     .foregroundStyle(.gray)
                             }
-
+                            
                             Spacer()
                             HStack {
                                 Image("visa")
@@ -92,23 +80,26 @@ struct PaymentView: View {
                             .tint(.red)
                         }
                         .roundedRectangleStyle(color: .lightGrayBackground)
-                        .frame(height: 100)
                         .onTapGesture {
                             if selectedCardIndex == index {
                                 selectedCardIndex = nil
+                                isPaymentMethodSelected = false
                             } else {
                                 selectedCardIndex = index
                                 isPaymentMethodSelected = true
+                                print(isPaymentMethodSelected)
                             }
                         }
                     }
-                  
+                    .frame(height: 100)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 20, trailing: 0))
                     .listRowInsets(.none)
                     .listRowSeparator(.hidden)
                 }
                 .scrollIndicators(.hidden)
                 .scrollContentBackground(.hidden)
-
+                .padding(.bottom)
+                
                 HStack {
                     if applePayMethod == false {
                         Image(systemName:"apple.logo")
@@ -129,10 +120,18 @@ struct PaymentView: View {
                 .padding(.horizontal)
                 .animation(.easeIn(duration: 0.6), value: applePayMethod)
                 .onTapGesture {
-                    applePayMethod = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        viewModel.placeOrder()
-                        shouldNavigate = true
+                    if isPaymentMethodSelected == false {
+                        applePayMethod = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            noMethodsSelected = false
+                            viewModel.placeOrder()
+                            shouldNavigate = true
+                        }
+                    } else {
+                        selectOnePaymentAlert = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            selectOnePaymentAlert = false
+                        }
                     }
                 }
                 
@@ -158,7 +157,10 @@ struct PaymentView: View {
                             viewModel.placeOrder()
                             shouldNavigate = true
                         } else {
-                            noMethodsSelected.toggle()
+                            noMethodsSelected = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                noMethodsSelected = false
+                            }
                         }
                     } label: {
                         HStack {
@@ -181,6 +183,7 @@ struct PaymentView: View {
                 .presentationDetents([.height(300)])
         })
         .onAppear(perform: cardViewModel.getGreditCard)
+        Spacer()
     }
 }
 

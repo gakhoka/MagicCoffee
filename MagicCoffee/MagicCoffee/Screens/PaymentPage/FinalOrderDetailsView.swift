@@ -15,7 +15,7 @@ struct FinalOrderDetailsView: View {
     @Binding  var path: NavigationPath
 
     var body: some View {
-        VStack(spacing: 40) {
+        VStack(alignment: .center, spacing: 40) {
             HStack {
                 Spacer()
                 Button {
@@ -37,14 +37,20 @@ struct FinalOrderDetailsView: View {
             
             Text("\(String(describing: cardViewModel.username)) your order has successfully been placed")
                 .foregroundColor(.gray)
+                .padding(.horizontal, 20)
+
             
             Text("Your order will be ready today at \(viewModel.prepareTime().formattedDate())")
+                .padding(.horizontal, 20)
            
             
             Text("Submit your personal QR code at a coffee shop to receive an order")
                 .foregroundColor(.gray)
+                .padding(.horizontal, 20)
+
             Spacer()
         }
+        .multilineTextAlignment(.center)
         .padding()
         .poppinsFont(size: 16)
     }

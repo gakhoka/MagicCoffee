@@ -17,29 +17,8 @@ struct MyOrderView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            
-            HStack {
-                Text("My order")
-                    .padding()
-                    .poppinsFont(size: 24)
-                Spacer()
-            }
-            .padding(.horizontal)
-            HStack {
-                Spacer()
-                Button {
-                    path = NavigationPath()
-                    viewModel.resetCoffee(coffee: coffee)
-                } label: {
-                    HStack {
-                        Image("addcoffee")
-                            .padding(.horizontal)
-                            .foregroundColor(.black)
-                    }
-                }
-                .tint(.navyGreen)
-            }
-            .padding(.horizontal)
+
+        
             List {
                 ForEach(viewModel.coffees) { coffee in
                     HStack {
@@ -104,6 +83,8 @@ struct MyOrderView: View {
             .scrollIndicators(.hidden)
             .scrollContentBackground(.hidden)
             
+            addNewCoffee
+                        
             HStack {
                 VStack(alignment: .leading, spacing: 5) {
                     Text("Total price")
@@ -150,16 +131,34 @@ struct MyOrderView: View {
                     path = NavigationPath()
                 } label: {
                     Text(viewModel.freeCoffees > 0 ? "\(viewModel.freeCoffees)" : "")
-                    Image("coffeeImage")
+                    Image("cupofcoffee")
                         .opacity(viewModel.freeCoffees > 0 ? 1.0 : 0.0)
-                        .scaleEffect(viewModel.freeCoffees > 0 ? 1.2 : 0.0)
-                        .animation(viewModel.freeCoffees > 0 ?  .easeInOut(duration: 1).repeatForever(autoreverses: true)
-                            : nil,
-                                   value: viewModel.freeCoffees
-                        )
-                        .foregroundColor(viewModel.freeCoffees > 0 ?  .coffeeBeanColor : .gray)
                 }
             }
+        }
+        .navigationTitle("My order")
+    }
+    
+    private var addNewCoffee: some View {
+        HStack {
+            Spacer()
+            Text("Add new coffee")
+            Spacer()
+            Image(systemName: "chevron.right")
+        }
+        
+        .foregroundStyle(.white)
+        .padding()
+        .frame(maxWidth: .infinity, minHeight: 50)
+        .background(
+            LinearGradient(colors: [.creamColor, .brownColor], startPoint: .leading, endPoint: .trailing)
+                .cornerRadius(20)
+        )
+        .cornerRadius(20)
+        .padding()
+        .onTapGesture {
+            path = NavigationPath()
+            viewModel.resetCoffee(coffee: coffee)
         }
     }
 }
