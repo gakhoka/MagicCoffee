@@ -14,6 +14,8 @@ struct AdditivesView: View {
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
     
+    @State var Alladditives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
+    
     var body: some View {
         VStack {
             Spacer(minLength: 50)
@@ -24,7 +26,7 @@ struct AdditivesView: View {
             .padding(.horizontal, 50)
             
             List {
-                ForEach(viewModel.additives, id: \.self) { additive in
+                ForEach(Alladditives, id: \.self) { additive in
                     HStack {
                         Text(additive)
                             .foregroundColor(viewModel.selectedAdditives.contains(additive) ? .brown : .black)

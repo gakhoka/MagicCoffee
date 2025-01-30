@@ -101,7 +101,6 @@ class OrdersTableViewCell: UITableViewCell {
         }
     }
     
-    func configureDate() {}
     
     private func placeViews() {
         contentView.addSubview(dateLabel)

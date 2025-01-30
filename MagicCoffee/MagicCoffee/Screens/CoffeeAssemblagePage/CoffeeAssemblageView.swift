@@ -14,6 +14,10 @@ struct CoffeeAssemblageView: View {
     @Binding var path: NavigationPath
     var coffee: Coffee
     
+    @State var AllmilkTypes = ["None", "Regular", "Lactose-free", "Skimmed", "Vegetable"]
+    @State var AllsyrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
+
+    
     var body: some View {
         VStack {
             ScrollView {
@@ -48,16 +52,17 @@ struct CoffeeAssemblageView: View {
         .customBackButton {
             dismiss()
         }
+        .onAppear(perform: viewModel.fetchCountries)
     }
     
     private var milkSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: viewModel.milkTypes) { milk in
+        OptionSelectionView(selectedOption: $viewModel.selectedMilk, title: "What type of milk do you prefer?", options: AllmilkTypes) { milk in
             viewModel.updatePriceForMilk(milk)
         }
     }
     
     private var syrupSheet: some View {
-        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: viewModel.syrupTypes) { syrup in
+        OptionSelectionView(selectedOption: $viewModel.selectedSyrup, title: "What flavor of syrup do you prefer?", options: AllsyrupTypes) { syrup in
             viewModel.updatePriceForSyrup(syrup)
         }
     }
@@ -79,12 +84,7 @@ struct CoffeeAssemblageView: View {
                 label: {
                     Text("Next")
                     .nextButtonAppearance()
-                }
-            )
-            .simultaneousGesture(TapGesture().onEnded {
-               // viewModel.addCoffee()
-                
-            })
+                })
         }
     }
     
