@@ -16,7 +16,7 @@ class OrderViewModel: ObservableObject {
     
     @Published var coffeeCount = 1
     @Published var coffeePrice = 0.0
-    @Published var isOn = false
+    @Published var isDatePickerOn = false
     @Published var isTakeAway = true
     @Published var coffeeName = ""
     @Published var numberOfCoffees = 1
@@ -39,6 +39,7 @@ class OrderViewModel: ObservableObject {
     @Published var totalcoffeeCount = 0
     @Published var isGiftCoffeeSelected = false
     @Published var orderDate = Date.now
+    @Published var pickDate = Date.now
     @Published var freeCoffees: Int {
         didSet {
             UserDefaults.standard.set(freeCoffees, forKey: "free")
@@ -189,8 +190,12 @@ class OrderViewModel: ObservableObject {
     }
     
     func prepareTime() -> Date {
-        let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
-        return date
+        if !isDatePickerOn {
+            let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
+            return date
+        } else {
+            return pickDate
+        }
     }
     
     func saveFreeCoffees() {
@@ -218,6 +223,8 @@ class OrderViewModel: ObservableObject {
         selectedIceAmount = 1
         selectedRoastAmount = 1
         coffeeType = 0.5
+        isDatePickerOn = false
+        pickDate = Date.now
         
         isGiftCoffeeSelected = false
     }
