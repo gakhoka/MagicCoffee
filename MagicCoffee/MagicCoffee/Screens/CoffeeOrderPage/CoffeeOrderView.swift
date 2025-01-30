@@ -172,16 +172,17 @@ struct CoffeeOrderView: View {
     }
     
     private var timePicker: some View {
+        
         HStack {
-            Text("Prepare for a certain time?")
-                .padding()
-            Spacer()
-            VStack {
-                Toggle(isOn: $viewModel.isOn) {
-                    
-                }
-                .frame(width: 60)
-            }
+            Image("timeClock")
+                .padding(.leading)
+                
+            DatePicker("", selection: $viewModel.pickDate, in: Date()...,  displayedComponents: [.hourAndMinute , .date])
+                .opacity(viewModel.isDatePickerOn ? 1 : 0)
+                .animation(.easeIn(duration: 0.5), value: viewModel.isDatePickerOn)
+                .padding(.leading)
+            
+            Toggle("", isOn: $viewModel.isDatePickerOn)
         }
         .padding()
     }
