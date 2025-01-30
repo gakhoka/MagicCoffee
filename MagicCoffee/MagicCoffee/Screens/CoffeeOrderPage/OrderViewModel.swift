@@ -153,6 +153,7 @@ class OrderViewModel: ObservableObject {
         if freeCoffees > 0 {
             isGiftCoffeeSelected = true
             freeCoffees -= 1
+            saveFreeCoffeesToFirestore()
         } else {
             isGiftCoffeeSelected.toggle()
         }
@@ -216,6 +217,7 @@ class OrderViewModel: ObservableObject {
         
         userRef.getDocument { [weak self] document, error in
             if let error = error {
+                print(error.localizedDescription)
                 return
             }
             
@@ -233,7 +235,7 @@ class OrderViewModel: ObservableObject {
         let userRef = database.collection("users").document(userId)
         
         userRef.updateData(["freeCoffees": freeCoffees]) { [weak self] error in
-            guard let self = self else { return }
+            guard self != nil else { return }
             if let error = error {
                 print(error.localizedDescription)
             }

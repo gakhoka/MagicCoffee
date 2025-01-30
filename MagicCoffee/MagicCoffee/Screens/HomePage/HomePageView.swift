@@ -23,48 +23,16 @@ struct HomePageView: View {
                     .padding()
                 
                 VStack {
-                    
                     HStack {
                         selectYourCoffee
                         Spacer()
-                        Text(orderViewModel.isGiftCoffeeSelected ? "Free coffee" : "")
-                            .poppinsFont(size: 20)
-                            .foregroundColor(.creamColor)
-                            .padding()
+                        freeCoffee
                     }
-                    
-                    
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 20) {
-                            ForEach(viewModel.coffees.filter { coffee in
-                                text.isEmpty || coffee.name.localizedCaseInsensitiveContains(text)
-                            }, id: \.id) { coffee in
-                                NavigationLink(value: coffee) {
-                                    ZStack {
-                                        RoundedRectangle(cornerRadius: 25)
-                                            .fill(.white)
-                                            .frame(width: 175)
-                                        VStack {
-                                            AsyncCoffeeView(image: coffee.image)
-                                            Text(coffee.name)
-                                                .foregroundStyle(.black)
-                                        }
-                                        .frame(height: 150)
-                                        .padding()
-                                    }
-                                    .padding(.horizontal)
-                                }
-                            }
-                        }
-                        .padding(.bottom, 120)
-                    }
-                    .scrollIndicators(.hidden)
-                    .padding(.horizontal)
+                    coffeesList
                 }
                 .onAppear {
                     viewModel.fetchUser()
                 }
-                
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
                 .edgesIgnoringSafeArea(.bottom)
                 .navigationDestination(for: Coffee.self) { coffee in
@@ -72,6 +40,42 @@ struct HomePageView: View {
                 }
             }
         }
+    }
+    
+    private var freeCoffee: some View {
+        Text(orderViewModel.isGiftCoffeeSelected ? "Free coffee" : "")
+            .poppinsFont(size: 20)
+            .foregroundColor(.creamColor)
+            .padding()
+    }
+    
+    private var coffeesList: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 20) {
+                ForEach(viewModel.coffees.filter { coffee in
+                    text.isEmpty || coffee.name.localizedCaseInsensitiveContains(text)
+                }, id: \.id) { coffee in
+                    NavigationLink(value: coffee) {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 25)
+                                .fill(.white)
+                                .frame(width: 175)
+                            VStack {
+                                AsyncCoffeeView(image: coffee.image)
+                                Text(coffee.name)
+                                    .foregroundStyle(.black)
+                            }
+                            .frame(height: 150)
+                            .padding()
+                        }
+                        .padding(.horizontal)
+                    }
+                }
+            }
+            .padding(.bottom, 120)
+        }
+        .scrollIndicators(.hidden)
+        .padding(.horizontal)
     }
     
     private var topView: some View {
@@ -84,7 +88,7 @@ struct HomePageView: View {
                     .poppinsFont(size: 20)
             }
             Spacer()
-
+            
             Spacer()
             TextField("Search coffee...", text: $text)
                 .padding(10)

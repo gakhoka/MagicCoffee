@@ -59,6 +59,6 @@ struct CitiesView: View {
     }
 }
 
-//#Preview {
-//    CitiesView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), cities: [Country.City])
-//}
+#Preview {
+    CitiesView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), cities: [Country.City(name: "")])
+}

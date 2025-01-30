@@ -10,9 +10,11 @@ import FirebaseAuth
 import FirebaseFirestore
 
 class CreditCardViewmodel: ObservableObject {
-    @Published var total = 0.0
-    @Published var user: User?
+    
     @Published var userCards: [CreditCard] = []
+    @Published var total = 0.0
+    @Published var cardSaved = false
+    @Published var user: User?
     
     func getGreditCard() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -99,6 +101,7 @@ class CreditCardViewmodel: ObservableObject {
             }
             
             self?.userCards.append(card)
+            self?.cardSaved = true
         }
     }
     

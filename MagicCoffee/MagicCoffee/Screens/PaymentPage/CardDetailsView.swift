@@ -18,39 +18,33 @@ struct CardDetailsView: View {
     
     var body: some View {
         VStack(spacing: 20) {
+            Text(cardsViewModel.cardSaved ? "Card successfully added" : "")
+                .foregroundColor(.navyGreen)
+                .animation(.easeIn(duration: 0.3), value: cardsViewModel.cardSaved)
+            Spacer()
+            
             Text("Enter Card Details")
                 
             TextField("Cardholder Name", text: $cardHolderName)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
-                .autocapitalization(.words)
+                .cardTextField()
             
             TextField("Card Number", text: $cardNumber)
-                .keyboardType(.numberPad)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(10)
+                .cardTextField()
             
             HStack(spacing: 15) {
                 TextField("MM/YY", text: $expirationDate)
-                    .keyboardType(.numberPad)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .frame(maxWidth: .infinity)
+                    .cardTextField()
                 
                 SecureField("CVV", text: $cvv)
-                    .keyboardType(.numberPad)
-                    .padding()
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .frame(maxWidth: .infinity)
+                    .cardTextField()
             }
             
             Button(action: {
                 let card = CreditCard(cardNumber: cardNumber, cardHolderName: cardHolderName, expirationDate: expirationDate, cvv: cvv)
                 cardsViewModel.addCreditCard(card)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    cardsViewModel.cardSaved = false
+                }
             }) {
                 Text("Save Card")
                     .foregroundStyle(.white)
