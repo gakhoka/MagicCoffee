@@ -6,11 +6,9 @@
 //
 
 import SwiftUI
-import StoreKit
 
 struct HomePageView: View {
     
-    @Environment(\.requestReview) var requestReview
     @StateObject var viewModel = HomePageViewModel()
     @ObservedObject var orderViewModel: OrderViewModel
     @State private var path = NavigationPath()

@@ -18,6 +18,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func userNotification() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { success, error in
+            if success {
+                print("sucess")
+            } else if let error {
+                print(error.localizedDescription)
+            }
+        }
+    }
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {

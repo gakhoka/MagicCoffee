@@ -64,7 +64,7 @@ class OrderViewModel: ObservableObject {
     func addRedeemedCoffee(_ coffee: Coffee) {
         coffees.append(coffee)
     }
-    
+        
     func fetchCountries() {
         let dataBase = Firestore.firestore()
         let reference = dataBase.collection("Countries")
@@ -106,11 +106,12 @@ class OrderViewModel: ObservableObject {
         
         let orderData = order.asDictionary()
         
-        userOrdersRef.addDocument(data: orderData) { error in
+        userOrdersRef.addDocument(data: orderData) { [weak self] error in
             if let error = error {
                 completion(.failure(error))
             } else {
                 completion(.success(()))
+                self?.showNotification()
             }
         }
         
@@ -170,6 +171,23 @@ class OrderViewModel: ObservableObject {
             freeCoffees -= 1
         } else {
             isGiftCoffeeSelected.toggle()
+        }
+    }
+    
+    private func showNotification() {
+        let content = UNMutableNotificationContent()
+        content.title = "Your order is ready! ☕"
+        content.body = "Please collect"
+        content.sound = .default
+
+        let triggerTime = TimeInterval(prepareTime().timeIntervalSinceNow)
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, triggerTime), repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print(error.localizedDescription)
+            }
         }
     }
     
