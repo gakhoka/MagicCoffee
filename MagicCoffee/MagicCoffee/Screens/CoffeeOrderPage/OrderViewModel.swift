@@ -40,26 +40,11 @@ class OrderViewModel: ObservableObject {
     @Published var isGiftCoffeeSelected = false
     @Published var orderDate = Date.now
     @Published var pickDate = Date.now
-    @Published var freeCoffees: Int {
-        didSet {
-            UserDefaults.standard.set(freeCoffees, forKey: "free")
-        }
-    }
-
-    @Published var userOrderCount: Int {
-        didSet {
-            UserDefaults.standard.set(userOrderCount, forKey: "count")
-        }
-    }
-    
+    @Published var freeCoffees = 0
+    @Published var userOrderCount = 0
     private var previousMilk = "None"
     private var previousSyrup = "None"
     
-    
-    init() {
-        self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
-        self.freeCoffees = UserDefaults.standard.integer(forKey: "free")
-    }
     
     func addRedeemedCoffee(_ coffee: Coffee) {
         coffees.append(coffee)
@@ -145,7 +130,6 @@ class OrderViewModel: ObservableObject {
     }
     
     func placeOrder() {
-        
         if isGiftCoffeeSelected {
             total = coffees.filter { $0.price > 0 }.reduce(0.0) { $0 + $1.price }
             freeCoffees -= 1
@@ -184,7 +168,8 @@ class OrderViewModel: ObservableObject {
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, triggerTime), repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 
-        UNUserNotificationCenter.current().add(request) { error in
+        UNUserNotificationCenter.current().add(request) { [weak self] error in
+            guard self != nil else { return }
             if let error = error {
                 print(error.localizedDescription)
             }
@@ -219,6 +204,39 @@ class OrderViewModel: ObservableObject {
     func saveFreeCoffees() {
         if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
             freeCoffees += 1
+            saveFreeCoffeesToFirestore()
+        }
+    }
+    
+    func fetchUserFreeCoffees() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+
+        let database = Firestore.firestore()
+        let userRef = database.collection("users").document(userId)
+        
+        userRef.getDocument { [weak self] document, error in
+            if let error = error {
+                return
+            }
+            
+            if let document = document, document.exists {
+                let data = document.data()
+                self?.freeCoffees = data?["freeCoffees"] as? Int ?? 0
+            }
+        }
+    }
+    
+    func saveFreeCoffeesToFirestore() {
+        guard let userId = Auth.auth().currentUser?.uid else { return }
+        
+        let database = Firestore.firestore()
+        let userRef = database.collection("users").document(userId)
+        
+        userRef.updateData(["freeCoffees": freeCoffees]) { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                print(error.localizedDescription)
+            }
         }
     }
     
@@ -243,7 +261,6 @@ class OrderViewModel: ObservableObject {
         coffeeType = 0.5
         isDatePickerOn = false
         pickDate = Date.now
-        
         isGiftCoffeeSelected = false
     }
     
@@ -292,7 +309,6 @@ class OrderViewModel: ObservableObject {
         previousSyrup = selectedSyrup
         selectedSyrup = syrupType
     }
-    
     
     func updatePriceForSize(newSize: Int) {
         let oldSize = volumeSize

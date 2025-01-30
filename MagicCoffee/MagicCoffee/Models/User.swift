@@ -15,4 +15,5 @@ struct User: Identifiable, Codable {
     var orders: [Order] = []
     var points: Int? = 0
     var creditCard: [CreditCard] = []
+    var freeCoffess = 0
 }

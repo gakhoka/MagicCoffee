@@ -33,8 +33,11 @@ struct CoffeeOrderView: View {
             }
         }
         .poppinsFont(size: 16)
-        .onAppear(perform: resetCoffee)
-        .onAppear(perform: viewModel.fetchUserOrders)
+        .onAppear {
+            resetCoffee()
+            viewModel.fetchUserOrders()
+            viewModel.fetchUserFreeCoffees()
+        }
         .navigationTitle("Order")
         .customBackButton { dismiss() }
     }
