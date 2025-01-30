@@ -10,15 +10,10 @@ import SwiftUI
 import FirebaseAuth
 
 class OrderViewModel: ObservableObject {
-    
-    init() {
-        self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
-        self.freeCoffees = UserDefaults.standard.integer(forKey: "free")
-        fetchUserOrders()
-    }
-    
+
     var coffees: [Coffee] = []
-    var coffeeCountries: [Country] = Bundle.main.decode("countries.json")
+    var coffeeCountries: [Country] = []
+    
     @Published var coffeeCount = 1
     @Published var coffeePrice = 0.0
     @Published var isOn = false
@@ -37,9 +32,6 @@ class OrderViewModel: ObservableObject {
     @Published var selectedSyrup = ""
     @Published var isMilkSelectionTapped = false
     @Published var isSyrupSelectionTapped = false
-    @Published var milkTypes = ["None", "Regular", "Lactose-free", "Skimmed", "Vegetable"]
-    @Published var syrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
-    @Published var additives = ["Ceylon cinnamon", "Grated chocolate", "Liquid chocolate", "Marshmallow", "Whipped cream", "Cream", "Nutmeg", "Ice cream"]
     @Published var selectedAdditives = [String]()
     @Published var selectedCity = ""
     @Published var coffeeImage = ""
@@ -52,7 +44,7 @@ class OrderViewModel: ObservableObject {
             UserDefaults.standard.set(freeCoffees, forKey: "free")
         }
     }
-    
+
     @Published var userOrderCount: Int {
         didSet {
             UserDefaults.standard.set(userOrderCount, forKey: "count")
@@ -63,8 +55,44 @@ class OrderViewModel: ObservableObject {
     private var previousSyrup = "None"
     
     
+    init() {
+        self.userOrderCount = UserDefaults.standard.integer(forKey: "count")
+        self.freeCoffees = UserDefaults.standard.integer(forKey: "free")
+    }
+    
     func addRedeemedCoffee(_ coffee: Coffee) {
         coffees.append(coffee)
+    }
+    
+    func fetchCountries() {
+        let dataBase = Firestore.firestore()
+        let reference = dataBase.collection("Countries")
+        
+        reference.getDocuments { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            guard let snapshot = snapshot else { return }
+            
+            var fetchedCountries: [Country] = []
+            
+            for document in snapshot.documents {
+                let data = document.data()
+                
+                let name = data["name"] as? String ?? ""
+                let cityNames = data["cities"] as? [String] ?? []
+                let cities: [Country.City] = cityNames.map { Country.City(name: $0) }
+                
+                let country = Country(name: name, cities: cities)
+                fetchedCountries.append(country)
+            }
+            
+            DispatchQueue.main.async {
+                self?.coffeeCountries = fetchedCountries
+            }
+        }
     }
     
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
@@ -94,6 +122,7 @@ class OrderViewModel: ObservableObject {
             }
         }
     }
+
     
     func fetchUserOrders() {
         let database = Firestore.firestore()
@@ -128,7 +157,6 @@ class OrderViewModel: ObservableObject {
                 self?.coffees.removeAll()
                 self?.total = 0.0
                 self?.isGiftCoffeeSelected = false
-
             case .failure(let error):
                 print(error.localizedDescription)
             }
