@@ -17,97 +17,9 @@ struct MyOrderView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-
-        
-            List {
-                ForEach(viewModel.coffees) { coffee in
-                    HStack {
-                        if let imageUrl = URL(string: coffee.image) {
-                            AsyncImage(url: imageUrl) { image in
-                                image.image?.resizable()
-                                    .scaledToFit()
-                                    .frame(width: 100, height: 100)
-                            }
-                        }
-                        VStack(alignment: .leading, spacing: 10) {
-                            HStack {
-                                Text(coffee.name)
-                                    .font(.system(size: 18))
-                                Spacer()
-                                HStack(spacing: 0) {
-                                    Text("$")
-                                    Text(String(format: "%.2f", coffee.price))
-                                        .foregroundColor(.black)
-                                }
-                                .font(.system(size: 16 ))
-                            }
-                            HStack {
-                                Text(coffee.size.rawValue)
-                                Text("|")
-                                Text(coffee.grinding.rawValue)
-                                Text("|")
-                                if coffee.iceAmount > 0 {
-                                    Text("iced |")
-                                }
-                                
-                            }
-                            .foregroundStyle(.gray)
-                            
-                            HStack {
-                                Text(coffee.milk == "" ? "Regular Milk": coffee.milk)
-                                
-                                Text("|")
-                                Text(coffee.syrup == "" ? "No Syrup" : coffee.syrup)
-                            }
-                            .foregroundStyle(.gray)
-                            
-                            Text("x\(coffee.count)")
-                        }
-                        .font(.system(size: 16))
-                        
-                        Spacer()
-                    }
-                    .swipeActions {
-                        Button {
-                            withAnimation(.easeOut(duration: 0.3)) {
-                                viewModel.removeOrder(coffee)
-                            }
-                        } label: {
-                            Image("TrashCan")
-                        }
-                        .tint(.lightRed)
-                    }
-                }
-                .listRowBackground(Color.lightGrayBackground)
-            }
-            .scrollIndicators(.hidden)
-            .scrollContentBackground(.hidden)
-            
+            orderList
             addNewCoffee
-                        
-            HStack {
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Total price")
-                        .foregroundStyle(.gray)
-                    HStack {
-                        Text("$")
-                        Text(String(format: "%.2f", viewModel.total))
-                            .font(.system(size: 24))
-                    }
-                }
-                .padding(.leading)
-                
-                Spacer()
-                
-                Button {
-                    isPresented.toggle()
-                } label: {
-                    Text("Next")
-                        .nextButtonAppearance()
-                        .frame(width: UIScreen.main.bounds.width / 2)
-                }
-            }
-            .padding(.horizontal)
+            bottomView
             
         }
         .sheet(isPresented: $isPresented, content: {
@@ -126,17 +38,113 @@ struct MyOrderView: View {
         
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    viewModel.getFreeCoffee()
-                    path = NavigationPath()
-                } label: {
-                    Text(viewModel.freeCoffees > 0 ? "\(viewModel.freeCoffees)" : "")
-                    Image("cupofcoffee")
-                        .opacity(viewModel.freeCoffees > 0 ? 1.0 : 0.0)
-                }
+               freeCoffee
             }
         }
         .navigationTitle("My order")
+    }
+    
+    private var freeCoffee: some View {
+        Button {
+            viewModel.getFreeCoffee()
+            path = NavigationPath()
+        } label: {
+            Text(viewModel.freeCoffees > 0 ? "\(viewModel.freeCoffees)" : "")
+            Image("cupofcoffee")
+                .opacity(viewModel.freeCoffees > 0 ? 1.0 : 0.0)
+        }
+    }
+    
+    private var bottomView: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 5) {
+                Text("Total price")
+                    .foregroundStyle(.gray)
+                HStack {
+                    Text("$")
+                    Text(String(format: "%.2f", viewModel.total))
+                        .font(.system(size: 24))
+                }
+            }
+            .padding(.leading)
+            
+            Spacer()
+            
+            Button {
+                isPresented.toggle()
+            } label: {
+                Text("Next")
+                    .nextButtonAppearance()
+                    .frame(width: UIScreen.main.bounds.width / 2)
+            }
+        }
+        .padding(.horizontal)
+    }
+    
+    private var orderList: some View {
+        List {
+            ForEach(viewModel.coffees) { coffee in
+                HStack {
+                    if let imageUrl = URL(string: coffee.image) {
+                        AsyncImage(url: imageUrl) { image in
+                            image.image?.resizable()
+                                .scaledToFit()
+                                .frame(width: 100, height: 100)
+                        }
+                    }
+                    VStack(alignment: .leading, spacing: 10) {
+                        HStack {
+                            Text(coffee.name)
+                                .font(.system(size: 18))
+                            Spacer()
+                            HStack(spacing: 0) {
+                                Text("$")
+                                Text(String(format: "%.2f", coffee.price))
+                                    .foregroundColor(.black)
+                            }
+                            .font(.system(size: 16 ))
+                        }
+                        HStack {
+                            Text(coffee.size.rawValue)
+                            Text("|")
+                            Text(coffee.grinding.rawValue)
+                            Text("|")
+                            if coffee.iceAmount > 0 {
+                                Text("iced |")
+                            }
+                            
+                        }
+                        .foregroundStyle(.gray)
+                        
+                        HStack {
+                            Text(coffee.milk == "" ? "Regular Milk": coffee.milk)
+                            
+                            Text("|")
+                            Text(coffee.syrup == "" ? "No Syrup" : coffee.syrup)
+                        }
+                        .foregroundStyle(.gray)
+                        
+                        Text("x\(coffee.count)")
+                    }
+                    .font(.system(size: 16))
+                    
+                    Spacer()
+                }
+                .swipeActions {
+                    Button {
+                        withAnimation(.easeOut(duration: 0.3)) {
+                            viewModel.removeOrder(coffee)
+                        }
+                    } label: {
+                        Image("TrashCan")
+                    }
+                    .tint(.lightRed)
+                }
+            }
+            .listRowBackground(Color.lightGrayBackground)
+        }
+        .scrollIndicators(.hidden)
+        .scrollContentBackground(.hidden)
     }
     
     private var addNewCoffee: some View {

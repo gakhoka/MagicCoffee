@@ -24,9 +24,9 @@ class HistoryViewModel {
     func fetchOrders() {
         let database = Firestore.firestore()
         guard let uid = Auth.auth().currentUser?.uid else { return }
-            
+        
         let ordersRef = database.collection("users").document(uid).collection("orders")
-
+        
         ordersRef.getDocuments { [weak self] snapshot, error in
             if let error = error {
                 print(error.localizedDescription)
