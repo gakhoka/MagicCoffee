@@ -103,7 +103,8 @@ struct HomePageView: View {
                 ProfilePageView()
                     .navigationBarBackButtonHidden(true)
             } label: {
-                Image("Profile")
+                Image(systemName: "person")
+                    .imageScale(.large)
             }
 
         }

@@ -174,7 +174,7 @@ struct CoffeeOrderView: View {
     
     private var timePicker: some View {
         HStack {
-            Image("timeClock")
+            Image("calendar")
                 .padding(.leading)
                 
             DatePicker("", selection: $viewModel.pickDate, in: Date()...,  displayedComponents: [.hourAndMinute , .date])
