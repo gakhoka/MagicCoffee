@@ -32,14 +32,14 @@ class RewardsViewModel: ObservableObject {
         
         let userRef = database.collection("users").document(uid)
         
-        userRef.getDocument { [weak self] document, error in
+        userRef.getDocument { [weak self] snapshot, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
             
-            if let document = document, document.exists {
-                self?.userPoints = document.get("score") as? Int ?? 0
+            if let snapshot = snapshot, snapshot.exists {
+                self?.userPoints = snapshot.get("score") as? Int ?? 0
             }
         }
         

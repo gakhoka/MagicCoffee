@@ -108,9 +108,7 @@ class WelcomePageViewController: UIViewController {
             nextButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             nextButton.heightAnchor.constraint(equalToConstant: 50),
             nextButton.widthAnchor.constraint(equalToConstant: 50)
-            
         ])
     }
-   
 }
 

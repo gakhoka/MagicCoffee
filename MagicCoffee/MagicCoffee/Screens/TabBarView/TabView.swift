@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct TabBarView: View {
-    @StateObject var viewModel = OrderViewModel()
     
+    @StateObject var viewModel = OrderViewModel()
+    @State private var selection = 1
+
     init() {
         UITabBar.appearance().backgroundColor = .lightGrayBackground
     }
-    
-    @State private var selection = 1
-    
+        
     var body: some View {
         TabView(selection: $selection) {
             HomePageView(orderViewModel: viewModel)

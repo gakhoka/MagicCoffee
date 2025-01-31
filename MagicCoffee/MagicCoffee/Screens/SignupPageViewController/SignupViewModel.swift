@@ -25,7 +25,7 @@ class SignupViewModel {
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             if let error = error {
                 completion(.failure(error))
                 return
@@ -37,7 +37,7 @@ class SignupViewModel {
             
             let newUser = User(id: userId, username: username, email: email)
             
-            self.saveUser(user: newUser) { success in
+            self?.saveUser(user: newUser) { success in
                 if success {
                     completion(.success(()))
                 } else {
@@ -57,7 +57,8 @@ class SignupViewModel {
             "orders": []
         ]
         
-        database.collection("users").document(user.id).setData(userData) { error in
+        database.collection("users").document(user.id).setData(userData) { [weak self] error in
+            guard let self = self else { return }
             if let error = error {
                 print(error.localizedDescription)
                 completion(false)

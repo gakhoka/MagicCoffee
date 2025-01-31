@@ -19,14 +19,12 @@ struct RedeemPointsView: View {
                 VStack(spacing: 25) {
                     Text("My points")
                     Text("\(viewModel.userPoints)")
-                       
                 }
                 .poppinsFont(size: 20)
                 .foregroundColor(.nardoGray)
                 
                redeemButton
             }
-            
             .padding()
             
             beansImage
