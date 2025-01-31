@@ -13,8 +13,16 @@ class ProfilePageViewController: UIViewController {
     
     private let viewModel = ProfileViewModel()
     private let qrcodeGenerator = QRcodeGenerator()
+    private let profileItem = ProfileItemViewHelper()
     private let qrImage = UIImageView()
     
+    private lazy var signoutView: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 10
+        view.backgroundColor = .lightGrayBackground
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
     
     private lazy var backButton: UIButton = {
         let button = UIButton()
@@ -66,21 +74,18 @@ class ProfilePageViewController: UIViewController {
     }
     
     private func placeViews() {
-        view.addSubview(signOutButton)
         view.addSubview(qrImage)
         view.addSubview(mainstackView)
-        view.addSubview(logOutLabel)
         view.addSubview(backButton)
+        view.addSubview(signoutView)
+        signoutView.addSubview(signOutButton)
+        signoutView.addSubview(logOutLabel)
     }
     
     private func configureViewModel() {
         viewModel.updateHandler = { [weak self] in
             self?.setupProfileItems()
         }
-    }
-    
-    func customBackButton() {
-        
     }
     
     private func qrCodeSetup() {
@@ -130,69 +135,6 @@ class ProfilePageViewController: UIViewController {
         }
     }
     
-    private func createProfileItemView(icon: String, title: String, value: String) -> UIView {
-        let containerView = UIView()
-        
-        let iconImage = UIImageView()
-        iconImage.image = UIImage(systemName: icon)
-        iconImage.tintColor = .black
-        iconImage.contentMode = .scaleAspectFit
-        
-        let labelsStack = UIStackView()
-        labelsStack.axis = .vertical
-        labelsStack.spacing = 10
-        
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.font = .systemFont(ofSize: 14)
-        titleLabel.textColor = .systemGray
-        
-        let valueTextField = UITextField()
-        valueTextField.text = value
-        valueTextField.font = .systemFont(ofSize: 16)
-        valueTextField.borderStyle = .none
-        valueTextField.autocapitalizationType = .none
-        valueTextField.isEnabled = false
-
-        let editButton = UIButton()
-        editButton.setImage(UIImage(named: "Edit"), for: .normal)
-        editButton.tintColor = .systemGray
-        editButton.addAction(UIAction(handler: {[weak self] action in
-            self?.toggleEdit(editButton)
-        }), for: .touchUpInside)
-
-        
-        containerView.addSubview(iconImage)
-        containerView.addSubview(labelsStack)
-        containerView.addSubview(editButton)
-        labelsStack.addArrangedSubview(titleLabel)
-        labelsStack.addArrangedSubview(valueTextField)
-        
-        iconImage.translatesAutoresizingMaskIntoConstraints = false
-        labelsStack.translatesAutoresizingMaskIntoConstraints = false
-        editButton.translatesAutoresizingMaskIntoConstraints = false
-        
-        NSLayoutConstraint.activate([
-            containerView.heightAnchor.constraint(equalToConstant: 80),
-            
-            iconImage.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 20),
-            iconImage.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            iconImage.widthAnchor.constraint(equalToConstant: 30),
-            iconImage.heightAnchor.constraint(equalToConstant: 30),
-            
-            labelsStack.leadingAnchor.constraint(equalTo: iconImage.trailingAnchor, constant: 15),
-            labelsStack.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            labelsStack.trailingAnchor.constraint(equalTo: editButton.leadingAnchor, constant: -10),
-            
-            editButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -20),
-            editButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
-            editButton.widthAnchor.constraint(equalToConstant: 30),
-            editButton.heightAnchor.constraint(equalToConstant: 30)
-        ])
-        
-        return containerView
-    }
-    
     private func navigateBack() {
         navigationController?.popViewController(animated: true)
     }
@@ -207,10 +149,16 @@ class ProfilePageViewController: UIViewController {
             mainstackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             mainstackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),
             
-            signOutButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            signOutButton.leftAnchor.constraint(equalTo: mainstackView.leftAnchor, constant: 45),
+            signoutView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            signoutView.leftAnchor.constraint(equalTo: mainstackView.leftAnchor, constant: 20),
             
-            logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 20),
+            signoutView.rightAnchor.constraint(equalTo: mainstackView.rightAnchor, constant: -20),
+            signoutView.heightAnchor.constraint(equalToConstant: 80),
+            
+            signOutButton.leftAnchor.constraint(equalTo: signoutView.leftAnchor, constant: 20),
+            signOutButton.centerYAnchor.constraint(equalTo: signoutView.centerYAnchor),
+            
+            logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 5),
             logOutLabel.centerYAnchor.constraint(equalTo: signOutButton.centerYAnchor),
             
             qrImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
@@ -225,17 +173,18 @@ class ProfilePageViewController: UIViewController {
         mainstackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         let items = [
-            ("person.circle", "Name", viewModel.username),
+            ("person", "Name", viewModel.username),
             ("envelope", "Email", viewModel.email),
             ("lock", "Password", "*********")
         ]
         
-        items.forEach { icon, title, value in
-            let itemView = self.createProfileItemView(icon: icon, title: title, value: value)
-            self.mainstackView.addArrangedSubview(itemView)
+        items.forEach { [weak self] icon, title, value in
+            let itemView = self?.profileItem.createProfileItemView(icon: icon, title: title, value: value, toggleEdit: { button in
+                   self?.toggleEdit(button)
+               })
+            self?.mainstackView.addArrangedSubview(itemView ?? UIView())
         }
     }
-    
     
     private func toggleEdit(_ sender: UIButton) {
         guard let containerView = sender.superview,
