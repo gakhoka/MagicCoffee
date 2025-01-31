@@ -150,24 +150,3 @@ class ForgotPasswordViewController: UIViewController {
         ])
     }
 }
-
-
-struct ForgotviewControllerRepresentable: UIViewControllerRepresentable {
-    
-    typealias UIViewControllerType = ForgotPasswordViewController
-    
-    
-    func makeUIViewController(context: Context) -> ForgotPasswordViewController {
-        ForgotPasswordViewController()
-    }
-    
-    func updateUIViewController(_ uiViewController: ForgotPasswordViewController, context: Context) {
-        
-    }
-}
-
-struct ForgotviewController_Previews: PreviewProvider {
-    static var previews: some View {
-        ForgotviewControllerRepresentable()
-    }
-}

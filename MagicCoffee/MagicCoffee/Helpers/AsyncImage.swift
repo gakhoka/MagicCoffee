@@ -35,7 +35,6 @@ struct AsyncCoffeeView: View {
                         .frame(width: 80, height: 80)
                 }
             }
-
         }
     }
 }

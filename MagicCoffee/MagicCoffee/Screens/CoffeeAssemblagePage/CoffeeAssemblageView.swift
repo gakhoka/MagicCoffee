@@ -9,14 +9,13 @@ import SwiftUI
 
 struct CoffeeAssemblageView: View {
     
-    @Environment(\.dismiss) var dismiss: DismissAction
-    @ObservedObject var viewModel: OrderViewModel
-    @Binding var path: NavigationPath
-    var coffee: Coffee
     
+    @ObservedObject var viewModel: OrderViewModel
+    @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
     @State var AllmilkTypes = ["None", "Regular", "Lactose-free", "Skimmed", "Vegetable"]
     @State var AllsyrupTypes = ["None", "Amaretto", "Coconut", "Vanilla", "Caramel"]
-
+    var coffee: Coffee
     
     var body: some View {
         VStack {
@@ -83,7 +82,7 @@ struct CoffeeAssemblageView: View {
                     .navigationBarBackButtonHidden(true),
                 label: {
                     Text("Next")
-                    .nextButtonAppearance()
+                        .nextButtonAppearance()
                 })
         }
     }

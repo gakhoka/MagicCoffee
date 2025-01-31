@@ -70,8 +70,6 @@ class CustomTextField {
             bottomDivider.leftAnchor.constraint(equalTo: iconImageView.leftAnchor),
             bottomDivider.rightAnchor.constraint(equalTo: textField.rightAnchor),
             bottomDivider.topAnchor.constraint(equalTo: iconImageView.bottomAnchor, constant: 10),
-            
-         
         ])
         
         if let eyeButton = eyeButton {

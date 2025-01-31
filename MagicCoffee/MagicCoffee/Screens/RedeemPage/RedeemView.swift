@@ -61,7 +61,6 @@ struct RedeemView: View {
             }
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
-            
         }
         .onAppear {
             viewModel.fetchRedeemableCoffees()

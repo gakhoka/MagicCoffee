@@ -13,6 +13,7 @@ struct FinalOrderDetailsView: View {
     @ObservedObject var cardViewModel: CreditCardViewmodel
     @ObservedObject var viewModel: OrderViewModel
     @Binding var path: NavigationPath
+    @State var prepareTime = ""
 
     var body: some View {
         VStack(alignment: .center, spacing: 40) {
@@ -40,7 +41,7 @@ struct FinalOrderDetailsView: View {
                 .padding(.horizontal, 20)
 
             
-            Text("Your order will be ready today at \(viewModel.prepareTime().formattedDate())")
+            Text("Your order will be ready today at \(prepareTime)")
                 .padding(.horizontal, 20)
            
             
@@ -49,6 +50,9 @@ struct FinalOrderDetailsView: View {
                 .padding(.horizontal, 20)
 
             Spacer()
+        }
+        .onAppear {
+            prepareTime = viewModel.prepareTime().formattedDate()
         }
         .multilineTextAlignment(.center)
         .padding()

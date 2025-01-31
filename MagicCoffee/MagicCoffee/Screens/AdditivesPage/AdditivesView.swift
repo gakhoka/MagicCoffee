@@ -41,7 +41,6 @@ struct AdditivesView: View {
                             Image(systemName: "circle")
                                 .foregroundColor(.nardoGray)
                                 .imageScale(.large)
-                            
                         }
                     }
                     .contentShape(Rectangle())

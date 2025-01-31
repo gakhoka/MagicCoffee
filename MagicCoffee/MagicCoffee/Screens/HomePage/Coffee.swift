@@ -33,7 +33,7 @@ struct Coffee: Identifiable, Codable, Hashable {
     enum CoffeeSize: String, Codable {
         case small, medium, large
         
-        init?(intValue: Int) {
+        init?(_ intValue: Int) {
             switch intValue {
             case 1:
                 self = .small
@@ -67,7 +67,7 @@ struct Coffee: Identifiable, Codable, Hashable {
     enum GrindingLevel: String ,Codable {
         case fine, medium
         
-        init?(intValue: Int) {
+        init?(_ intValue: Int) {
             switch intValue {
             case 0:
                 self = .fine
@@ -79,7 +79,7 @@ struct Coffee: Identifiable, Codable, Hashable {
         }
     }
     
-    static let example = Coffee(count: 2, name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "sd", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6, orderDate: Date())
+    static let example = Coffee(count: 2, name: "", ristreto: 1, size: CoffeeSize.large, image: "Latte", sortByOrigin: "brazil", grinding: GrindingLevel.fine, milk: "", syrup: "", iceAmount: 1, roastingLevel: RoastingLevel.low, additives: [""], score: 1, redeemPointsAmount: 200, validityDate: "", price: 6, orderDate: Date())
 }
 
 extension Coffee {

@@ -22,7 +22,7 @@ class OrderViewModel: ObservableObject {
     @Published var numberOfCoffees = 1
     @Published var volumeSize = 1
     @Published var ristrettoSize = 1
-    @Published var cupData = ["smallCup": 1, "mediumCup": 2, "largeCup": 3]
+    @Published var cupSize = ["smallCup": 1, "mediumCup": 2, "largeCup": 3]
     @Published var selectedGrindSize =  0
     @Published var selectedRoastAmount = 2
     @Published var selectedIceAmount = 0
@@ -45,42 +45,10 @@ class OrderViewModel: ObservableObject {
     private var previousMilk = "None"
     private var previousSyrup = "None"
     
+
     
-    func addRedeemedCoffee(_ coffee: Coffee) {
-        coffees.append(coffee)
-    }
-        
-    func fetchCountries() {
-        let dataBase = Firestore.firestore()
-        let reference = dataBase.collection("Countries")
-        
-        reference.getDocuments { [weak self] snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            guard let snapshot = snapshot else { return }
-            
-            var fetchedCountries: [Country] = []
-            
-            for document in snapshot.documents {
-                let data = document.data()
-                
-                let name = data["name"] as? String ?? ""
-                let cityNames = data["cities"] as? [String] ?? []
-                let cities: [Country.City] = cityNames.map { Country.City(name: $0) }
-                
-                let country = Country(name: name, cities: cities)
-                fetchedCountries.append(country)
-            }
-            
-            DispatchQueue.main.async {
-                self?.coffeeCountries = fetchedCountries
-            }
-        }
-    }
-    
+    //MARK: order
+
     func uploadOrderToFirebase(order: Order,completion: @escaping (Result<Void, Error>) -> Void) {
         guard  let currentUser = Auth.auth().currentUser else { return }
         
@@ -110,23 +78,23 @@ class OrderViewModel: ObservableObject {
         }
     }
 
+    private func createCoffee() -> Coffee {
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate, prepTime: prepareTime())
+        return coffee
+    }
     
-    func fetchUserOrders() {
-        let database = Firestore.firestore()
-        guard let uid = Auth.auth().currentUser?.uid else { return }
-        
-        let referrnce = database.collection("users").document(uid).collection("orders")
-        
-        referrnce.getDocuments { [weak self] snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            if let snapshot = snapshot {
-                self?.userOrderCount = snapshot.count
-            }
+    func prepareTime() -> Date {
+        if !isDatePickerOn {
+            let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
+            return date
+        } else {
+            return pickDate
         }
+    }
+    
+    private func createOrder() -> Order {
+        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
+        return order
     }
     
     func placeOrder() {
@@ -151,14 +119,10 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-    func getFreeCoffee() {
-        if freeCoffees > 0 {
-            isGiftCoffeeSelected = true
-            freeCoffees -= 1
-            saveFreeCoffeesToFirestore()
-        } else {
-            isGiftCoffeeSelected.toggle()
-        }
+    func removeOrder(_ coffee: Coffee) {
+        coffees.removeAll { $0.id == coffee.id }
+        updateTotalCoffeeCount()
+        updateTotalPrice()
     }
     
     private func showNotification() {
@@ -190,24 +154,15 @@ class OrderViewModel: ObservableObject {
         updateTotalCoffeeCount()
     }
     
-    private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(intValue: volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(intValue: selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate, prepTime: prepareTime())
-        return coffee
-    }
+    //MARK: Free coffee
     
-    func prepareTime() -> Date {
-        if !isDatePickerOn {
-            let date = orderDate.addingTimeInterval(TimeInterval(Double.random(in: 15...25) * 60.0))
-            return date
-        } else {
-            return pickDate
-        }
-    }
-    
-    func saveFreeCoffees() {
-        if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
-            freeCoffees += 1
+    func getFreeCoffee() {
+        if freeCoffees > 0 {
+            isGiftCoffeeSelected = true
+            freeCoffees -= 1
             saveFreeCoffeesToFirestore()
+        } else {
+            isGiftCoffeeSelected.toggle()
         }
     }
     
@@ -244,10 +199,72 @@ class OrderViewModel: ObservableObject {
         }
     }
     
-    func createOrder() -> Order {
-        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
-        return order
+    private func saveFreeCoffees() {
+        if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
+            freeCoffees += 1
+            saveFreeCoffeesToFirestore()
+        }
     }
+    
+    func addRedeemedCoffee(_ coffee: Coffee) {
+        coffees.append(coffee)
+    }
+    
+    //MARK: Countries
+    
+    
+    func fetchCountries() {
+        let dataBase = Firestore.firestore()
+        let reference = dataBase.collection("Countries")
+        
+        reference.getDocuments { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            guard let snapshot = snapshot else { return }
+            
+            var fetchedCountries: [Country] = []
+            
+            for document in snapshot.documents {
+                let data = document.data()
+                
+                let name = data["name"] as? String ?? ""
+                let cityNames = data["cities"] as? [String] ?? []
+                let cities: [Country.City] = cityNames.map { Country.City(name: $0) }
+                
+                let country = Country(name: name, cities: cities)
+                fetchedCountries.append(country)
+            }
+            
+            DispatchQueue.main.async {
+                self?.coffeeCountries = fetchedCountries
+            }
+        }
+    }
+    
+    //MARK: USER
+    
+    func fetchUserOrders() {
+        let database = Firestore.firestore()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let referrnce = database.collection("users").document(uid).collection("orders")
+        
+        referrnce.getDocuments { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                self?.userOrderCount = snapshot.count
+            }
+        }
+    }
+    
+    //MARK: Coffee price calc
     
     func resetCoffee(coffee: Coffee) {
         coffeeName = coffee.name
@@ -273,12 +290,6 @@ class OrderViewModel: ObservableObject {
             partialResult + coffee.count
         }
         totalcoffeeCount = totalCoffees
-    }
-    
-    func removeOrder(_ coffee: Coffee) {
-        coffees.removeAll { $0.id == coffee.id }
-        updateTotalCoffeeCount()
-        updateTotalPrice()
     }
     
     private func updateTotalPrice() {

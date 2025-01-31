@@ -15,11 +15,7 @@ class HomePageViewModel: ObservableObject {
     @Published var user: User?
     @Published var username = ""
     
-    init() {
-        fetchCoffees()
-        fetchUser()
-    }
-    
+
     func fetchCoffees() {
         let dataBase = Firestore.firestore()
         let referrence = dataBase.collection("Coffees")
@@ -58,10 +54,10 @@ class HomePageViewModel: ObservableObject {
                   let data = document.data() else {
                 return
             }
-            
-            print(data)
-            
+                    
             self?.username = data["username"] as? String ?? "No username"
+            
+            UserDefaults.standard.set(self?.username, forKey: "username")
         }
     }
 }

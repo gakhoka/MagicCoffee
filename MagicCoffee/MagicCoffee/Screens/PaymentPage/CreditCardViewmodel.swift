@@ -109,6 +109,6 @@ class CreditCardViewmodel: ObservableObject {
         if let username = UserDefaults.standard.string(forKey: "username") {
             return username
         }
-        return "no"
+        return "no username"
     }
 }

@@ -28,7 +28,6 @@ struct LoyaltyView: View {
                 }
                 .roundedRect(height: 50, color: .white)
                 .padding(.horizontal)
-
             }
         }
         .poppinsFont(size: 20)

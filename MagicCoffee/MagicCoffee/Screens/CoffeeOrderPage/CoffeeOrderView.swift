@@ -12,7 +12,6 @@ struct CoffeeOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
-
     var coffee: Coffee
     
     var body: some View {
@@ -61,17 +60,17 @@ struct CoffeeOrderView: View {
             Spacer()
             HStack(alignment: .bottom, spacing: 30) {
                 
-                ForEach(viewModel.cupData.keys.sorted(by: >), id: \.self) { key in
+                ForEach(viewModel.cupSize.keys.sorted(by: >), id: \.self) { key in
                     VStack {
                         Image(key)
                             .foregroundColor(
-                                viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
+                                viewModel.volumeSize == (viewModel.cupSize[key] ?? 1) ? .black : .gray)
                             .onTapGesture {
-                                viewModel.updatePriceForSize(newSize: viewModel.cupData[key] ?? 1)
+                                viewModel.updatePriceForSize(newSize: viewModel.cupSize[key] ?? 1)
                             }
                         
-                        Text("\(viewModel.cupData[key] == 1 ? 250 : (viewModel.cupData[key] == 2 ? 350 : (viewModel.cupData[key] == 3 ? 450 : 0)))ml")
-                            .foregroundStyle(viewModel.volumeSize == (viewModel.cupData[key] ?? 1) ? .black : .gray)
+                        Text("\(viewModel.cupSize[key] == 1 ? 250 : (viewModel.cupSize[key] == 2 ? 350 : (viewModel.cupSize[key] == 3 ? 450 : 0)))ml")
+                            .foregroundStyle(viewModel.volumeSize == (viewModel.cupSize[key] ?? 1) ? .black : .gray)
                             .font(.system(size: 12))
                     }
                 }
@@ -137,7 +136,6 @@ struct CoffeeOrderView: View {
                     if viewModel.coffeeCount > 1 {
                         viewModel.coffeeCount -= 1
                         viewModel.coffeePrice = viewModel.coffeePrice - coffee.price
-
                     }
                 }) {
                     Image(systemName: "minus")
@@ -175,7 +173,6 @@ struct CoffeeOrderView: View {
     }
     
     private var timePicker: some View {
-        
         HStack {
             Image("timeClock")
                 .padding(.leading)
@@ -214,11 +211,10 @@ struct CoffeeOrderView: View {
                     image.image?.resizable()
                         .scaledToFit()
                 }
-            
                 .frame(width: 200, height: 200)
                 .roundedRectangleStyle(color: Color.navyGreen)
                 .padding()
-                .frame(width: UIScreen.main.bounds.width, height: 200)         
+                .frame(width: UIScreen.main.bounds.width, height: 200)
             }
         }
     }
