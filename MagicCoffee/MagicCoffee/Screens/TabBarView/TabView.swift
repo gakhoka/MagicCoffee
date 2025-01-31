@@ -35,27 +35,8 @@ struct TabBarView: View {
                 .tabItem {
                     Image("History")
                 }
-            
-            ProfilePageView()
-                .tag(3)
-                .tabItem {
-                    Image("Profile")
-                }
         }
         .accentColor(.black)
-    }
-    
-    struct ProfilePageView: UIViewControllerRepresentable {
-        func makeUIViewController(context: Context) -> ProfilePageViewController {
-            let vc = ProfilePageViewController()
-            return vc
-        }
-        
-        func updateUIViewController(_ uiViewController: ProfilePageViewController, context: Context) {
-            
-        }
-        
-        typealias UIViewControllerType = ProfilePageViewController
     }
     
     struct Historyview: UIViewControllerRepresentable {
@@ -68,10 +49,6 @@ struct TabBarView: View {
         }
         
         typealias UIViewControllerType = HistoryViewController
-        
-        
-        
-        
     }
 }
 

@@ -96,6 +96,15 @@ struct HomePageView: View {
                 .background(Color(.systemGray6))
                 .cornerRadius(10)
                 .frame(width: 200)
+            
+            Spacer()
+            NavigationLink {
+                ProfilePageView()
+                    .navigationBarBackButtonHidden(true)
+            } label: {
+                Image("Profile")
+            }
+
         }
     }
     
@@ -104,6 +113,19 @@ struct HomePageView: View {
             .poppinsFont(size: 20)
             .foregroundStyle(.white)
             .padding()
+    }
+    
+    struct ProfilePageView: UIViewControllerRepresentable {
+        func makeUIViewController(context: Context) -> ProfilePageViewController {
+            let vc = ProfilePageViewController()
+            return vc
+        }
+        
+        func updateUIViewController(_ uiViewController: ProfilePageViewController, context: Context) {
+            
+        }
+        
+        typealias UIViewControllerType = ProfilePageViewController
     }
 }
 
