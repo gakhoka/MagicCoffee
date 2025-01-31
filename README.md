@@ -1,8 +1,5 @@
 # Magic Coffee App ☕✨
-## Magic Coffee is an iOS app that lets users browse and order from a selection of coffee options.
-
-### The app offers a smooth experience with coffee browsing, search, and even a special free coffee offer! 🎉
-### With Firebase back end services, users can create accounts, log in, and manage their profiles 
+## Magic Coffee is an iOS app that lets users browse and order from a selection of coffee options. The app offers a smooth experience with coffee browsing, search, and even a special free coffee offer! 🎉 With Firebase back end services, users can create accounts, log in, and manage their profiles 
 
 ## Features 🌟
 ### Firebase Authentication 🔐:
