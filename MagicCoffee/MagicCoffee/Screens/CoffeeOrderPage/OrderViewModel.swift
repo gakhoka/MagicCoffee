@@ -200,7 +200,7 @@ class OrderViewModel: ObservableObject {
     }
     
     private func saveFreeCoffees() {
-        if userOrderCount > 0 && (userOrderCount - 7) % 8 == 0 {
+        if userOrderCount > 0 && (userOrderCount - 2) % 3 == 0 {
             freeCoffees += 1
             saveFreeCoffeesToFirestore()
         }
