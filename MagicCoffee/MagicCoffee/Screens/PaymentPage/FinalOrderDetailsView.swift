@@ -12,7 +12,7 @@ struct FinalOrderDetailsView: View {
     
     @ObservedObject var cardViewModel: CreditCardViewmodel
     @ObservedObject var viewModel: OrderViewModel
-    @Binding  var path: NavigationPath
+    @Binding var path: NavigationPath
 
     var body: some View {
         VStack(alignment: .center, spacing: 40) {

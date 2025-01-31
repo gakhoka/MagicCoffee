@@ -10,7 +10,7 @@ import SwiftUI
 struct CoffeeOrderView: View {
     
     @ObservedObject var viewModel: OrderViewModel
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
 
     var coffee: Coffee

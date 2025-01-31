@@ -77,7 +77,9 @@ struct PaymentView: View {
             Button {
                 if isPaymentMethodSelected  {
                     viewModel.placeOrder()
-                    shouldNavigate = true
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        shouldNavigate = true
+                    }
                 } else {
                     noMethodsSelected = true
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -179,7 +181,6 @@ struct PaymentView: View {
                     } else {
                         selectedCardIndex = index
                         isPaymentMethodSelected = true
-                        print(isPaymentMethodSelected)
                     }
                 }
             }

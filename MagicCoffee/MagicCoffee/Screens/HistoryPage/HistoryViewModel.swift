@@ -65,7 +65,7 @@ class HistoryViewModel {
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    self?.ongoingOrder = ongoingList.sorted { $0.orderDate > $1.orderDate }
+                    self?.ongoingOrder = ongoingList.sorted { $0.orderDate < $1.orderDate }
                     self?.ordersHistory = historyList.sorted { $0.orderDate > $1.orderDate }
                     self?.updateCoffees?()
                 }

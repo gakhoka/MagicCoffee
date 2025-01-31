@@ -11,15 +11,17 @@ struct RedeemPointsView: View {
     
     @ObservedObject var viewModel: RewardsViewModel
     @ObservedObject var orderViewModel: OrderViewModel
+    @Binding var path: NavigationPath
     
     var body: some View {
         ZStack {
             HStack(spacing: 70) {
-                VStack(alignment: .leading, spacing: 25) {
+                VStack(spacing: 25) {
                     Text("My points")
-                        .font(.system(size: 16))
                     Text("\(viewModel.userPoints)")
+                       
                 }
+                .poppinsFont(size: 20)
                 .foregroundColor(.nardoGray)
                 
                redeemButton
@@ -33,7 +35,7 @@ struct RedeemPointsView: View {
     }
     
     private var redeemButton: some View {
-        NavigationLink(destination: RedeemView(viewModel: viewModel, orderViewmodel: orderViewModel).navigationBarBackButtonHidden(true)) {
+        NavigationLink(destination: RedeemView(viewModel: viewModel, orderViewmodel: orderViewModel, path: $path).navigationBarBackButtonHidden(true)) {
             Text("Redeem Drinks")
                 .redeemButton()
         }
@@ -49,5 +51,5 @@ struct RedeemPointsView: View {
 }
 
 #Preview {
-    RedeemPointsView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()), orderViewModel: OrderViewModel())
+    RedeemPointsView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()), orderViewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }

@@ -32,6 +32,7 @@ struct HomePageView: View {
                 }
                 .onAppear {
                     viewModel.fetchUser()
+                    orderViewModel.resetCoffee(coffee: .example)
                 }
                 .roundedRectangleStyle(cornerRadius: 20, color: .navyGreen)
                 .edgesIgnoringSafeArea(.bottom)
