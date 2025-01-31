@@ -82,44 +82,46 @@ struct PaymentView: View {
     
     private var bottomView: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text("Total amount")
                     .foregroundStyle(.gray)
+                    .font(.system(size: 16))
                 HStack {
                     Text("$")
                     Text(String(format: "%.2f", viewModel.total))
+                        .font(.system(size: 24))
                 }
-                .poppinsFont(size: 20)
-                
             }
             .padding(.horizontal)
             .poppinsFont(size: 14)
             
             Spacer()
-            
-            Button {
-                if isPaymentMethodSelected  {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        viewModel.placeOrder()
-                        shouldNavigate = true
+            VStack {
+                Button {
+                    if isPaymentMethodSelected  {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            viewModel.placeOrder()
+                            shouldNavigate = true
+                        }
+                    } else {
+                        noMethodsSelected = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                            noMethodsSelected = false
+                        }
                     }
-                } else {
-                    noMethodsSelected = true
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        noMethodsSelected = false
+                } label: {
+                    HStack {
+                        Image("card")
+                        Text("Pay Now")
+                            .poppinsFont(size: 14)
                     }
+                    .nextButtonAppearance()
                 }
-            } label: {
-                HStack {
-                    Image("card")
-                    Text("Pay Now")
-                        .poppinsFont(size: 14)
-                }
-                .nextButtonAppearance()
+                .disabled(applePayMethod)
+                .frame(width: UIScreen.main.bounds.width / 2)
             }
-            .disabled(applePayMethod)
-            .frame(width: UIScreen.main.bounds.width / 2)
         }
+        .padding(.bottom, -25)
     }
     
     private var applePay: some View {
@@ -157,6 +159,7 @@ struct PaymentView: View {
                 }
             }
         }
+        .padding(.bottom)
     }
     
     private var orderList: some View {
