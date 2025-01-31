@@ -123,7 +123,7 @@ class LoginPageViewController: UIViewController {
     
     private func stackViewSetup() {
         let (emailContainer, emailTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Message")
-        let (passwordContainer, passwordTextField) = textFieldCenter.createTextField(placeholder: "Email address", imageName: "Lock", showPasswordIcon: true)
+        let (passwordContainer, passwordTextField) = textFieldCenter.createTextField(placeholder: "Password", imageName: "Lock", showPasswordIcon: true)
         
         self.emailField = emailTextField
         self.passwordField = passwordTextField

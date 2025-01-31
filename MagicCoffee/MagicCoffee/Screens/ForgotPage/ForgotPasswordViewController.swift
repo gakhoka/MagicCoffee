@@ -62,10 +62,6 @@ class ForgotPasswordViewController: UIViewController {
         view.addSubview(sendButton)
     }
     
-    private func navigateToVerificationPage() {
-        navigationController?.pushViewController(VerificationViewController(), animated: true)
-    }
-    
     private func leftBarButtonConfig() {
         configureLeftBarButton(icon: "arrow.left", action: { [weak self] in
             self?.navigateTologinPage()

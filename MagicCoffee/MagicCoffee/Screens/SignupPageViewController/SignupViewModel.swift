@@ -58,7 +58,7 @@ class SignupViewModel {
         ]
         
         database.collection("users").document(user.id).setData(userData) { [weak self] error in
-            guard let self = self else { return }
+            guard self != nil else { return }
             if let error = error {
                 print(error.localizedDescription)
                 completion(false)
