@@ -140,7 +140,9 @@ class OrderViewModel: ObservableObject {
         uploadOrderToFirebase(order: createOrder()) { [weak self] result in
             switch result {
             case .success(_):
-                self?.coffees.removeAll()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) { [weak self] in
+                    self?.coffees.removeAll()
+                }
                 self?.total = 0.0
                 self?.isGiftCoffeeSelected = false
             case .failure(let error):
@@ -178,7 +180,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func addCoffee() {
-        if coffees.first(where: { $0.name == coffeeName }) != nil && isGiftCoffeeSelected == false {
+        if coffeeName == ""  {
             return
         }
         

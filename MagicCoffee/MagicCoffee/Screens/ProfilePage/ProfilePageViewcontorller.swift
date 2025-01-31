@@ -15,6 +15,16 @@ class ProfilePageViewController: UIViewController {
     private let qrcodeGenerator = QRcodeGenerator()
     private let qrImage = UIImageView()
     
+    
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.create(image: "arrow.left", tintColor: .black)
+        button.addAction(UIAction(handler: { [weak self] action in
+            self?.navigateBack()
+        }), for: .touchUpInside)
+        return button
+    }()
+    
     private lazy var signOutButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "logout"), for: .normal)
@@ -60,12 +70,17 @@ class ProfilePageViewController: UIViewController {
         view.addSubview(qrImage)
         view.addSubview(mainstackView)
         view.addSubview(logOutLabel)
+        view.addSubview(backButton)
     }
     
     private func configureViewModel() {
         viewModel.updateHandler = { [weak self] in
             self?.setupProfileItems()
         }
+    }
+    
+    func customBackButton() {
+        
     }
     
     private func qrCodeSetup() {
@@ -178,8 +193,16 @@ class ProfilePageViewController: UIViewController {
         return containerView
     }
     
+    private func navigateBack() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
+            
+            backButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+            
             mainstackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 50),
             mainstackView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 20),
             mainstackView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -20),

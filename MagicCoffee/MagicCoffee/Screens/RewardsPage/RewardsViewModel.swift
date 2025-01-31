@@ -34,7 +34,7 @@ class RewardsViewModel: ObservableObject {
         
         userRef.getDocument { [weak self] document, error in
             if let error = error {
-                print("Error fetching user document: \(error.localizedDescription)")
+                print(error.localizedDescription)
                 return
             }
             
@@ -46,7 +46,7 @@ class RewardsViewModel: ObservableObject {
         let ordersRef = userRef.collection("orders")
         ordersRef.getDocuments { [weak self] snapshot, error in
             if let error = error {
-                print("Error fetching orders: \(error.localizedDescription)")
+                print(error.localizedDescription)
                 return
             }
             
@@ -81,6 +81,8 @@ class RewardsViewModel: ObservableObject {
                 print(error.localizedDescription)
             }
             
+            var coffees: [Coffee] = []
+            
             if let snapshot = snapshot {
                 for document in snapshot.documents {
                     let data = document.data()
@@ -90,7 +92,9 @@ class RewardsViewModel: ObservableObject {
                     let redeemPointsAmount = data["redeemPointsAmount"] as? Int ?? 0
                     
                     let coffee = Coffee(name: name, image: image, redeemPointsAmount: redeemPointsAmount)
-                    self?.freeCoffees.append(coffee)
+                    coffees.append(coffee)
+                    let sortedCoffees = coffees.sorted { $0.redeemPointsAmount > $1.redeemPointsAmount }
+                    self?.freeCoffees = sortedCoffees
                 }
             }
         }
@@ -118,9 +122,6 @@ class RewardsViewModel: ObservableObject {
             userPoints -= coffee.redeemPointsAmount
             orderViewModel.coffees.append(coffee)
             updateUserScore()
-            if let index = freeCoffees.firstIndex(where: { $0.name == coffee.name }) {
-                freeCoffees.remove(at: index)
-            }
         } else {
             notEnoughPoints = true
         }

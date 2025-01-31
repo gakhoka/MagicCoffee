@@ -1,5 +1,5 @@
 //
-//  MyOrderVieww.swift
+//  MyOrderView.swift
 //  MagicCoffee
 //
 //  Created by Giorgi Gakhokidze on 21.01.25.
@@ -20,7 +20,6 @@ struct MyOrderView: View {
             orderList
             addNewCoffee
             bottomView
-            
         }
         .sheet(isPresented: $isPresented, content: {
             PaymentView(viewModel: viewModel, path: $path)
@@ -29,7 +28,7 @@ struct MyOrderView: View {
         
         .onAppear {
             viewModel.fetchUserOrders()
-            print(viewModel.userOrderCount)
+            viewModel.addCoffee()
         }
         .poppinsFont(size: 16)
         .customBackButton {
@@ -167,9 +166,6 @@ struct MyOrderView: View {
         .onTapGesture {
             path = NavigationPath()
             viewModel.resetCoffee(coffee: coffee)
-        }
-        .onAppear {
-            viewModel.addCoffee()
         }
     }
 }

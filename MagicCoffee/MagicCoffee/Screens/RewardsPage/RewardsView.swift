@@ -11,20 +11,21 @@ struct RewardsView: View {
     
     @ObservedObject var orderViewModel: OrderViewModel
     @StateObject private var viewModel: RewardsViewModel
-        
+    @State private var path = NavigationPath()
+    
     init(orderViewModel: OrderViewModel) {
         self.orderViewModel = orderViewModel
         _viewModel = StateObject(wrappedValue: RewardsViewModel(orderViewModel: orderViewModel))
     }
 
     var body: some View {
-        NavigationView {
+        NavigationStack(path: $path) {
             VStack(spacing: 20) {
                 Text("Rewards")
                 
                 LoyaltyView(viewModel: viewModel)
                 
-                RedeemPointsView(viewModel: viewModel, orderViewModel: orderViewModel)
+                RedeemPointsView(viewModel: viewModel, orderViewModel: orderViewModel, path: $path)
                 HStack {
                     Text("History Rewards")
                         .font(.system(size: 20))

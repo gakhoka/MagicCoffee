@@ -12,6 +12,7 @@ struct RedeemView: View {
     @ObservedObject var viewModel: RewardsViewModel
     @ObservedObject var orderViewmodel: OrderViewModel
     @Environment(\.dismiss) var dismiss
+    @Binding var path: NavigationPath
     
     var body: some View {
         VStack {
@@ -72,16 +73,9 @@ struct RedeemView: View {
         .customBackButton {
             dismiss()
         }
-        .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                NavigationLink(destination: MyOrderView(viewModel: orderViewmodel, path: .constant(NavigationPath()), coffee: .example)) {
-                    Image("Cart")
-                }
-            }
-        }
     }
 }
 
 #Preview {
-    RedeemView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()), orderViewmodel: OrderViewModel())
+    RedeemView(viewModel: RewardsViewModel(orderViewModel: OrderViewModel()), orderViewmodel: OrderViewModel(), path: .constant(NavigationPath()))
 }
