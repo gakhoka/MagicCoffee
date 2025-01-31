@@ -12,7 +12,7 @@ struct MyOrderView: View {
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
-    @State private var isPresented = false
+  //  @State private var isPresented = false
     var coffee: Coffee
     
     var body: some View {
@@ -21,10 +21,10 @@ struct MyOrderView: View {
             addNewCoffee
             bottomView
         }
-        .sheet(isPresented: $isPresented, content: {
-            PaymentView(viewModel: viewModel, path: $path)
-                .presentationDetents([.height(500)])
-        })
+//        .sheet(isPresented: $isPresented, content: {
+//            PaymentView(viewModel: viewModel, path: $path)
+//                .presentationDetents([.height(500)])
+//        })
         
         .onAppear {
             viewModel.fetchUserOrders()
@@ -69,9 +69,7 @@ struct MyOrderView: View {
             
             Spacer()
             
-            Button {
-                isPresented.toggle()
-            } label: {
+            NavigationLink(destination: PaymentView(viewModel: viewModel, path: $path).navigationBarBackButtonHidden(true)) {
                 Text("Next")
                     .nextButtonAppearance()
                     .frame(width: UIScreen.main.bounds.width / 2)

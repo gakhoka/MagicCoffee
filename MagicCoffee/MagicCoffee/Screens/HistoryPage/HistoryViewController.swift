@@ -182,7 +182,6 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(with: selectedCoffee, isonGoing: isOngoingSelected)
             cell.coffee = selectedCoffee
             return cell
-            
         }
         return UITableViewCell()
     }

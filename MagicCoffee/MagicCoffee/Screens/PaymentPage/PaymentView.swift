@@ -11,6 +11,7 @@ struct PaymentView: View {
     
     @ObservedObject var viewModel: OrderViewModel
     @StateObject var cardViewModel = CreditCardViewmodel()
+    @Environment(\.dismiss) var dismiss
     @State private var selectedCardIndex: Int? = nil
     @State private var isCardTapped = false
     @State private var isPaymentMethodSelected = false
@@ -18,6 +19,7 @@ struct PaymentView: View {
     @State private var shouldNavigate = false
     @State private var applePayMethod = false
     @State private var selectOnePaymentAlert = false
+    @State private var isAddCardTapped = false
     @Binding var path: NavigationPath
     
     let username = UserDefaults.standard.string(forKey: "username")
@@ -39,21 +41,43 @@ struct PaymentView: View {
                 .navigationBarBackButtonHidden(true)
                 .presentationDetents([.height(300)])
         })
+        .customBackButton {
+            dismiss()
+        }
+        .sheet(isPresented: $isAddCardTapped, content: {
+            CardDetailsView(cardsViewModel: cardViewModel)
+                .presentationDetents([.height(400)])
+        })
+        .navigationTitle("Order Payment")
         .onAppear(perform: cardViewModel.getGreditCard)
         Spacer()
     }
     
     private var addCard: some View {
-        HStack {
-            Text("Order payment")
-                .fontWeight(.bold)
-            Spacer()
-            NavigationLink(destination: CardDetailsView(cardsViewModel: cardViewModel).navigationBarBackButtonHidden(true)) {
-                Image("addcard")
-                    .foregroundColor(.black)
+        VStack(alignment: .leading, spacing: 40) {
+            HStack {
+                
+                VStack(alignment: .leading, spacing: 10) {
+                    Text(cardViewModel.username)
+                        .poppinsFont(size: 20)
+                    Text("Magic coffee store")
+                        .poppinsFont(size: 16)
+                        .foregroundStyle(.gray)
+                }
+                Spacer()
+                Button {
+                    isAddCardTapped.toggle()
+                } label: {
+                    Image("addcard")
+                        .foregroundColor(.navyGreen)
+                        
+                }
             }
+            .padding(.horizontal)
+            Text("Credit and Debit cards")
+                .poppinsFont(size: 20)
+                .padding(.horizontal)
         }
-        .padding(.horizontal)
     }
     
     private var bottomView: some View {
@@ -73,11 +97,10 @@ struct PaymentView: View {
             
             Spacer()
             
-            
             Button {
                 if isPaymentMethodSelected  {
-                    viewModel.placeOrder()
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        viewModel.placeOrder()
                         shouldNavigate = true
                     }
                 } else {
@@ -138,56 +161,73 @@ struct PaymentView: View {
     
     private var orderList: some View {
         List {
-            ForEach(cardViewModel.userCards.indices, id: \.self) { index in
-                let card = cardViewModel.userCards[index]
-                HStack {
-                    ZStack {
-                        Circle()
-                            .stroke(lineWidth: 1)
-                            .fill(.black)
-                            .frame(width: 18, height: 18)
-                            .padding()
-                        Circle()
-                            .fill(index == selectedCardIndex ? .black : .clear)
-                            .frame(width: 10, height: 10)
-                            .padding()
-                    }
+            if cardViewModel.userCards.isEmpty {
+                VStack {
+                    Image(systemName: "creditcard.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 100, height: 100)
+                        .foregroundStyle(
+                            .linearGradient(colors: [.creamColor, .coffeeBeanColor, .navyGreen, .brownColor], startPoint: .top, endPoint: .bottomTrailing))
                     
-                    VStack(alignment: .leading) {
-                        Text("Credit Card")
-                            .poppinsFont(size: 18)
-                        Text(card.cardNumber)
-                            .poppinsFont(size: 14)
-                            .foregroundStyle(.gray)
-                    }
-                    
-                    Spacer()
+                    Text("No cards added")
+                        .poppinsFont(size: 18)
+                        .foregroundColor(.gray)
+                }
+                .frame(maxWidth: .infinity, minHeight: 200)
+            } else {
+                ForEach(cardViewModel.userCards.indices, id: \.self) { index in
+                    let card = cardViewModel.userCards[index]
                     HStack {
-                        Image("visa")
-                        Image("mastercard")
+                        ZStack {
+                            Circle()
+                                .stroke(lineWidth: 1)
+                                .fill(.black)
+                                .frame(width: 18, height: 18)
+                                .padding()
+                            Circle()
+                                .fill(index == selectedCardIndex ? .black : .clear)
+                                .frame(width: 10, height: 10)
+                                .padding()
+                        }
+                        
+                        VStack(alignment: .leading) {
+                            Text("Credit Card")
+                                .poppinsFont(size: 18)
+                            Text(card.cardNumber)
+                                .poppinsFont(size: 14)
+                                .foregroundStyle(.gray)
+                        }
+                        
+                        Spacer()
+                        HStack {
+                            Image("visa")
+                            Image("mastercard")
+                        }
+                    }
+                    .contextMenu {
+                        Button("Delete") {
+                            cardViewModel.removeCard(at: index)
+                        }
+                        .tint(.red)
+                    }
+                    .roundedRectangleStyle(color: .lightGrayBackground)
+                    .onTapGesture {
+                        if selectedCardIndex == index {
+                            selectedCardIndex = nil
+                            isPaymentMethodSelected = false
+                        } else {
+                            selectedCardIndex = index
+                            isPaymentMethodSelected = true
+                        }
                     }
                 }
-                .contextMenu {
-                    Button("Delete") {
-                        cardViewModel.removeCard(at: index)
-                    }
-                    .tint(.red)
-                }
-                .roundedRectangleStyle(color: .lightGrayBackground)
-                .onTapGesture {
-                    if selectedCardIndex == index {
-                        selectedCardIndex = nil
-                        isPaymentMethodSelected = false
-                    } else {
-                        selectedCardIndex = index
-                        isPaymentMethodSelected = true
-                    }
-                }
+                .frame(height: 100)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowInsets(.none)
+                .listRowSeparator(.hidden)
+                .padding(.vertical)
             }
-            .frame(height: 100)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 20, trailing: 0))
-            .listRowInsets(.none)
-            .listRowSeparator(.hidden)
         }
         .scrollIndicators(.hidden)
         .scrollContentBackground(.hidden)

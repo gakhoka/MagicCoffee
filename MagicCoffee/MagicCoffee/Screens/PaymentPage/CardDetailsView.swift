@@ -20,8 +20,9 @@ struct CardDetailsView: View {
         VStack(spacing: 20) {
             Text(cardsViewModel.cardSaved ? "Card successfully added" : "")
                 .foregroundColor(.navyGreen)
+                .padding(.top)
                 .animation(.easeIn(duration: 0.3), value: cardsViewModel.cardSaved)
-            Spacer()
+            
             
             Text("Enter Card Details")
                 
@@ -41,7 +42,9 @@ struct CardDetailsView: View {
             
             Button(action: {
                 let card = CreditCard(cardNumber: cardNumber, cardHolderName: cardHolderName, expirationDate: expirationDate, cvv: cvv)
-                cardsViewModel.addCreditCard(card)
+                withAnimation {
+                    cardsViewModel.addCreditCard(card)
+                }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                     cardsViewModel.cardSaved = false
                 }
