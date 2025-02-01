@@ -1,83 +1,51 @@
 # Magic Coffee App ☕✨
-## Magic Coffee is an iOS app that lets users browse and order from a selection of coffee options. The app offers a smooth experience with coffee browsing, search, and even a special free coffee offer! 🎉 With Firebase back end services, users can create accounts, log in, and manage their profiles 
+## Welcome to Magic Coffee, the ultimate iOS app for coffee lovers! Whether you're looking to browse through a variety of coffee options, place an order, or track your rewards, Magic Coffee has got you covered! Powered by Firebase backend services, this app offers a seamless user experience with secure authentication and real-time data management.
+
+
 
 ## Features 🌟
-### Firebase Authentication 🔐:
-#### Sign up and log in using email to access your personal profile.
-<img src="https://github.com/user-attachments/assets/5484ec9d-d3e6-495e-84aa-b06bbcabfb12" width="295" height="639" />
-
-<img src="https://github.com/user-attachments/assets/5103b1f0-9098-4534-ab1a-f9721030f73c" width="295" height="639" />
-
-<img src="https://github.com/user-attachments/assets/2050fefd-6cb3-4d26-8f83-c2acc18ef9d7" width="295" height="639" />
-
-<img src="https://github.com/user-attachments/assets/8c06ae37-08dd-47dc-9b41-499bda6b12bb" width="295" height="639" />
-
+## Firebase Authentication 🔐
+#### • Sign up and log in using your email to access your personalized profile and coffee orders.
 ## Coffee Browser 🧑‍💻
-
-### Browse various coffee selections with images and names
-
-<img src="https://github.com/user-attachments/assets/c449d83f-9d2c-4821-9c67-1fa613c73a51" width="295" height="639" />
-
-## ☕ Modifying Your Coffee Order
-
-#### Easily update your coffee order by adjusting quantities, removing items, cup size , additives, milk type  and more.
-#### Manage your selections and proceed to checkout with a seamless experience! 🛒
-<img src="https://github.com/user-attachments/assets/9ac99d27-6a19-44f8-bab0-25239139d897" width="295" height="639" />
-<img src="https://github.com/user-attachments/assets/b2ba3aef-2018-490f-b4f3-d83500579000" width="295" height="639" />
-
+#### • Browse through a wide selection of coffee options, each with detailed images and names to help you choose your favorite brew.
+## Modify Your Coffee Order ☕️
+#### • Easily adjust your coffee order: change the quantity, remove items, select cup size, choose additives, pick a milk type, and more!
+#### • Modify your order and proceed to checkout in a hassle-free manner.
 ## MyOrder Page 🛍️
-#### View and manage your coffee orders, check the total price, use free coffee offers, and proceed to payment—all in one place! ☕️💳
-
-<img src="https://github.com/user-attachments/assets/ca6cbeae-354d-4d70-8637-ed7097d05d16" width="295" height="639" />
-<img src="https://github.com/user-attachments/assets/aff207df-adb8-4116-a8bc-3e3decfb33c2" width="295" height="639" />
-
+#### • View and manage your coffee orders all in one place.
+#### • Keep track of your total price 💸, use your free coffee offers 🎉, and proceed to payment with ease 💳.
 ## RewardsView 🎁
+#### • Track your loyalty progress and redeem your points for rewards!
+#### • Earn points with every purchase 🏆.
+#### • Redeem points for discounts or free coffee 🎉☕️.
+#### • View past redemptions, including coffee names, dates, and points spent.
+## Order History 📜
+#### • Track past and ongoing orders with detailed information like cup size, roasting level, grinding type, and milk preferences.
+#### • Switch between "Ongoing" and "History" tabs for a quick overview.
 
-### The RewardsView allows users to track and redeem their loyalty points in the Magic Coffee app.
-#### Loyalty Progress ⭐️ – View earned points and track progress toward rewards.
-#### Redeem Points ☕️ – Use points for discounts or free coffee.
-#### Rewards History 📜 – See past redemptions with coffee names, dates, and scores.
-
-<img src="https://github.com/user-attachments/assets/829a07c6-d5df-422b-b3b4-947b29b29fc7" width="295" height="639" />
-<img src="https://github.com/user-attachments/assets/96c11a05-ed7f-438b-8ffe-880f260a56b6" width="295" height="639" />
-
-## Order History 📜 
-
-### Track your past and ongoing coffee orders with details.
-
-#### Custom Details ☕️ – View cup size, roasting level, grinding type, and milk preference.
-#### Easy Navigation 🔍 – Switch between "On going" and "History" tabs for a clear overview.
 
 ## Technologies Used 🛠️
+#### • Xcode 14+ 💻
+#### • Swift 5.5 🦅
+#### • UIKit and SwiftUI 📱✨
+#### • Firebase Authentication 🔐
+#### • Firebase Realtime Database 🔄
+#### • Firebase Storage ☁️
+#### • Push Notifications 📲
+## Version Control 🔧
+#### • Git 🧑‍💻
+#### • GitHub 🐙
+## Architecture 🏗️
+#### • MVVM Architecture: Clean separation of concerns for better maintainability and scalability 🧩.
+#### • Hybrid Architecture (UIKit + SwiftUI): Combines legacy support with UIKit and modern UI patterns using SwiftUI for a seamless user experience 🎮.
 
-#### Xcode 14+
-#### Swift 5.5
-#### UIKit and SWIFTUIF
 
-## Backend & Services
+## Benefits 🌟
+#### • Legacy Support: UIKit ensures compatibility with older iOS versions.
+#### • Modern UI Patterns: SwiftUI provides a clean and responsive interface with a modern design.
+#### • Gradual Migration Path: Hybrid architecture allows easy transition from UIKit to SwiftUI over time.
+## Contributor 🙋‍♂️
+#### • Giorgi Gakhokidze
+#### • Email: giorgigakhokidze14@gmail.com
 
-#### Firebase Authentication
-#### Firebase Realtime Database
-#### Firebase Storage
-#### Push Notifications
-
-## Version Control
-
-#### Git
-#### GitHub
-
-## Architecture
-#### MVVM Architecture
-
-## Hybrid Architecture (UIKit + SwiftUI)
-
-### Benefits
-#### Legacy support with UIKit
-#### Modern UI patterns with SwiftUI
-#### Framework-specific optimizations
-#### Gradual migration path
-
-## Contributor
-#### Giorgi Gakhokidze
-#### email: giorgigakhokidze14@gmail.com
-
+## Feel free to reach out for any suggestions, improvements 
