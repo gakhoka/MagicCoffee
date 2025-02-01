@@ -12,7 +12,7 @@ import FirebaseAuth
 class ForgotPasswordViewModel {
     func sendPasswordReset(email: String, completion: @escaping (Result<Void, Error>) -> Void) {
         Auth.auth().sendPasswordReset(withEmail: email) { [weak self] error in
-            guard let self = self else { return }
+            guard self != nil else { return }
 
             if let error = error {
                 completion(.failure(error))
@@ -26,7 +26,7 @@ class ForgotPasswordViewModel {
     func checkIfEmailExists(_ email: String, completion: @escaping (Result<Bool, Error>) -> Void) {
         
         Auth.auth().createUser(withEmail: email, password: UUID().uuidString) { [weak self] result, error in
-            guard let self = self else { return }
+            guard self != nil else { return }
 
             if let error = error as NSError? {
                 let authError = AuthErrorCode(_bridgedNSError: error)
