@@ -32,7 +32,9 @@ struct RewardsView: View {
                         .padding(.horizontal, 20)
                     Spacer()
                 }
+                .padding(.top)
                 
+        if !viewModel.coffeeHistory.isEmpty {
                 List {
                     ForEach(viewModel.coffeeHistory) { coffee in
                         HStack {
@@ -50,10 +52,23 @@ struct RewardsView: View {
                     .listRowSeparator(.visible)
                 }
                 .poppinsFont(size: 24)
-                .onAppear(perform: viewModel.fetchUserOrders)
                 .scrollContentBackground(.hidden)
                 .scrollIndicators(.hidden)
+            
+                } else {
+                    Spacer()
+                    VStack(spacing: 20) {
+                        Spacer()
+                        Image("noreward")
+                            .foregroundColor(.navyGreen)
+                        Text("No rewards yet")
+                            .poppinsFont(size: 16)
+                        Spacer()
+                        Spacer()
+                    }
+                }
             }
+            .onAppear(perform: viewModel.fetchUserOrders)
         }
     }
 }

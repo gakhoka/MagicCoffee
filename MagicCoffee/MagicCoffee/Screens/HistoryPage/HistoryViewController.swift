@@ -160,7 +160,7 @@ class HistoryViewController: UIViewController {
     }
     
     private func setupEmptyView() {
-        emptyOrderLabel.text = isOngoingSelected ? "No ongoing orders yet" : "There are no orders in history"
+        emptyOrderLabel.text = isOngoingSelected ? "No ongoing orders yet" : "No history of orders yet"
 
         view.addSubview(emptyImage)
         view.addSubview(emptyOrderLabel)
