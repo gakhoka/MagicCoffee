@@ -14,6 +14,8 @@ struct Order: Identifiable, Codable {
     let isTakeAway: Bool
     let price: Double
     let coffee: [Coffee]
+    let prepareTime: Date
+    let orderDate: Date
 }
 
 extension Order {
@@ -22,6 +24,8 @@ extension Order {
             "coffeeAmount": coffeeAmount,
             "isTakeAway": isTakeAway,
             "price": price,
+            "prepareTime": prepareTime,
+            "orderDate": orderDate,
             "coffee": coffee.map { $0.asDictionary() }
         ]
     }

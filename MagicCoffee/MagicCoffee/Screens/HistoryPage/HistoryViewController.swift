@@ -221,19 +221,58 @@ class HistoryViewController: UIViewController {
 
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+    func numberOfSections(in tableView: UITableView) -> Int {
         return isOngoingSelected ? viewModel.ongoingOrder.count : viewModel.ordersHistory.count
     }
     
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let selectedOrders = isOngoingSelected ? viewModel.ongoingOrder : viewModel.ordersHistory
+        return selectedOrders[section].coffee.count
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell {
-            let selectedCoffee = isOngoingSelected ? viewModel.ongoingOrder[indexPath.row] : viewModel.ordersHistory[indexPath.row]
-            cell.configure(with: selectedCoffee, isonGoing: isOngoingSelected)
-            cell.coffee = selectedCoffee
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "OrderCell", for: indexPath) as? OrdersTableViewCell else {
+            return UITableViewCell()
         }
-        return UITableViewCell()
+        
+        let selectedOrders = isOngoingSelected ? viewModel.ongoingOrder : viewModel.ordersHistory
+        let order = selectedOrders[indexPath.section]
+        let coffee = order.coffee[indexPath.row]
+        
+        cell.configure(with: coffee, isOngoing: isOngoingSelected, order: order)
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView()
+        headerView.backgroundColor = .lightGrayBackground
+        headerView.layer.cornerRadius = 10
+        
+        let selectedOrders = isOngoingSelected ? viewModel.ongoingOrder : viewModel.ordersHistory
+        let order = selectedOrders[section]
+        
+        let amountLabel = UILabel()
+        amountLabel.create(text: "\(order.coffeeAmount) coffees totally", font: 14)
+        
+        let priceLabel = UILabel()
+        priceLabel.create(text: "Price $\(String(format: "%.2f", order.price))", font: 14)
+        
+        
+        headerView.addSubview(amountLabel)
+        headerView.addSubview(priceLabel)
+        
+        NSLayoutConstraint.activate([
+            amountLabel.leftAnchor.constraint(equalTo: headerView.leftAnchor, constant: 15),
+            amountLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            priceLabel.rightAnchor.constraint(equalTo: headerView.rightAnchor, constant: -15),
+            priceLabel.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+        
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
 }
 

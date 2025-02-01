@@ -158,7 +158,7 @@ class ProfilePageViewController: UIViewController {
             signOutButton.leftAnchor.constraint(equalTo: signoutView.leftAnchor, constant: 20),
             signOutButton.centerYAnchor.constraint(equalTo: signoutView.centerYAnchor),
             
-            logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 5),
+            logOutLabel.leftAnchor.constraint(equalTo: signOutButton.rightAnchor, constant: 15),
             logOutLabel.centerYAnchor.constraint(equalTo: signOutButton.centerYAnchor),
             
             qrImage.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),

@@ -41,7 +41,7 @@ struct FinalOrderDetailsView: View {
                 .padding(.horizontal, 20)
 
             
-            Text("Your order will be ready today at \(prepareTime)")
+            Text("Your order will be ready at \(prepareTime)")
                 .padding(.horizontal, 20)
            
             

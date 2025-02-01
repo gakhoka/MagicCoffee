@@ -34,27 +34,35 @@ struct RewardsView: View {
                 }
                 .padding(.top)
                 
-        if !viewModel.coffeeHistory.isEmpty {
-                List {
-                    ForEach(viewModel.coffeeHistory) { coffee in
-                        HStack {
-                            VStack(alignment: .leading, spacing: 20) {
-                                Text(coffee.name)
-                                Text(coffee.orderDate.formattedDate())
+                if !viewModel.coffeeHistory.isEmpty {
+                    List {
+                        ForEach(viewModel.coffeeHistory) { order in
+                            VStack(alignment: .leading) {
+                                // Displaying order date
+                                Text(order.orderDate.formattedDate())
                                     .foregroundStyle(.gray)
                                     .font(.system(size: 15))
+                                    .padding(.bottom, 5)
+                                
+                                // Looping through coffees in the order and displaying each coffee's name and score
+                                ForEach(order.coffee) { coffee in
+                                    HStack {
+                                        Text(coffee.name)
+                                            .font(.system(size: 18))
+                                        Spacer()
+                                        Text("+ \(coffee.score)")
+                                            .font(.system(size: 18))
+                                    }
+                                    .padding(.bottom, 5)
+                                }
                             }
-                            Spacer()
-                            Text("+ \(coffee.score)")
+                            .poppinsFont(size: 18)
                         }
-                        .poppinsFont(size: 18)
+                        .listRowSeparator(.visible)
                     }
-                    .listRowSeparator(.visible)
-                }
-                .poppinsFont(size: 24)
-                .scrollContentBackground(.hidden)
-                .scrollIndicators(.hidden)
-            
+                    .poppinsFont(size: 24)
+                    .scrollContentBackground(.hidden)
+                    .scrollIndicators(.hidden)
                 } else {
                     Spacer()
                     VStack(spacing: 20) {

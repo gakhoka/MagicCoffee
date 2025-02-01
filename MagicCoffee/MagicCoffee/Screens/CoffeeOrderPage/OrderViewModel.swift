@@ -79,7 +79,7 @@ class OrderViewModel: ObservableObject {
     }
 
     private func createCoffee() -> Coffee {
-        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice, orderDate: orderDate, prepTime: prepareTime())
+        let coffee = Coffee(count: coffeeCount, name: coffeeName, ristreto: ristrettoSize, size: Coffee.CoffeeSize(volumeSize) ?? .medium, image: coffeeImage, sortByOrigin: selectedCity, grinding: Coffee.GrindingLevel(selectedGrindSize) ?? .fine, milk: selectedMilk, syrup: selectedSyrup, iceAmount: selectedIceAmount, roastingLevel: Coffee.RoastingLevel(selectedRoastAmount) ?? .low, additives: selectedAdditives, score: Int(coffeePrice) * 5, price: isGiftCoffeeSelected ? 0.0 : coffeePrice)
         return coffee
     }
     
@@ -93,7 +93,7 @@ class OrderViewModel: ObservableObject {
     }
     
     private func createOrder() -> Order {
-        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees)
+        let order = Order(coffeeAmount: totalcoffeeCount, isTakeAway: isTakeAway, price: total, coffee: coffees, prepareTime: prepareTime(), orderDate: orderDate)
         return order
     }
     

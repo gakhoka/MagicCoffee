@@ -12,8 +12,8 @@ import FirebaseFirestore
 
 class HistoryViewModel {
     
-    var ordersHistory: [Coffee] = []
-    var ongoingOrder: [Coffee] = []
+    var ordersHistory: [Order] = []
+    var ongoingOrder: [Order] = []
     
     init() {
         fetchOrders()
@@ -35,37 +35,51 @@ class HistoryViewModel {
             
             if let snapshot = snapshot {
                 
-                var historyList: [Coffee] = []
-                var ongoingList: [Coffee] = []
+                var historyList: [Order] = []
+                var ongoingList: [Order] = []
                 
                 for document in snapshot.documents {
-
-                    if let coffees = document.get("coffee") as? [[String: Any]] {
-                        for coffee in coffees {
+                    if let coffeeData = document.get("coffee") as? [[String: Any]] {
+                        var coffees: [Coffee] = []
+                        
+                        for coffee in coffeeData {
                             if let name = coffee["name"] as? String,
-                               let prepTime = coffee["prepTime"] as? Timestamp,
-                               let timestamp = coffee["orderDate"] as? Timestamp,
                                let size = coffee["size"] as? String,
                                let grinding = coffee["grinding"] as? String,
                                let milk = coffee["milk"] as? String,
                                let roasting = coffee["roastingLevel"] as? String,
                                let price = coffee["price"] as? Double {
-                                let orderDate = timestamp.dateValue()
-                                let prepDate = prepTime.dateValue()
-                                let myCoffee = Coffee(name: name, size: Coffee.CoffeeSize(rawValue: size) ?? .large, grinding: Coffee.GrindingLevel(rawValue: grinding) ?? .medium, milk: milk, roastingLevel: Coffee.RoastingLevel(rawValue: roasting) ?? .low, price: price, orderDate: orderDate, prepTime: prepDate)
-                                
-                                if prepDate > Date.now {
-                                    ongoingList.append(myCoffee)
-                                } else {
-                                    historyList.append(myCoffee)
-                                }
+                        
+                                let myCoffee = Coffee(
+                                    name: name,
+                                    size: Coffee.CoffeeSize(rawValue: size) ?? .large,
+                                    grinding: Coffee.GrindingLevel(rawValue: grinding) ?? .medium,
+                                    milk: milk,
+                                    roastingLevel: Coffee.RoastingLevel(rawValue: roasting) ?? .low,
+                                    price: price
+                                )
+                                coffees.append(myCoffee)
+                            }
+                        }
+                        
+                        if let coffeeAmount = document.get("coffeeAmount") as? Int,
+                           let isTakeAway = document.get("isTakeAway") as? Bool,
+                           let price = document.get("price") as? Double,
+                           let prepareTime = document.get("prepareTime") as? Timestamp,
+                           let orderDate = document.get("orderDate") as? Timestamp {
+                            let order = Order(coffeeAmount: coffeeAmount, isTakeAway: isTakeAway, price: price, coffee: coffees, prepareTime: prepareTime.dateValue(), orderDate: orderDate.dateValue())
+                            
+                            if order.prepareTime > Date.now {
+                                ongoingList.append(order)
+                            } else {
+                                historyList.append(order)
                             }
                         }
                     }
                 }
                 
                 DispatchQueue.main.async { [weak self] in
-                    self?.ongoingOrder = ongoingList.sorted { $0.orderDate < $1.orderDate }
+                    self?.ongoingOrder = ongoingList.sorted { $0.prepareTime < $1.prepareTime }
                     self?.ordersHistory = historyList.sorted { $0.orderDate > $1.orderDate }
                     self?.updateCoffees?()
                 }

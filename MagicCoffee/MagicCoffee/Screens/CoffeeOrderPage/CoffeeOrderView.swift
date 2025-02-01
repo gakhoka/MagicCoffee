@@ -15,7 +15,7 @@ struct CoffeeOrderView: View {
     var coffee: Coffee
     
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             coffeeImage
             ScrollView {
                 if !viewModel.isGiftCoffeeSelected {
@@ -24,7 +24,6 @@ struct CoffeeOrderView: View {
                 onsiteOrTakeAway
                 cupSize
                 ristretto
-                timePicker
                 totalAmount
                 NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, path: $path, coffee: coffee)) {
                     coffeeLoverAssemblage
@@ -173,20 +172,6 @@ struct CoffeeOrderView: View {
         .padding()
     }
     
-    private var timePicker: some View {
-        HStack {
-            Image("calendar")
-                .padding(.leading)
-                
-            DatePicker("", selection: $viewModel.pickDate, in: Date()...,  displayedComponents: [.hourAndMinute , .date])
-                .opacity(viewModel.isDatePickerOn ? 1 : 0)
-                .animation(.easeIn(duration: 0.5), value: viewModel.isDatePickerOn)
-                .padding(.leading)
-            
-            Toggle("", isOn: $viewModel.isDatePickerOn)
-        }
-        .padding()
-    }
     
     private var coffeeLoverAssemblage: some View {
         HStack {

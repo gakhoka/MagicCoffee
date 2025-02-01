@@ -53,6 +53,21 @@ struct PaymentView: View {
         Spacer()
     }
     
+    private var timePicker: some View {
+        HStack {
+            Image("calendar")
+                .padding(.leading)
+                
+            DatePicker("", selection: $viewModel.pickDate, in: Date()...,  displayedComponents: [.hourAndMinute , .date])
+                .opacity(viewModel.isDatePickerOn ? 1 : 0)
+                .animation(.easeIn(duration: 0.5), value: viewModel.isDatePickerOn)
+                .padding(.leading)
+            
+            Toggle("", isOn: $viewModel.isDatePickerOn)
+        }
+        .padding()
+    }
+    
     private var addCard: some View {
         VStack(alignment: .leading, spacing: 40) {
             HStack {
@@ -74,6 +89,7 @@ struct PaymentView: View {
                 }
             }
             .padding(.horizontal)
+            timePicker
             Text("Credit and Debit cards")
                 .poppinsFont(size: 20)
                 .padding(.horizontal)
