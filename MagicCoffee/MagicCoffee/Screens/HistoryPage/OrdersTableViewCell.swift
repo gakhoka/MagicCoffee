@@ -11,6 +11,7 @@ import UIKit
 class OrdersTableViewCell: UITableViewCell {
     
     var coffee: Coffee?
+    var order: Order?
     
     private lazy var milkLabel: UILabel = {
         let label = UILabel()
@@ -87,20 +88,15 @@ class OrdersTableViewCell: UITableViewCell {
         setupConstraints()
     }
     
-    func configure(with coffee: Coffee, isonGoing: Bool) {
+    func configure(with coffee: Coffee, isOngoing: Bool, order: Order) {
         coffeeName.text = coffee.name
         price.text = "\(String(format: "%.2f", coffee.price)) $"
         sizeLabel.text = "\(coffee.size.rawValue) cup |"
-        dateLabel.text = coffee.prepTime.formatToDay(isOngoing: isonGoing)
+        dateLabel.text = order.prepareTime.formatToDay(isOngoing: isOngoing)
         roastingLabel.text = "\(coffee.roastingLevel.rawValue) roasting"
         grindingLabel.text = "\(coffee.grinding.rawValue) grinding |"
-        if coffee.milk == "" {
-            milkLabel.text = "Regular Milk"
-        } else {
-            milkLabel.text = coffee.milk
-        }
+        milkLabel.text = coffee.milk.isEmpty ? "Regular Milk" : coffee.milk
     }
-    
     
     private func placeViews() {
         contentView.addSubview(dateLabel)
