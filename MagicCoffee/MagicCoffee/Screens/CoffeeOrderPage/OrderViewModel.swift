@@ -144,7 +144,7 @@ class OrderViewModel: ObservableObject {
     }
     
     func addCoffee() {
-        if coffeeName == ""  {
+        if coffeeName == "" || (coffees.first(where: { $0.price == coffeePrice }) != nil) {
             return
         }
         

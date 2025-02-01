@@ -38,29 +38,27 @@ struct RewardsView: View {
                     List {
                         ForEach(viewModel.coffeeHistory) { order in
                             VStack(alignment: .leading) {
-                                // Displaying order date
                                 Text(order.orderDate.formattedDate())
-                                    .foregroundStyle(.gray)
-                                    .font(.system(size: 15))
-                                    .padding(.bottom, 5)
+                                    .poppinsFont(size: 18)
+                                    .foregroundColor(.gray)
+                                    .padding([.top, .bottom])
                                 
-                                // Looping through coffees in the order and displaying each coffee's name and score
                                 ForEach(order.coffee) { coffee in
                                     HStack {
                                         Text(coffee.name)
-                                            .font(.system(size: 18))
+                                            .poppinsFont(size: 16)
+
                                         Spacer()
-                                        Text("+ \(coffee.score)")
-                                            .font(.system(size: 18))
+                                        Text("+ \(coffee.score) pts")
+                                            .poppinsFont(size: 17)
+
                                     }
                                     .padding(.bottom, 5)
                                 }
                             }
-                            .poppinsFont(size: 18)
                         }
                         .listRowSeparator(.visible)
                     }
-                    .poppinsFont(size: 24)
                     .scrollContentBackground(.hidden)
                     .scrollIndicators(.hidden)
                 } else {
