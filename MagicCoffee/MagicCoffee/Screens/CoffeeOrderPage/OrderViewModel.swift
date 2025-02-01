@@ -252,7 +252,7 @@ class OrderViewModel: ObservableObject {
                 fetchedCountries.append(country)
             }
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.coffeeCountries = fetchedCountries
             }
         }
