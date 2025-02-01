@@ -15,18 +15,18 @@ struct CoffeeOrderView: View {
     var coffee: Coffee
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 40) {
             coffeeImage
             ScrollView {
-                if !viewModel.isGiftCoffeeSelected {
+                VStack(spacing: 10) {
                     coffeeAmount
-                }
-                onsiteOrTakeAway
-                cupSize
-                ristretto
-                totalAmount
-                NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, path: $path, coffee: coffee)) {
-                    coffeeLoverAssemblage
+                    onsiteOrTakeAway
+                    cupSize
+                    ristretto
+                    totalAmount
+                    NavigationLink(destination: CoffeeAssemblageView(viewModel: viewModel, path: $path, coffee: coffee)) {
+                        coffeeLoverAssemblage
+                    }
                 }
             }
             .scrollIndicators(.hidden)
@@ -155,6 +155,7 @@ struct CoffeeOrderView: View {
                 }
             }
             .capsuleButton()
+            .opacity(viewModel.isGiftCoffeeSelected ? 0 : 1)
         }
         .padding(.horizontal)
     }
@@ -205,7 +206,6 @@ struct CoffeeOrderView: View {
         }
     }
 }
-
 #Preview {
     CoffeeOrderView(viewModel: OrderViewModel(), path: .constant(NavigationPath()), coffee: .example)
 }
