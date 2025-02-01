@@ -144,9 +144,23 @@ class OrderViewModel: ObservableObject {
     }
     
     func addCoffee() {
-        if coffeeName == "" || (coffees.first(where: { $0.price == coffeePrice }) != nil) {
+        if coffeeName == "" {
             return
         }
+        
+        if coffees.first(where: {
+            $0.name == coffeeName &&
+            $0.size == Coffee.CoffeeSize(volumeSize) &&
+            $0.grinding == Coffee.GrindingLevel(selectedGrindSize) &&
+            $0.milk == selectedMilk &&
+            $0.syrup == selectedSyrup &&
+            $0.iceAmount == selectedIceAmount &&
+            $0.roastingLevel == Coffee.RoastingLevel(selectedRoastAmount) &&
+            $0.additives == selectedAdditives &&
+            $0.sortByOrigin  == selectedCity
+        }) != nil {
+                return
+            }
         
         let coffee = createCoffee()
         coffees.append(coffee)
