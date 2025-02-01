@@ -30,6 +30,7 @@ struct CoffeeOrderView: View {
                     coffeeLoverAssemblage
                 }
             }
+            .scrollIndicators(.hidden)
         }
         .poppinsFont(size: 16)
         .onAppear {

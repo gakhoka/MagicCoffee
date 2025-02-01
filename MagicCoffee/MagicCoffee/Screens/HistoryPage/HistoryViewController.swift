@@ -16,6 +16,20 @@ class HistoryViewController: UIViewController {
     private var isOngoingSelected = true
     var viewModel = HistoryViewModel()
     
+    private lazy var emptyOrderLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "Poppins", size: 18)
+        return label
+    }()
+    
+    private lazy var emptyImage: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "slash")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.create(text: "History", font: 20)
@@ -83,13 +97,14 @@ class HistoryViewController: UIViewController {
     func updateViewModel() {
         viewModel.updateCoffees = { [weak self] in
             DispatchQueue.main.async { [weak self] in                self?.tableView.reloadData()
+                self?.emptyView()
             }
         }
     }
     
     private func setupUI() {
         setupButtons()
-        setupTableView()
+        emptyView()
         setupTitleLabel()
     }
     
@@ -143,18 +158,53 @@ class HistoryViewController: UIViewController {
         underlineLeadingConstraint = underlineView.leadingAnchor.constraint(equalTo: ongoingButton.leadingAnchor)
         underlineLeadingConstraint.isActive = true
     }
+    
+    private func setupEmptyView() {
+        emptyOrderLabel.text = isOngoingSelected ? "No ongoing orders yet" : "There are no orders in history"
+
+        view.addSubview(emptyImage)
+        view.addSubview(emptyOrderLabel)
+        NSLayoutConstraint.activate([
+            emptyImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyImage.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            emptyOrderLabel.topAnchor.constraint(equalTo: emptyImage.bottomAnchor, constant: 20),
+            emptyOrderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
+    }
+    
+    private func emptyView() {
+        if viewModel.ongoingOrder.isEmpty && viewModel.ordersHistory.isEmpty {
+               setupEmptyView()
+               tableView.removeFromSuperview()
+           } else if isOngoingSelected && viewModel.ongoingOrder.isEmpty {
+               setupEmptyView()
+               tableView.removeFromSuperview()
+           } else if !isOngoingSelected && viewModel.ordersHistory.isEmpty {
+               setupEmptyView()
+               tableView.removeFromSuperview()
+           } else {
+               emptyImage.removeFromSuperview()
+               emptyOrderLabel.removeFromSuperview()
+               if tableView.superview == nil {
+                   setupTableView()
+               }
+           }
+    }
    
     
     private func didTapOngoing() {
         isOngoingSelected = true
         updateTabSelection(selectedButton: ongoingButton, unselectedButton: historyButton)
         tableView.reloadData()
+        emptyView()
     }
     
      private func didTapHistory() {
         isOngoingSelected = false
         updateTabSelection(selectedButton: historyButton, unselectedButton: ongoingButton)
          tableView.reloadData()
+         emptyView()
     }
     
     private func updateTabSelection(selectedButton: UIButton, unselectedButton: UIButton) {
