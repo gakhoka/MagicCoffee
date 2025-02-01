@@ -150,7 +150,7 @@ class LoginPageViewController: UIViewController {
             forgotPasswordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             loginButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -30),
-            //MARK: SHECVALE
+
             loginButton.bottomAnchor.constraint(equalTo: newMemberLabel.topAnchor, constant: -50),
             loginButton.heightAnchor.constraint(equalToConstant: 50),
             loginButton.widthAnchor.constraint(equalToConstant: 50),
@@ -185,7 +185,7 @@ class LoginPageViewController: UIViewController {
         }
         
         viewModel.signin(email: email, password: password) { [weak self] result in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in 
                 switch result {
                 case .success(_):
                     self?.navigateToHomePage()

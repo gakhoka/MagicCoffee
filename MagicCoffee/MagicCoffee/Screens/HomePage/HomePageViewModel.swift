@@ -19,7 +19,7 @@ class HomePageViewModel: ObservableObject {
     func fetchCoffees() {
         let dataBase = Firestore.firestore()
         let referrence = dataBase.collection("Coffees")
-        referrence.getDocuments { snapshot, error in
+        referrence.getDocuments { [weak self] snapshot, error in
             if let error = error {
                 print(error.localizedDescription)
             }
@@ -33,7 +33,7 @@ class HomePageViewModel: ObservableObject {
                     let price = data["price"] as? Double ?? 0.0
                     
                     let coffee = Coffee(name: name, image: image, price: price)
-                    self.coffees.append(coffee)
+                    self?.coffees.append(coffee)
                 }
             }
         }

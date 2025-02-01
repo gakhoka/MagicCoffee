@@ -39,7 +39,7 @@ class ProfileViewModel {
             self?.username = data["username"] as? String ?? ""
             self?.email = data["email"] as? String ?? ""
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.updateHandler?()
             }
         }
@@ -65,7 +65,7 @@ class ProfileViewModel {
             self?.username = username
             self?.email = email
             
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { 
                 self?.updateHandler?()
                 completion(true)
             }
