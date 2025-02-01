@@ -39,8 +39,8 @@ class ProfileItemViewHelper {
         let editButton = UIButton()
         editButton.setImage(UIImage(named: "Edit"), for: .normal)
         editButton.tintColor = .systemGray
-        editButton.addAction(UIAction(handler: { action in
-            toggleEdit(editButton) 
+        editButton.addAction(UIAction(handler: {  action in
+           toggleEdit(editButton)
         }), for: .touchUpInside)
 
         

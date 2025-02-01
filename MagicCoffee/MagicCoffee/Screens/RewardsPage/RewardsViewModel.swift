@@ -27,65 +27,58 @@ class RewardsViewModel: ObservableObject {
     }
     
     func fetchUserOrders() {
-            let database = Firestore.firestore()
-            guard let uid = Auth.auth().currentUser?.uid else { return }
-            
-            let userRef = database.collection("users").document(uid)
-            
-            userRef.getDocument { [weak self] snapshot, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-                
-                if let snapshot = snapshot, snapshot.exists {
-                    self?.userPoints = snapshot.get("score") as? Int ?? 0
-                }
+        let database = Firestore.firestore()
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        
+        let userRef = database.collection("users").document(uid)
+        
+        userRef.getDocument { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
             }
             
-            let ordersRef = userRef.collection("orders")
-            ordersRef.getDocuments { [weak self] snapshot, error in
-                if let error = error {
-                    print(error.localizedDescription)
-                    return
-                }
-                
-                if let snapshot = snapshot {
-                    self?.userOrderCount = snapshot.count
-                    
-                    var orderList: [Order] = [] // Store Order objects
-                    
-                    for document in snapshot.documents {
-                        if let coffeeArray = document.get("coffee") as? [[String: Any]] {
-                            var coffeeList: [Coffee] = []
-                            let orderDate = (document.get("orderDate") as? Timestamp)?.dateValue() ?? Date()
-                            let prepareTime = (document.get("prepareTime") as? Timestamp)?.dateValue() ?? Date()
-                            
-                            for coffee in coffeeArray {
-                                if let name = coffee["name"] as? String,
-                                   let score = coffee["score"] as? Int {
-                                    let myCoffee = Coffee(name: name, score: score)
-                                    coffeeList.append(myCoffee)
-                                }
-                            }
-                            
-                            let order = Order(coffeeAmount: coffeeList.count, isTakeAway: true, price: 0.0, coffee: coffeeList, prepareTime: prepareTime, orderDate: orderDate)
-                            orderList.append(order)
-                        }
-                    }
-                    
-                    // Sort by order date
-                    self?.coffeeHistory = orderList.sorted { $0.orderDate > $1.orderDate }
-                }
+            if let snapshot = snapshot, snapshot.exists {
+                self?.userPoints = snapshot.get("score") as? Int ?? 0
             }
         }
         
-        func getCoffeeFromOrder(order: Order) -> [String] {
-            // Function to extract coffee names from an order
-            return order.coffee.map { $0.name }
+        let ordersRef = userRef.collection("orders")
+        ordersRef.getDocuments { [weak self] snapshot, error in
+            if let error = error {
+                print(error.localizedDescription)
+                return
+            }
+            
+            if let snapshot = snapshot {
+                self?.userOrderCount = snapshot.count
+                
+                var orderList: [Order] = []
+                
+                for document in snapshot.documents {
+                    if let coffeeArray = document.get("coffee") as? [[String: Any]] {
+                        var coffeeList: [Coffee] = []
+                        let orderDate = (document.get("orderDate") as? Timestamp)?.dateValue() ?? Date()
+                        let prepareTime = (document.get("prepareTime") as? Timestamp)?.dateValue() ?? Date()
+                        
+                        for coffee in coffeeArray {
+                            if let name = coffee["name"] as? String,
+                               let score = coffee["score"] as? Int {
+                                let myCoffee = Coffee(name: name, score: score)
+                                coffeeList.append(myCoffee)
+                            }
+                        }
+                        
+                        let order = Order(coffeeAmount: coffeeList.count, isTakeAway: true, price: 0.0, coffee: coffeeList, prepareTime: prepareTime, orderDate: orderDate)
+                        orderList.append(order)
+                    }
+                }
+                
+                self?.coffeeHistory = orderList.sorted { $0.orderDate > $1.orderDate }
+            }
         }
-    
-    
+    }
+
     func fetchRedeemableCoffees() {
         let dataBase = Firestore.firestore()
         let referrence = dataBase.collection("Coffees")
