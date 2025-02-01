@@ -250,9 +250,11 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
         
         let selectedOrders = isOngoingSelected ? viewModel.ongoingOrder : viewModel.ordersHistory
         let order = selectedOrders[section]
+    
         
+        let coffeeText = order.coffeeAmount == 1 ? "coffee" : "coffees"
         let amountLabel = UILabel()
-        amountLabel.create(text: "\(order.coffeeAmount) coffees totally", font: 14)
+        amountLabel.create(text: "\(order.coffeeAmount) \(coffeeText) totally", font: 14)
         
         let priceLabel = UILabel()
         priceLabel.create(text: "Price $\(String(format: "%.2f", order.price))", font: 14)
