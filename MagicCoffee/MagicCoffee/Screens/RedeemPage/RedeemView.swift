@@ -29,10 +29,8 @@ struct RedeemView: View {
                         HStack {
                             AsyncCoffeeView(image: coffee.image)
                         Spacer()
-                        VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading) {
                             Text(coffee.name)
-                            Text("Valid until \(coffee.validityDate)")
-                                .font(.system(size: 14))
                                 .foregroundStyle(.gray)
                         }
                         
