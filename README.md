@@ -1,7 +1,7 @@
 # Magic Coffee App ☕✨
 
 
-## Welcome to Magic Coffee, the ultimate iOS app for coffee lovers! Whether you're looking to browse through a variety of coffee options, place an order, or track your rewards, Magic Coffee has got you covered! Powered by Firebase backend services, this app offers a seamless user experience with secure authentication and real-time data management.
+### Welcome to Magic Coffee, the ultimate iOS app for coffee lovers! Whether you're looking to browse through a variety of coffee options, place an order, or track your rewards, Magic Coffee has got you covered! Powered by Firebase backend services, this app offers a seamless user experience with secure authentication and real-time data management.
 
 
 
@@ -9,7 +9,7 @@
 
 ___ 
 
-## Features 🌟
+# Features 🌟
 ## Firebase Authentication 🔐
 
 #### • Sign up and log in using your email to access your personalized profile and coffee orders.
