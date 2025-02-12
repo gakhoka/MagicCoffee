@@ -46,7 +46,7 @@ struct PaymentView: View {
         }
         .sheet(isPresented: $isAddCardTapped, content: {
             CardDetailsView(cardsViewModel: cardViewModel)
-                .presentationDetents([.height(400)])
+                .presentationDetents([.height(500)])
         })
         .navigationTitle("Order Payment")
         .onAppear(perform: cardViewModel.getGreditCard)
