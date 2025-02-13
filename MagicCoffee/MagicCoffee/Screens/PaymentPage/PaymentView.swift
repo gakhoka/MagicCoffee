@@ -213,7 +213,7 @@ struct PaymentView: View {
                         VStack(alignment: .leading) {
                             Text("Credit Card")
                                 .poppinsFont(size: 18)
-                            Text(card.cardNumber)
+                            Text(card.cardNumber.hiddeMiddleNumbers())
                                 .poppinsFont(size: 14)
                                 .foregroundStyle(.gray)
                         }
