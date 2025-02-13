@@ -29,7 +29,7 @@ struct PaymentView: View {
             VStack {
                 paymentAlert
                 addCard
-                orderList
+                ccList
                 applePay
                 bottomView
             }
@@ -178,74 +178,79 @@ struct PaymentView: View {
         .padding(.bottom)
     }
     
-    private var orderList: some View {
+    private var ccList: some View {
         List {
-            if cardViewModel.userCards.isEmpty {
-                VStack {
-                    Image(systemName: "creditcard.fill")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 100)
-                        .foregroundStyle(
-                            .linearGradient(colors: [.creamColor, .coffeeBeanColor, .navyGreen, .brownColor], startPoint: .top, endPoint: .bottomTrailing))
-                    
-                    Text("No cards added")
-                        .poppinsFont(size: 18)
-                        .foregroundColor(.gray)
-                }
-                .frame(maxWidth: .infinity, minHeight: 200)
+            if cardViewModel.cardFetchError {
+                Text("Error loading user cards")
+                    .poppinsFont(size: 20)
             } else {
-                ForEach(cardViewModel.userCards.indices, id: \.self) { index in
-                    let card = cardViewModel.userCards[index]
-                    HStack {
-                        ZStack {
-                            Circle()
-                                .stroke(lineWidth: 1)
-                                .fill(.black)
-                                .frame(width: 18, height: 18)
-                                .padding()
-                            Circle()
-                                .fill(index == selectedCardIndex ? .black : .clear)
-                                .frame(width: 10, height: 10)
-                                .padding()
-                        }
+                if cardViewModel.userCards.isEmpty {
+                    VStack {
+                        Image(systemName: "creditcard.fill")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 100, height: 100)
+                            .foregroundStyle(
+                                .linearGradient(colors: [.creamColor, .coffeeBeanColor, .navyGreen, .brownColor], startPoint: .top, endPoint: .bottomTrailing))
                         
-                        VStack(alignment: .leading) {
-                            Text("Credit Card")
-                                .poppinsFont(size: 18)
-                            Text(card.cardNumber.hiddeMiddleNumbers())
-                                .poppinsFont(size: 14)
-                                .foregroundStyle(.gray)
-                        }
-                        
-                        Spacer()
+                        Text("No cards added")
+                            .poppinsFont(size: 18)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 200)
+                } else {
+                    ForEach(cardViewModel.userCards.indices, id: \.self) { index in
+                        let card = cardViewModel.userCards[index]
                         HStack {
-                            Image("visa")
-                            Image("mastercard")
+                            ZStack {
+                                Circle()
+                                    .stroke(lineWidth: 1)
+                                    .fill(.black)
+                                    .frame(width: 18, height: 18)
+                                    .padding()
+                                Circle()
+                                    .fill(index == selectedCardIndex ? .black : .clear)
+                                    .frame(width: 10, height: 10)
+                                    .padding()
+                            }
+                            
+                            VStack(alignment: .leading) {
+                                Text("Credit Card")
+                                    .poppinsFont(size: 18)
+                                Text(card.cardNumber.hiddeMiddleNumbers())
+                                    .poppinsFont(size: 14)
+                                    .foregroundStyle(.gray)
+                            }
+                            
+                            Spacer()
+                            HStack {
+                                Image("visa")
+                                Image("mastercard")
+                            }
+                        }
+                        .contextMenu {
+                            Button("Delete") {
+                                cardViewModel.removeCard(at: index)
+                            }
+                            .tint(.red)
+                        }
+                        .roundedRectangleStyle(color: .lightGrayBackground)
+                        .onTapGesture {
+                            if selectedCardIndex == index {
+                                selectedCardIndex = nil
+                                isPaymentMethodSelected = false
+                            } else {
+                                selectedCardIndex = index
+                                isPaymentMethodSelected = true
+                            }
                         }
                     }
-                    .contextMenu {
-                        Button("Delete") {
-                            cardViewModel.removeCard(at: index)
-                        }
-                        .tint(.red)
-                    }
-                    .roundedRectangleStyle(color: .lightGrayBackground)
-                    .onTapGesture {
-                        if selectedCardIndex == index {
-                            selectedCardIndex = nil
-                            isPaymentMethodSelected = false
-                        } else {
-                            selectedCardIndex = index
-                            isPaymentMethodSelected = true
-                        }
-                    }
+                    .frame(height: 100)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowInsets(.none)
+                    .listRowSeparator(.hidden)
+                    .padding(.vertical)
                 }
-                .frame(height: 100)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowInsets(.none)
-                .listRowSeparator(.hidden)
-                .padding(.vertical)
             }
         }
         .scrollIndicators(.hidden)
