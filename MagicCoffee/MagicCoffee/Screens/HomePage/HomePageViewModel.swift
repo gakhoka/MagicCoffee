@@ -14,6 +14,8 @@ class HomePageViewModel: ObservableObject {
     @Published var coffees: [Coffee] = []
     @Published var user: User?
     @Published var username = ""
+    @Published var showErrorMessage = false
+    
     
 
     func fetchCoffees() {
@@ -21,6 +23,7 @@ class HomePageViewModel: ObservableObject {
         let referrence = dataBase.collection("Coffees")
         referrence.getDocuments { [weak self] snapshot, error in
             if let error = error {
+                self?.showErrorMessage = true
                 print(error.localizedDescription)
             }
             

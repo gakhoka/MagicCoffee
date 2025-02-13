@@ -19,14 +19,20 @@ struct CoffeeCountryView: View {
             Spacer()
             Text("Select country and sort of coffee")
                 .padding()
-            List {
-                ForEach(countriesViewModel.countries) { country in
-                    NavigationLink(destination: CitiesView(viewModel: viewModel, path: $path, cities: country.cities)) {
-                        Text(country.name)
+            if countriesViewModel.countries.isEmpty {
+                Text("Error loading countries, please check your connection")
+                    .poppinsFont(size: 24)
+                    .foregroundStyle(.primary)
+            } else {
+                List {
+                    ForEach(countriesViewModel.countries) { country in
+                        NavigationLink(destination: CitiesView(viewModel: viewModel, path: $path, cities: country.cities)) {
+                            Text(country.name)
+                        }
                     }
                 }
+                .poppinsFont(size: 16)
             }
-            .poppinsFont(size: 16)
         }
         .navigationTitle("Select Country")
         .scrollContentBackground(.hidden)
