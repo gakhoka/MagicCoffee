@@ -15,6 +15,7 @@ class CreditCardViewmodel: ObservableObject {
     @Published var total = 0.0
     @Published var cardSaved = false
     @Published var user: User?
+    @Published var cardFetchError = false
     
     func getGreditCard() {
         guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -24,6 +25,7 @@ class CreditCardViewmodel: ObservableObject {
         
         referrence.getDocuments { [weak self] snapshot, error in
             if let error = error {
+                self?.cardFetchError = true
                 print(error.localizedDescription)
             }
             
