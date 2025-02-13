@@ -11,6 +11,7 @@ import Foundation
 class CountriesViewModel: ObservableObject {
     
     @Published var countries: [Country] = []
+    @Published var errorMessage = false
 
     func fetchCountries() {
         let dataBase = Firestore.firestore()
@@ -18,6 +19,7 @@ class CountriesViewModel: ObservableObject {
         
         reference.getDocuments { [weak self] snapshot, error in
             if let error = error {
+                self?.errorMessage = true
                 print(error.localizedDescription)
                 return
             }

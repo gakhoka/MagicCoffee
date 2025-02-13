@@ -28,7 +28,15 @@ struct HomePageView: View {
                         Spacer()
                         freeCoffee
                     }
-                    coffeesList
+                    if viewModel.showErrorMessage {
+                        VStack {
+                            Text("Error loading coffees")
+                                .poppinsFont(size: 20)
+                                .foregroundStyle(.white)
+                        }
+                    } else {
+                        coffeesList
+                    }
                 }
                 .onAppear {
                     viewModel.fetchUser()
