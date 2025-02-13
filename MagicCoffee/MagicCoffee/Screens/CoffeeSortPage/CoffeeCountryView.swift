@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CoffeeCountryView: View {
     
+    @ObservedObject var countriesViewModel: CountriesViewModel
     @ObservedObject  var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
@@ -19,7 +20,7 @@ struct CoffeeCountryView: View {
             Text("Select country and sort of coffee")
                 .padding()
             List {
-                ForEach(viewModel.coffeeCountries) { country in
+                ForEach(countriesViewModel.countries) { country in
                     NavigationLink(destination: CitiesView(viewModel: viewModel, path: $path, cities: country.cities)) {
                         Text(country.name)
                     }
@@ -27,7 +28,6 @@ struct CoffeeCountryView: View {
             }
             .poppinsFont(size: 16)
         }
-        .onAppear { viewModel.fetchCountries() }
         .navigationTitle("Select Country")
         .scrollContentBackground(.hidden)
         .customBackButton { dismiss() }
@@ -36,5 +36,5 @@ struct CoffeeCountryView: View {
 }
 
 #Preview {
-    CoffeeCountryView(viewModel: OrderViewModel(), path: .constant(NavigationPath()))
+    CoffeeCountryView(countriesViewModel: CountriesViewModel(), viewModel: OrderViewModel(), path: .constant(NavigationPath()))
 }

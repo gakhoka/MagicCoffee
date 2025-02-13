@@ -10,6 +10,7 @@ import SwiftUI
 struct CoffeeAssemblageView: View {
     
     
+    @StateObject var countriesViewModel = CountriesViewModel()
     @ObservedObject var viewModel: OrderViewModel
     @Environment(\.dismiss) var dismiss
     @Binding var path: NavigationPath
@@ -51,7 +52,7 @@ struct CoffeeAssemblageView: View {
         .customBackButton {
             dismiss()
         }
-        .onAppear(perform: viewModel.fetchCountries)
+        .onAppear(perform: countriesViewModel.fetchCountries)
     }
     
     private var milkSheet: some View {
@@ -174,7 +175,7 @@ struct CoffeeAssemblageView: View {
     }
     
     private var coffeeSort: some View {
-        NavigationLink(destination: CoffeeCountryView(viewModel: viewModel, path: $path)) {
+        NavigationLink(destination: CoffeeCountryView(countriesViewModel: countriesViewModel, viewModel: viewModel, path: $path)) {
             HStack {
                 Text("Coffee sort")
                 Spacer()

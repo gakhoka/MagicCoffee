@@ -12,7 +12,6 @@ import FirebaseAuth
 class OrderViewModel: ObservableObject {
 
     var coffees: [Coffee] = []
-    var coffeeCountries: [Country] = []
     
     @Published var coffeeCount = 1
     @Published var coffeePrice = 0.0
@@ -46,6 +45,11 @@ class OrderViewModel: ObservableObject {
     private var previousSyrup = "None"
     
 
+    var pushNotifications: PushNotifications?
+    
+    init(pushNotifications: PushNotifications = PushNotifications()) {
+        self.pushNotifications = pushNotifications
+    }
     
     //MARK: order
 
@@ -64,7 +68,9 @@ class OrderViewModel: ObservableObject {
                 completion(.failure(error))
             } else {
                 completion(.success(()))
-                self?.showNotification()
+                if let prepareTime = self?.prepareTime() {
+                    self?.pushNotifications?.showNotification(prepareTime)
+                }
             }
         }
         
@@ -123,24 +129,6 @@ class OrderViewModel: ObservableObject {
         coffees.removeAll { $0.id == coffee.id }
         updateTotalCoffeeCount()
         updateTotalPrice()
-    }
-    
-    private func showNotification() {
-        let content = UNMutableNotificationContent()
-        content.title = "Your order is ready! ☕"
-        content.body = "Please collect"
-        content.sound = .default
-
-        let triggerTime = TimeInterval(prepareTime().timeIntervalSinceNow)
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: max(1, triggerTime), repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
-        UNUserNotificationCenter.current().add(request) { [weak self] error in
-            guard self != nil else { return }
-            if let error = error {
-                print(error.localizedDescription)
-            }
-        }
     }
     
     func addCoffee() {
@@ -222,40 +210,6 @@ class OrderViewModel: ObservableObject {
     
     func addRedeemedCoffee(_ coffee: Coffee) {
         coffees.append(coffee)
-    }
-    
-    //MARK: Countries
-    
-    
-    func fetchCountries() {
-        let dataBase = Firestore.firestore()
-        let reference = dataBase.collection("Countries")
-        
-        reference.getDocuments { [weak self] snapshot, error in
-            if let error = error {
-                print(error.localizedDescription)
-                return
-            }
-            
-            guard let snapshot = snapshot else { return }
-            
-            var fetchedCountries: [Country] = []
-            
-            for document in snapshot.documents {
-                let data = document.data()
-                
-                let name = data["name"] as? String ?? ""
-                let cityNames = data["cities"] as? [String] ?? []
-                let cities: [Country.City] = cityNames.map { Country.City(name: $0) }
-                
-                let country = Country(name: name, cities: cities)
-                fetchedCountries.append(country)
-            }
-            
-            DispatchQueue.main.async { [weak self] in
-                self?.coffeeCountries = fetchedCountries
-            }
-        }
     }
     
     //MARK: USER
