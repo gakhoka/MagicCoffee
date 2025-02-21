@@ -127,6 +127,7 @@ class OrderViewModel: ObservableObject {
     
     func removeOrder(_ coffee: Coffee) {
         coffees.removeAll { $0.id == coffee.id }
+        coffeeName = ""
         updateTotalCoffeeCount()
         updateTotalPrice()
     }
