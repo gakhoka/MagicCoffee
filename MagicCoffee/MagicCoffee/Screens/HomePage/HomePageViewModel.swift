@@ -19,6 +19,11 @@ class HomePageViewModel: ObservableObject {
     
 
     func fetchCoffees() {
+        
+        if !coffees.isEmpty {
+            return
+        }
+        
         let dataBase = Firestore.firestore()
         let referrence = dataBase.collection("Coffees")
         referrence.getDocuments { [weak self] snapshot, error in
